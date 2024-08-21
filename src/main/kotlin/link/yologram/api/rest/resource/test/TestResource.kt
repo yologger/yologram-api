@@ -14,4 +14,24 @@ class TestResource {
     fun test(): String {
         return "test"
     }
+
+    @GetMapping("/test1")
+    fun test1(): String {
+        return "test1"
+    }
+
+    @GetMapping("/test2")
+    fun test2(): String {
+        return "test2"
+    }
+
+    @GetMapping("/test3")
+    fun test3(): String {
+        return "test3"
+    }
+
+    @GetMapping("/test4")
+    fun test4(): String {
+        return "test4"
+    }
 }

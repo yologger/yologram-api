@@ -1,0 +1,29 @@
+on:
+  push:
+    branches: [ staging ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up jdk
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '17'
+      - name: Build with gradle
+        run: ./gradlew clean build
+      - name: Rename jar
+        run: mv ./build/libs/*.jar ./build/libs/application.jar
+      - name: Deploy to Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          aws_access_key: ${{ secrets.AWS_GITHUB_ACTIONS_DEPLOYER_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_GITHUB_ACTIONS_DEPLOYER_SECRET_KEY }}
+          application_name: yologram-api-stg
+          environment_name: yologram-api-stg
+          version_label: ${{ github.sha }}
+          region: ${{ secrets.AWS_REGION }}
+          deployment_package: ./build/libs/application.jar
