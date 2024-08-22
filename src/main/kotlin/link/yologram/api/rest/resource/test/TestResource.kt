@@ -1,10 +1,15 @@
 package link.yologram.api.rest.resource.test
 
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletRequest
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
+import link.yologram.api.rest.response.JsonPayload
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/api/test/v1", produces = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
@@ -15,23 +20,36 @@ class TestResource {
         return "test"
     }
 
-    @GetMapping("/test1")
-    fun test1(): String {
-        return "test1"
-    }
+    @Autowired
+    private lateinit var request: HttpServletRequest
 
-    @GetMapping("/test2")
-    fun test2(): String {
-        return "test2"
-    }
+    @RequestMapping(
+        value = ["/echo/**"],
+        consumes = [MediaType.ALL_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE],
+        method = [RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS]
+    )
+    fun echoBack(@RequestBody(required = false) rawBody: ByteArray?): ResponseEntity<JsonPayload> {
 
-    @GetMapping("/test3")
-    fun test3(): String {
-        return "test3"
-    }
+        val headers: Map<String, String> = Collections.list(request.headerNames).associateWith { request.getHeader(it) }
 
-    @GetMapping("/test4")
-    fun test4(): String {
-        return "test4"
+        val host = mutableMapOf<String, String>().also {
+            it["ip"] = request.remoteAddr
+            it["hostname"] = request.remoteHost
+        }
+
+        val response = JsonPayload().apply {
+            set(JsonPayload.HOST, host)
+            set(JsonPayload.PROTOCOL, request.protocol ?: "")
+            set(JsonPayload.METHOD, request.method ?: "")
+            set(JsonPayload.HEADERS, headers)
+            set(JsonPayload.COOKIES, request.cookies ?: emptyArray<Cookie>() )
+            set(JsonPayload.PARAMETERS, request.parameterMap)
+            set(JsonPayload.QUERYSTRING, request.queryString ?: "")
+            set(JsonPayload.PATH, request.servletPath)
+            set(JsonPayload.BODY, rawBody?.let { Base64.getEncoder().encodeToString(it) } ?: "")
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response)
     }
 }
