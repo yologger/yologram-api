@@ -1,2 +1,36 @@
 server:
-  port: 5000
+  port: 5001
+
+spring:
+  config:
+    import:
+      - 'aws-parameterstore:/yologram/service/application_${spring.profiles.active}/'
+      - 'aws-parameterstore:/yologram/service/${spring.application.name}_${spring.profiles.active}/'
+  cloud:
+    aws:
+      credentials:
+        instance-profile: false
+        profile:
+          name: yologger
+
+core:
+  master:
+    datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://service-staging.c56as866g5sl.ap-northeast-2.rds.amazonaws.com:3306/yologram?useUnicode=true&charset=utf8mb4&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul&useSSL=false&rewriteBatchedStatements=true
+      username: yologram_api
+      hikari:
+        pool-name: hikaricp.service-staging.yologram.master
+        max-lifetime: 900000
+        minimum-idle: 28
+        maximum-pool-size: 100
+  slave:
+    datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://service-staging.c56as866g5sl.ap-northeast-2.rds.amazonaws.com:3306/yologram?useUnicode=true&charset=utf8mb4&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul&useSSL=false
+      username: yologram_api
+      hikari:
+        pool-name: hikaricp.service-staging.yologram.slave
+        max-lifetime: 900000
+        minimum-idle: 35
+        maximum-pool-size: 100
