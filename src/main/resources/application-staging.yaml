@@ -19,9 +19,9 @@ core:
       username: yologram_api
       hikari:
         pool-name: hikaricp.service-staging.yologram.master
-        max-lifetime: 900000
+        max-lifetime: 1800000 # 30m
         minimum-idle: 1
-        maximum-pool-size: 5
+        maximum-pool-size: 1
   slave:
     datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -29,6 +29,6 @@ core:
       username: yologram_api
       hikari:
         pool-name: hikaricp.service-staging.yologram.slave
-        max-lifetime: 900000
+        max-lifetime: 1800000 # 30m
         minimum-idle: 1
-        maximum-pool-size: 5
+        maximum-pool-size: 1
