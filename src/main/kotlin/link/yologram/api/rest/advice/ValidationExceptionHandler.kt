@@ -20,6 +20,7 @@ class ValidationExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handle(e: MethodArgumentNotValidException): ResponseEntity<Response<GlobalErrorResponse>> {
+        logger.error(e.message)
         val fieldErrors = e.bindingResult.fieldErrors
         val fieldError = fieldErrors[fieldErrors.size - 1]
         val errorMessage  = fieldError.defaultMessage ?: "${fieldError.field} field has invalid value"
@@ -28,6 +29,7 @@ class ValidationExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun handle(e: HttpMessageNotReadableException): ResponseEntity<Response<GlobalErrorResponse>> {
+        logger.error(e.message)
         return GlobalErrorResponse(message = "Json parse error").wrapBadRequest()
     }
 

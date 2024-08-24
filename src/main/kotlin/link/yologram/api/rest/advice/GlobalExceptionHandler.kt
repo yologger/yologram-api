@@ -1,7 +1,6 @@
 package link.yologram.api.rest.advice
 
 
-import link.yologram.api.domain.ums.UserService
 import link.yologram.api.rest.response.GlobalErrorResponse
 import link.yologram.api.rest.support.Response
 import link.yologram.api.rest.support.wrapInternalServerError

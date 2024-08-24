@@ -25,6 +25,8 @@ fun <T> T.wrapCreated() = ResponseEntity.status(HttpStatus.CREATED).body(Respons
 /** Wrap Bad Request */
 fun <T> T.wrapBadRequest() = ResponseEntity.badRequest().body(Response(this))
 
+fun <T> T.wrapUnauthorized() = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Response(this))
+
 /** Internal Server Error */
 fun <T> T.wrapInternalServerError() = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Response(this))
 

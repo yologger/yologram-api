@@ -55,6 +55,13 @@ dependencies {
     implementation(platform("io.awspring.cloud:spring-cloud-aws-dependencies:${DependencyVersions.SPRING_CLOUD_AWS_VERSION}"))
     implementation("io.awspring.cloud:spring-cloud-aws-starter-parameter-store")
 
+    // JWT
+    implementation("io.jsonwebtoken:jjwt-api:0.10.7")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.10.7")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.10.7")
+    implementation("com.auth0:jwks-rsa:0.11.0")
+    implementation("com.auth0:java-jwt:3.10.3")
+
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")

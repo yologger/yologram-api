@@ -7,3 +7,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+
+yologram-api:
+  auth:
+    jwt:
+      secret: X_YOLOGRAM_AUTH_TOKEN
+    access-token:
+      expire_in_seconds: 86400  # 1 day

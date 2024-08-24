@@ -27,3 +27,10 @@ core:
       hibernate.jdbc.time_zone: Asia/Seoul
     show-sql: false
     database: mysql
+
+yologram-api:
+  auth:
+    jwt:
+      secret: X_YOLOGRAM_AUTH_TOKEN
+    access-token:
+      expire_in_seconds: 86400  # 1 day
