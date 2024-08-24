@@ -48,14 +48,18 @@ dependencies {
     implementation("com.querydsl:querydsl-jpa:${DependencyVersions.QUERY_DSL_VERSION}:jakarta")
     kapt("com.querydsl:querydsl-apt:${DependencyVersions.QUERY_DSL_VERSION}:jakarta")
 
+    // AWS SSM Parameters Store
+    implementation(platform("io.awspring.cloud:spring-cloud-aws-dependencies:${DependencyVersions.SPRING_CLOUD_AWS_VERSION}"))
+    implementation("io.awspring.cloud:spring-cloud-aws-starter-parameter-store")
+
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
-    // AWS SSM Parameters Store
-    implementation(platform("io.awspring.cloud:spring-cloud-aws-dependencies:${DependencyVersions.SPRING_CLOUD_AWS_VERSION}"))
-    implementation("io.awspring.cloud:spring-cloud-aws-starter-parameter-store")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation(platform("org.testcontainers:testcontainers-bom:${DependencyVersions.TEST_CONTAINERS_VERSION}"))
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:mysql")
 }
 
 tasks.getByName<Jar>("jar") {

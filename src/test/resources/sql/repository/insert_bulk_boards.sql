@@ -1,0 +1,49 @@
+INSERT INTO `board`(uid, title, body) VALUES(1, 'user1 title1', 'user1 body1');
+INSERT INTO `board`(uid, title, body) VALUES(1, 'user1 title2', 'user1 body2');
+INSERT INTO `board`(uid, title, body) VALUES(1, 'user1 title3', 'user1 body3');
+INSERT INTO `board`(uid, title, body) VALUES(1, 'user1 title4', 'user1 body4');
+INSERT INTO `board`(uid, title, body) VALUES(1, 'user1 title5', 'user1 body5');
+INSERT INTO `board`(uid, title, body) VALUES(1, 'user1 title6', 'user1 body6');
+INSERT INTO `board`(uid, title, body) VALUES(1, 'user1 title7', 'user1 body7');
+INSERT INTO `board`(uid, title, body) VALUES(1, 'user1 title8', 'user1 body8');
+INSERT INTO `board`(uid, title, body) VALUES(1, 'user1 title9', 'user1 body9');
+
+INSERT INTO `board`(uid, title, body) VALUES(2, 'user2 title1', 'user2 body1');
+INSERT INTO `board`(uid, title, body) VALUES(2, 'user2 title2', 'user2 body2');
+INSERT INTO `board`(uid, title, body) VALUES(2, 'user2 title3', 'user2 body3');
+INSERT INTO `board`(uid, title, body) VALUES(2, 'user2 title4', 'user2 body4');
+INSERT INTO `board`(uid, title, body) VALUES(2, 'user2 title5', 'user2 body5');
+INSERT INTO `board`(uid, title, body) VALUES(2, 'user2 title6', 'user2 body6');
+INSERT INTO `board`(uid, title, body) VALUES(2, 'user2 title7', 'user2 body7');
+INSERT INTO `board`(uid, title, body) VALUES(2, 'user2 title8', 'user2 body8');
+INSERT INTO `board`(uid, title, body) VALUES(2, 'user2 title9', 'user2 body9');
+
+INSERT INTO `board`(uid, title, body) VALUES(3, 'user3 title1', 'user3 body1');
+INSERT INTO `board`(uid, title, body) VALUES(3, 'user3 title2', 'user3 body2');
+INSERT INTO `board`(uid, title, body) VALUES(3, 'user3 title3', 'user3 body3');
+INSERT INTO `board`(uid, title, body) VALUES(3, 'user3 title4', 'user3 body4');
+INSERT INTO `board`(uid, title, body) VALUES(3, 'user3 title5', 'user3 body5');
+INSERT INTO `board`(uid, title, body) VALUES(3, 'user3 title6', 'user3 body6');
+INSERT INTO `board`(uid, title, body) VALUES(3, 'user3 title7', 'user3 body7');
+INSERT INTO `board`(uid, title, body) VALUES(3, 'user3 title8', 'user3 body8');
+INSERT INTO `board`(uid, title, body) VALUES(3, 'user3 title9', 'user3 body9');
+
+INSERT INTO `board`(uid, title, body) VALUES(4, 'user4 title1', 'user4 body1');
+INSERT INTO `board`(uid, title, body) VALUES(4, 'user4 title2', 'user4 body2');
+INSERT INTO `board`(uid, title, body) VALUES(4, 'user4 title3', 'user4 body3');
+INSERT INTO `board`(uid, title, body) VALUES(4, 'user4 title4', 'user4 body4');
+INSERT INTO `board`(uid, title, body) VALUES(4, 'user4 title5', 'user4 body5');
+INSERT INTO `board`(uid, title, body) VALUES(4, 'user4 title6', 'user4 body6');
+INSERT INTO `board`(uid, title, body) VALUES(4, 'user4 title7', 'user4 body7');
+INSERT INTO `board`(uid, title, body) VALUES(4, 'user4 title8', 'user4 body8');
+INSERT INTO `board`(uid, title, body) VALUES(4, 'user4 title9', 'user4 body9');
+
+INSERT INTO `board`(uid, title, body) VALUES(5, 'user5 title1', 'user5 body1');
+INSERT INTO `board`(uid, title, body) VALUES(5, 'user5 title2', 'user5 body2');
+INSERT INTO `board`(uid, title, body) VALUES(5, 'user5 title3', 'user5 body3');
+INSERT INTO `board`(uid, title, body) VALUES(5, 'user5 title4', 'user5 body4');
+INSERT INTO `board`(uid, title, body) VALUES(5, 'user5 title5', 'user5 body5');
+INSERT INTO `board`(uid, title, body) VALUES(5, 'user5 title6', 'user5 body6');
+INSERT INTO `board`(uid, title, body) VALUES(5, 'user5 title7', 'user5 body7');
+INSERT INTO `board`(uid, title, body) VALUES(5, 'user5 title8', 'user5 body8');
+INSERT INTO `board`(uid, title, body) VALUES(5, 'user5 title9', 'user5 body9');
