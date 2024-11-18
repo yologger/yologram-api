@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 
 @Component
-@ConfigurationProperties(prefix = "yologram-api.auth.jwt")
+@ConfigurationProperties(prefix = "yologram.auth.jwt")
 class JwtConfig {
     var issuer: String = "yologram.co.kr"
     var audience: String = "yologram.client"
@@ -12,7 +12,7 @@ class JwtConfig {
 }
 
 @Component
-@ConfigurationProperties(prefix = "yologram-api.auth.access-token")
+@ConfigurationProperties(prefix = "yologram.auth.access-token")
 class AccessTokenConfig (
     val jwtConfig: JwtConfig
 ) {

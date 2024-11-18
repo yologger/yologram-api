@@ -28,7 +28,7 @@ core:
     show-sql: false
     database: mysql
 
-yologram-api:
+yologram:
   auth:
     jwt:
       secret: X_YOLOGRAM_AUTH_TOKEN
