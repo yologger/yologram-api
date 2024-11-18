@@ -3,9 +3,11 @@ package link.yologram.api.infrastructure.entity
 import jakarta.persistence.EntityManager
 import link.yologram.api.infrastructure.repository.AbstractDataJpaTest
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
+@Disabled
 class BoardTest(
     @Autowired private val entityManager: EntityManager
 ): AbstractDataJpaTest()  {

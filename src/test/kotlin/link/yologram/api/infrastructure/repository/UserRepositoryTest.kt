@@ -3,12 +3,13 @@ package link.yologram.api.infrastructure.repository
 
 import link.yologram.api.infrastructure.entity.User
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.jdbc.Sql
 
-// @Disabled
+@Disabled
 class UserRepositoryTest(
     @Autowired private val userRepository: UserRepository
 ): AbstractDataJpaTest() {

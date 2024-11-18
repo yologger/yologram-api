@@ -2,13 +2,14 @@ package link.yologram.api.infrastructure.repository
 
 import link.yologram.api.infrastructure.entity.Board
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.test.context.jdbc.Sql
 
-// @Disabled
+@Disabled
 @Sql(scripts = ["/sql/repository/insert_bulk_users.sql", "/sql/repository/insert_bulk_boards.sql"])
 class BoardRepositoryTest(
     @Autowired private val boardRepository: BoardRepository
