@@ -3,7 +3,7 @@ package link.yologram.api.rest.advice
 import link.yologram.api.domain.bms.dto.BmsErrorResponse
 import link.yologram.api.domain.bms.exception.BoardNotFoundException
 import link.yologram.api.domain.bms.exception.WrongBoardWriterException
-import link.yologram.api.domain.ums.exception.UserNotFoundException
+import link.yologram.api.domain.auth.exception.UserNotFoundException
 import link.yologram.api.rest.resource.bms.BmsResource
 import link.yologram.api.rest.support.Response
 import link.yologram.api.rest.support.wrapBadRequest

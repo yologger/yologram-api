@@ -1,11 +1,10 @@
-package link.yologram.api.rest.resource.ums
+package link.yologram.api.domain.auth.resource
 
 import link.yologram.api.domain.ums.dto.LogoutRequest
 import link.yologram.api.domain.ums.dto.ValidateAccessTokenRequest
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
-import link.yologram.api.domain.AUTH_TOKEN_KEY
 import link.yologram.api.domain.auth.dto.AuthData
-import link.yologram.api.domain.ums.AuthService
+import link.yologram.api.domain.auth.service.AuthService
 import link.yologram.api.domain.ums.dto.LoginRequest
 import link.yologram.api.domain.ums.dto.LoginResponse
 import link.yologram.api.rest.support.Response

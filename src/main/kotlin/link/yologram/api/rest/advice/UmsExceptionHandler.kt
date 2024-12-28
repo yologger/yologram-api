@@ -2,11 +2,11 @@ package link.yologram.api.rest.advice
 
 import link.yologram.api.domain.ums.dto.AuthErrorResponse
 import link.yologram.api.domain.ums.dto.UmsErrorResponse
-import link.yologram.api.domain.ums.exception.AuthException
+import link.yologram.api.domain.auth.exception.AuthException
 import link.yologram.api.domain.ums.exception.DuplicateUserException
-import link.yologram.api.domain.ums.exception.UserNotFoundException
-import link.yologram.api.domain.ums.exception.WrongPasswordException
-import link.yologram.api.rest.resource.ums.AuthResource
+import link.yologram.api.domain.auth.exception.UserNotFoundException
+import link.yologram.api.domain.auth.exception.WrongPasswordException
+import link.yologram.api.domain.auth.resource.AuthResource
 import link.yologram.api.rest.resource.ums.UserResource
 import link.yologram.api.rest.support.Response
 import link.yologram.api.rest.support.wrapBadRequest

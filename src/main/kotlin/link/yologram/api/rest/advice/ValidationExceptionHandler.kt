@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
-@Order(Ordered.HIGHEST_PRECEDENCE+1)
+@Order(Ordered.LOWEST_PRECEDENCE - 1)
 class ValidationExceptionHandler {
 
     private val logger = LoggerFactory.getLogger(ValidationExceptionHandler::class.java)

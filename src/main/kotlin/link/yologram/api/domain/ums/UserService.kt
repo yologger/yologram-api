@@ -4,7 +4,7 @@ import link.yologram.api.domain.ums.dto.JoinRequest
 import link.yologram.api.domain.ums.dto.JoinResponse
 import link.yologram.api.domain.ums.dto.UserData
 import link.yologram.api.domain.ums.exception.DuplicateUserException
-import link.yologram.api.domain.ums.exception.UserNotFoundException
+import link.yologram.api.domain.auth.exception.UserNotFoundException
 import link.yologram.api.infrastructure.entity.User
 import link.yologram.api.infrastructure.repository.UserRepository
 import org.slf4j.LoggerFactory

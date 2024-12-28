@@ -3,6 +3,7 @@ package link.yologram.api.rest.resource.test
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
+import link.yologram.api.domain.auth.dto.AuthData
 import link.yologram.api.rest.response.JsonPayload
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -51,5 +52,18 @@ class TestResource {
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response)
+    }
+
+    @GetMapping("/auth_necessary")
+    fun authNecessary(
+        authData: AuthData
+    ): String {
+        println(authData)
+        return "auth_necessary"
+    }
+
+    @GetMapping("/auth_not_necessary")
+    fun authNotNecessary(): String {
+        return "auth_not_necessary"
     }
 }

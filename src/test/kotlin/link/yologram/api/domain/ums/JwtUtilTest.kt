@@ -1,7 +1,9 @@
 package link.yologram.api.domain.ums
 
 import link.yologram.api.config.JwtConfig
-import link.yologram.api.domain.ums.exception.AuthException
+import link.yologram.api.domain.auth.dto.JwtClaim
+import link.yologram.api.domain.auth.JwtUtil
+import link.yologram.api.domain.auth.exception.AuthException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test

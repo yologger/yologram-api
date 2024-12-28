@@ -6,7 +6,7 @@ import link.yologram.api.domain.bms.dto.GetBoardsByUidResponse
 import link.yologram.api.domain.bms.dto.GetBoardsResponse
 import link.yologram.api.domain.bms.exception.BoardNotFoundException
 import link.yologram.api.domain.bms.exception.WrongBoardWriterException
-import link.yologram.api.domain.ums.exception.UserNotFoundException
+import link.yologram.api.domain.auth.exception.UserNotFoundException
 import link.yologram.api.infrastructure.entity.Board
 import link.yologram.api.infrastructure.repository.BoardRepository
 import link.yologram.api.infrastructure.repository.UserRepository

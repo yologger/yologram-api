@@ -1,12 +1,13 @@
-package link.yologram.api.domain.ums
+package link.yologram.api.domain.auth.service
 
+import link.yologram.api.domain.auth.JwtUtil
+import link.yologram.api.domain.auth.dto.JwtClaim
 import link.yologram.api.domain.ums.dto.LogoutResponse
 import link.yologram.api.domain.ums.dto.ValidateAccessTokenResponse
-import link.yologram.api.domain.ums.dto.AccessTokenClaim
 import link.yologram.api.domain.ums.dto.LoginResponse
-import link.yologram.api.domain.ums.exception.AuthException
-import link.yologram.api.domain.ums.exception.UserNotFoundException
-import link.yologram.api.domain.ums.exception.WrongPasswordException
+import link.yologram.api.domain.auth.exception.AuthException
+import link.yologram.api.domain.auth.exception.UserNotFoundException
+import link.yologram.api.domain.auth.exception.WrongPasswordException
 import link.yologram.api.infrastructure.repository.UserRepository
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
