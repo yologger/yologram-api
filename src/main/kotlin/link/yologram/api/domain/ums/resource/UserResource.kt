@@ -4,7 +4,6 @@ import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
 import link.yologram.api.domain.auth.dto.AuthData
 import link.yologram.api.domain.ums.service.UserService
 import link.yologram.api.domain.ums.dto.JoinRequest
-import link.yologram.api.domain.ums.dto.WithdrawRequest
 import link.yologram.api.global.wrapCreated
 import link.yologram.api.global.wrapOk
 import org.springframework.http.MediaType
@@ -25,10 +24,8 @@ class UserResource(
         @PathVariable(name = "uid") uid: Long
     ) = userService.getUser(uid).wrapOk()
 
-    @DeleteMapping("/withdraw", consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @DeleteMapping("/user/withdraw")
     fun withdraw(
-        @Validated @RequestBody request: WithdrawRequest
-    ) {
-
-    }
+        authData: AuthData
+    ) = userService.withdraw(authData.uid).wrapOk()
 }

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice(assignableTypes = [BmsResource::class])
-@Order(Ordered.HIGHEST_PRECEDENCE)
 class BmsExceptionHandler {
 
     private val logger = LoggerFactory.getLogger(BmsExceptionHandler::class.java)

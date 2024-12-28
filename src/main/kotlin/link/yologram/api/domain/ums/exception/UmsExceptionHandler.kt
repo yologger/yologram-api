@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice(assignableTypes = [UserResource::class])
-@Order(Ordered.HIGHEST_PRECEDENCE)
 class UmsExceptionHandler {
 
     private val logger = LoggerFactory.getLogger(UmsExceptionHandler::class.java)
@@ -27,6 +26,12 @@ class UmsExceptionHandler {
 
     @ExceptionHandler(value = [UserNotFoundException::class])
     fun handle(e: UserNotFoundException): ResponseEntity<Response<UmsErrorResponse>> {
+        logger.error(e.message)
+        return UmsErrorResponse(message = e.message).wrapBadRequest()
+    }
+
+    @ExceptionHandler(value = [UserAlreadyDeletedException::class])
+    fun handle(e: UserAlreadyDeletedException): ResponseEntity<Response<UmsErrorResponse>> {
         logger.error(e.message)
         return UmsErrorResponse(message = e.message).wrapBadRequest()
     }

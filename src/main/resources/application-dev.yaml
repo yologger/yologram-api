@@ -34,3 +34,9 @@ core:
         max-lifetime: 1800000 # 30m
         minimum-idle: 1
         maximum-pool-size: 10
+  jpa:
+    show-sql: true # 콘솔로그로 출력
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true

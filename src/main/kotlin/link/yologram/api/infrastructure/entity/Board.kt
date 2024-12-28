@@ -1,6 +1,8 @@
 package link.yologram.api.infrastructure.entity
 
 import jakarta.persistence.*
+import link.yologram.api.infrastructure.enum.BoardStatus
+import link.yologram.api.infrastructure.enum.UserStatus
 import org.springframework.data.annotation.CreatedDate
 import org.hibernate.annotations.ColumnDefault
 import org.springframework.data.annotation.LastModifiedDate
@@ -24,6 +26,13 @@ class Board (
 
     @Column(name = "body", columnDefinition = "text")
     var body: String,
+
+    @Column(name = "status", columnDefinition = "varchar(15) default 'ACTIVE'")
+    @Enumerated(EnumType.STRING)
+    var status: BoardStatus = BoardStatus.ACTIVE,
+
+    @Column(name = "deleted_date")
+    var deletedDate: LocalDateTime? = null
 ) {
     @Column(name = "create_date")
     @CreatedDate
