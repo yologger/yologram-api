@@ -19,7 +19,7 @@ class AuthService(
     private val passwordEncoder: PasswordEncoder,
     private val jwtUtil: JwtUtil
 ) {
-    @Transactional
+    @Transactional(rollbackFor = [Exception::class])
     @Throws(UserNotFoundException::class, WrongPasswordException::class)
     fun login(email: String, password: String) : LoginResponse {
         val user = userRepository.findByEmail(email).orElseThrow { UserNotFoundException("User not found") }
@@ -45,7 +45,7 @@ class AuthService(
         return LoginResponse(uid = user.id, accessToken = accessToken)
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = [Exception::class])
     @Throws(UserNotFoundException::class)
     fun validateToken(uid: Long, accessToken: String): ValidateAccessTokenResponse {
         val user = userRepository.findById(uid).orElseThrow { UserNotFoundException("User not found") }
@@ -54,7 +54,7 @@ class AuthService(
         return ValidateAccessTokenResponse(uid = uid, accessToken = accessToken)
     }
 
-    @Transactional
+    @Transactional(rollbackFor = [Exception::class])
     @Throws
     fun logout(uid: Long, accessToken: String): LogoutResponse {
         val user = userRepository.findById(uid).orElseThrow { UserNotFoundException("User not found") }

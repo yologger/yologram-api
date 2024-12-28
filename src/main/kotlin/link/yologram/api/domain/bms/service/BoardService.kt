@@ -1,4 +1,4 @@
-package link.yologram.api.domain.bms
+package link.yologram.api.domain.bms.service
 
 import link.yologram.api.domain.bms.dto.BoardData
 import link.yologram.api.domain.bms.dto.DeleteBoardResponse
@@ -21,7 +21,7 @@ class BoardService(
     private val boardRepository: BoardRepository,
     private val userRepository: UserRepository
 ) {
-    @Transactional
+    @Transactional(rollbackFor = [Exception::class])
     @Throws(UserNotFoundException::class)
     fun createBoard(uid: Long, title: String, body: String): BoardData {
         if (!userRepository.existsById(uid)) throw UserNotFoundException("User not found")
@@ -35,7 +35,7 @@ class BoardService(
         return BoardData.fromEntity(board = saved)
     }
 
-    @Transactional
+    @Transactional(rollbackFor = [Exception::class])
     @Throws(UserNotFoundException::class, BoardNotFoundException::class, WrongBoardWriterException::class)
     fun editBoard(uid: Long, bid: Long, newTitle: String, newBody: String): BoardData {
         val board = validateBoard(bid, uid)
@@ -44,7 +44,7 @@ class BoardService(
         return BoardData.fromEntity(board.get())
     }
 
-    @Transactional
+    @Transactional(rollbackFor = [Exception::class])
     @Throws(UserNotFoundException::class, BoardNotFoundException::class, WrongBoardWriterException::class)
     fun deleteBoard(uid: Long, bid: Long): DeleteBoardResponse {
         validateBoard(bid, uid)
@@ -52,16 +52,16 @@ class BoardService(
         return DeleteBoardResponse(uid = uid, bid = bid)
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = [Exception::class])
     fun getBoard(bid: Long): BoardData = BoardData.fromEntity(boardRepository.findById(bid).orElseThrow { BoardNotFoundException("Board not found") }!!)
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = [Exception::class])
     fun getBoards(page: Int, size: Int): GetBoardsResponse {
         val boards = boardRepository.findAll(PageRequest.of(page, size, Sort.by("id").descending())).map { BoardData.fromEntity(it) }.content
         return GetBoardsResponse(size = boards.size, boards = boards)
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = [Exception::class])
     fun getBoardsByUid(uid: Long, page: Long, size: Long): GetBoardsByUidResponse {
         val boards = boardRepository.findBoardsByUidOrderByCreateDateDesc(uid = uid, page = page, size = size).map { BoardData.fromEntity(it) }
         return GetBoardsByUidResponse(size = boards.size, boards = boards)

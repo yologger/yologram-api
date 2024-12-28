@@ -1,7 +1,7 @@
 package link.yologram.api.domain.bms.resource
 
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
-import link.yologram.api.domain.bms.BoardService
+import link.yologram.api.domain.bms.service.BoardService
 import link.yologram.api.domain.bms.dto.*
 import link.yologram.api.global.wrapCreated
 import link.yologram.api.global.wrapOk

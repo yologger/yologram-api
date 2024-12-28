@@ -27,7 +27,7 @@ class UserService(
 ) {
     private val logger = LoggerFactory.getLogger(UserService::class.java)
 
-    @Transactional
+    @Transactional(rollbackFor = [Exception::class])
     @Throws(DuplicateUserException::class)
     fun join(request: JoinRequest): JoinResponse {
 
@@ -44,13 +44,13 @@ class UserService(
         return JoinResponse(uid = saved.id)
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = [Exception::class])
     @Throws(UserNotFoundException::class)
     fun getUser(uid: Long): UserData {
         return UserData.fromEntity(userRepository.findByIdOrNull(uid) ?: throw UserNotFoundException("User uid: $uid not found."))
     }
 
-    @Transactional
+    @Transactional(rollbackFor = [Exception::class])
     fun withdraw(uid: Long): WithdrawResponse {
         val user = userRepository.findById(uid).orElseThrow { UserNotFoundException("User not exists") }
         if (user.status == UserStatus.DELETED) throw UserAlreadyDeletedException("User already deleted")
