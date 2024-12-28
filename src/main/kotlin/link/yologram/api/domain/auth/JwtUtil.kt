@@ -7,8 +7,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException
 import com.auth0.jwt.exceptions.TokenExpiredException
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import link.yologram.api.config.JwtConfig
-import link.yologram.api.decodeBase64
-import link.yologram.api.deserialize
+import link.yologram.api.global.decodeBase64
+import link.yologram.api.global.deserialize
 import link.yologram.api.domain.auth.dto.JwtClaim
 import link.yologram.api.domain.auth.exception.AuthException
 import org.springframework.stereotype.Component
