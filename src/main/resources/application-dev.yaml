@@ -11,7 +11,7 @@ spring:
       credentials:
         instance-profile: false
         profile:
-          name: yologger
+          name: yologram
 
 core:
   master:
@@ -21,9 +21,9 @@ core:
       username: yologram_api
       hikari:
         pool-name: hikaricp.service-staging.yologram.master
-        max-lifetime: 900000
-        minimum-idle: 28
-        maximum-pool-size: 100
+        max-lifetime: 1800000 # 30m
+        minimum-idle: 1
+        maximum-pool-size: 10
   slave:
     datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -31,6 +31,6 @@ core:
       username: yologram_api
       hikari:
         pool-name: hikaricp.service-staging.yologram.slave
-        max-lifetime: 900000
-        minimum-idle: 35
-        maximum-pool-size: 100
+        max-lifetime: 1800000 # 30m
+        minimum-idle: 1
+        maximum-pool-size: 10
