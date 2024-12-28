@@ -29,8 +29,8 @@ class Board (
     @CreatedDate
     lateinit var createDate: LocalDateTime
 
-    @Column(name = "modified_at", columnDefinition = "timestamp on update CURRENT_TIMESTAMP")
+    @Column(name = "modified_date", columnDefinition = "timestamp on update CURRENT_TIMESTAMP")
     @ColumnDefault("CURRENT_TIMESTAMP")
     @LastModifiedDate
-    lateinit var modifiedAt: LocalDateTime
+    lateinit var modifiedDate: LocalDateTime
 }

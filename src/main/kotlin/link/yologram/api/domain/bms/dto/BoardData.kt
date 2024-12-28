@@ -9,7 +9,7 @@ data class BoardData(
     val title: String,
     val body: String,
     val createDate: LocalDateTime,
-    val modifiedAt: LocalDateTime
+    val modifiedDate: LocalDateTime
 ) {
     companion object {
         fun fromEntity(board: Board): BoardData {
@@ -19,7 +19,7 @@ data class BoardData(
                 title = board.title,
                 body = board.body,
                 createDate = board.createDate,
-                modifiedAt = board.modifiedAt
+                modifiedDate = board.modifiedDate
             )
         }
     }
