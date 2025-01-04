@@ -1,10 +1,10 @@
 package link.yologram.api.global.excpetion
 
 
-import link.yologram.api.global.dto.GlobalErrorResponse
 import link.yologram.api.global.Response
 import link.yologram.api.global.wrapInternalServerError
 import link.yologram.api.global.wrapMethodNotAllowed
+import link.yologram.api.global.wrapNotFound
 import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.servlet.NoHandlerFoundException
 
 @RestControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE)
@@ -22,12 +23,18 @@ class GlobalExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
     fun handle(e: HttpRequestMethodNotSupportedException): ResponseEntity<Response<GlobalErrorResponse>> {
         logger.error(e.message)
-        return GlobalErrorResponse(message = "Http Request Method Not Allowed").wrapMethodNotAllowed()
+        return GlobalErrorResponse(errorMessage = "Http Request Method Not Allowed", errorCode = GlobalErrorCode.HTTP_REQUEST_METHOD_NOT_ALLOWED).wrapMethodNotAllowed()
+    }
+
+    @ExceptionHandler(NoHandlerFoundException::class)
+    fun handle(e: NoHandlerFoundException): ResponseEntity<Response<GlobalErrorResponse>> {
+        logger.error(e.message)
+        return GlobalErrorResponse(errorMessage = e.localizedMessage, errorCode = GlobalErrorCode.NOT_FOUND).wrapNotFound()
     }
 
     @ExceptionHandler(Exception::class)
     fun handle(e: Exception): ResponseEntity<Response<GlobalErrorResponse>> {
         logger.error(e.message)
-        return GlobalErrorResponse(message = "Internal Server Error").wrapInternalServerError()
+        return GlobalErrorResponse(errorMessage = "Internal Server Error", errorCode = GlobalErrorCode.INTERNAL_SERVER_ERROR).wrapInternalServerError()
     }
 }

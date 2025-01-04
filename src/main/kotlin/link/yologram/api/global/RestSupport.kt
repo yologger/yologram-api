@@ -33,6 +33,9 @@ fun <T> T.wrapInternalServerError() = ResponseEntity.status(HttpStatus.INTERNAL_
 /** Method Not Allowed */
 fun <T> T.wrapMethodNotAllowed() = ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(Response(this))
 
+/** Not Found */
+fun <T> T.wrapNotFound() = ResponseEntity.status(HttpStatus.NOT_FOUND).body(Response(this))
+
 /** Wrap Response Void */
 fun Unit.wrapVoid() = ResponseEntity.noContent()
 
