@@ -31,7 +31,7 @@ class UserService(
     @Throws(DuplicateUserException::class)
     fun join(request: JoinRequest): JoinResponse {
 
-        userRepository.findByEmail(request.email).ifPresent { throw DuplicateUserException("User '${request.email}' already exists.") }
+        userRepository.findByEmail(request.email).ifPresent { throw DuplicateUserException("user '${request.email}' already exists.") }
 
         val saved = userRepository.save(
             User(

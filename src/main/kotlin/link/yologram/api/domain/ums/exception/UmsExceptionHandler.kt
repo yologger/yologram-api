@@ -7,11 +7,14 @@ import link.yologram.api.global.wrapBadRequest
 import link.yologram.api.global.wrapConflict
 import link.yologram.api.global.wrapUnauthorized
 import org.slf4j.LoggerFactory
+import org.springframework.core.Ordered
+import org.springframework.core.annotation.Order
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
-@RestControllerAdvice(assignableTypes = [UserResource::class])
+@RestControllerAdvice
+@Order(Ordered.LOWEST_PRECEDENCE - 2)
 class UmsExceptionHandler {
 
     private val logger = LoggerFactory.getLogger(UmsExceptionHandler::class.java)

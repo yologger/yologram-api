@@ -10,7 +10,9 @@ import link.yologram.api.config.JwtConfig
 import link.yologram.api.global.decodeBase64
 import link.yologram.api.global.deserialize
 import link.yologram.api.domain.auth.dto.JwtClaim
-import link.yologram.api.domain.auth.exception.AuthException
+import link.yologram.api.domain.auth.exception.ExpiredTokenException
+import link.yologram.api.domain.auth.exception.TokenCreationFailException
+import link.yologram.api.domain.auth.exception.InvalidTokenException
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -35,21 +37,21 @@ class JwtUtil(
             .withClaim("uid", jwtClaim.uid)
             .sign(Algorithm.HMAC256(jwtConfig.secret))
     } catch (e: JWTCreationException) {
-        throw AuthException("Fail to create jwt token. ${e.message}")
+        throw TokenCreationFailException("Fail to create jwt token. ${e.message}")
     }
 
     fun getTokenClaim(token: String): JwtClaim = try {
         val json = validateToken(token)
         json deserialize JwtClaim::class
     } catch (e: MismatchedInputException) {
-        throw AuthException("Fail to parse jwt token")
+        throw InvalidTokenException("Fail to parse jwt token")
     }
 
     fun validateToken(token: String): String = try {
         jwtVerifier.verify(token).payload.decodeBase64()
     } catch (e: TokenExpiredException) {
-        throw AuthException("Expired jwt token")
+        throw ExpiredTokenException("Expired jwt token")
     } catch (e: JWTVerificationException) {
-        throw AuthException("Invalid jwt token")
+        throw InvalidTokenException("Invalid jwt token")
     }
 }

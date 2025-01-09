@@ -3,9 +3,9 @@ package link.yologram.api.domain.auth.service
 import link.yologram.api.domain.auth.JwtUtil
 import link.yologram.api.domain.auth.dto.JwtClaim
 import link.yologram.api.domain.ums.dto.LogoutResponse
-import link.yologram.api.domain.ums.dto.ValidateAccessTokenResponse
 import link.yologram.api.domain.ums.dto.LoginResponse
 import link.yologram.api.domain.auth.exception.AuthException
+import link.yologram.api.domain.auth.exception.InvalidTokenOwnerException
 import link.yologram.api.domain.auth.exception.UserNotFoundException
 import link.yologram.api.domain.auth.exception.WrongPasswordException
 import link.yologram.api.infrastructure.repository.UserRepository
@@ -45,20 +45,11 @@ class AuthService(
         return LoginResponse(uid = user.id, accessToken = accessToken)
     }
 
-    @Transactional(readOnly = true, rollbackFor = [Exception::class])
-    @Throws(UserNotFoundException::class)
-    fun validateToken(uid: Long, accessToken: String): ValidateAccessTokenResponse {
-        val user = userRepository.findById(uid).orElseThrow { UserNotFoundException("User not found") }
-        if (uid != user.id) throw AuthException("Invalid jwt token")
-        jwtUtil.validateToken(accessToken)
-        return ValidateAccessTokenResponse(uid = uid, accessToken = accessToken)
-    }
-
     @Transactional(rollbackFor = [Exception::class])
     @Throws
     fun logout(uid: Long, accessToken: String): LogoutResponse {
         val user = userRepository.findById(uid).orElseThrow { UserNotFoundException("User not found") }
-        if (uid != user.id) throw AuthException("Invalid jwt token")
+        if (uid != user.id) throw InvalidTokenOwnerException("Invalid token owner")
         jwtUtil.validateToken(accessToken)
         user.accessToken = null
         return LogoutResponse(uid = uid)
