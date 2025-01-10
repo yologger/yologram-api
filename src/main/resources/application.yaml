@@ -36,5 +36,5 @@ core:
 yologram:
   auth:
     jwt:
-      secret: X_YOLOGRAM_AUTH_TOKEN
+      secret: X-YOLOGRAM-USER-AUTH-TOKEN
       expire_in_seconds: 86400  # 1 day

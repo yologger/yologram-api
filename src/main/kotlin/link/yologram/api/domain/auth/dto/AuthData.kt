@@ -5,7 +5,7 @@ data class AuthData(
     val accessToken: String
 ) {
     companion object {
-        const val USER_KEY = "X_YOLOGRAM_USER_AUTH_TOKEN"
-        const val SERVICE_KEY = "X_YOLOGRAM_SERVICE_AUTH_TOKEN"
+        const val USER_KEY = "X-YOLOGRAM-USER-AUTH-TOKEN"
+        const val SERVICE_KEY = "X-YOLOGRAM-SERVICE-AUTH-TOKEN"
     }
 }

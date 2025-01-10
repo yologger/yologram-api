@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
 import link.yologram.api.domain.auth.dto.AuthData
 import link.yologram.api.domain.test.dto.JsonPayload
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -15,6 +16,8 @@ import java.util.*
 @RestController
 @RequestMapping("/api/test/v1", produces = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
 class TestResource {
+
+    private val logger = LoggerFactory.getLogger(TestResource::class.java)
 
     @GetMapping("/test")
     fun test(): String {
@@ -38,6 +41,16 @@ class TestResource {
             it["ip"] = request.remoteAddr
             it["hostname"] = request.remoteHost
         }
+
+        logger.info("host: $host")
+        logger.info("protocol: ${request.protocol ?: ""}")
+        logger.info("method: ${request.method ?: ""}")
+        logger.info("headers: $headers")
+        logger.info("cookies: ${request.cookies ?: emptyArray<Cookie>()}")
+        logger.info("parameters: ${request.parameterMap}")
+        logger.info("querystring: ${request.queryString ?: ""}")
+        logger.info("path: ${request.servletPath}")
+        logger.info("rawBody: ${rawBody?.let { Base64.getEncoder().encodeToString(it) } ?: ""}")
 
         val response = JsonPayload().apply {
             set(JsonPayload.HOST, host)
