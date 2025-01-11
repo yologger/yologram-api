@@ -23,10 +23,10 @@ class AuthResource(
     }
 
     @PostMapping("/validate_token")
-    fun validateToken(authData: AuthData): ResponseEntity<Response<ValidateAccessTokenResponse>> {
-        return ValidateAccessTokenResponse(uid = authData.uid, accessToken = authData.accessToken).wrapOk()
-    }
+    fun validateToken(authData: AuthData): ResponseEntity<Response<ValidateAccessTokenResponse>>
+    = authService.validateToken(authData.accessToken, authData.uid).wrapOk()
 
     @PostMapping("/logout")
-    fun logout(authData: AuthData) = authService.logout(uid = authData.uid, accessToken = authData.accessToken).wrapOk()
+    fun logout(authData: AuthData)
+    = authService.logout(uid = authData.uid, accessToken = authData.accessToken).wrapOk()
 }
