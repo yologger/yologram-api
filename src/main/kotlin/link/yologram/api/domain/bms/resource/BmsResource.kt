@@ -3,16 +3,22 @@ package link.yologram.api.domain.bms.resource
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
 import link.yologram.api.domain.bms.service.BoardService
 import link.yologram.api.domain.bms.dto.*
+import link.yologram.api.domain.bms.dto.comment.CommentData
+import link.yologram.api.domain.bms.dto.comment.CreateCommentRequest
+import link.yologram.api.domain.bms.service.CommentService
+import link.yologram.api.global.Response
 import link.yologram.api.global.wrapCreated
 import link.yologram.api.global.wrapOk
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/bms/v1", produces = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
 class BmsResource(
-    private val boardService: BoardService
+    private val boardService: BoardService,
+    private val commentService: CommentService
 ) {
 
     @PostMapping("/board", consumes = [MediaType.APPLICATION_JSON_VALUE])
@@ -36,4 +42,19 @@ class BmsResource(
     @GetMapping("/boards", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun getBoards(@Validated @RequestBody request: GetBoardsRequest)
     = boardService.getBoards(page = request.page, size = request.size)
+
+    @PostMapping("/board/{bid}/comments")
+    fun createComment(
+        @PathVariable bid: Long,
+        @RequestBody request: CreateCommentRequest
+    ): ResponseEntity<Response<Long>> {
+        return commentService.createComment(bid = bid, uid = request.uid, content = request.content).wrapCreated()
+    }
+
+    @GetMapping("/board/{bid}/comments")
+    fun getCommentsByBid(
+        @PathVariable bid: Long
+    ): ResponseEntity<Response<List<CommentData>>> {
+        return commentService.getCommentsByBid(bid = bid).wrapOk()
+    }
 }

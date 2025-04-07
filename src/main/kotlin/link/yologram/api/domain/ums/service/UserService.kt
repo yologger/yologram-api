@@ -1,5 +1,6 @@
 package link.yologram.api.domain.ums.service
 
+import link.yologram.api.domain.bms.enum.BoardStatus
 import link.yologram.api.domain.ums.dto.JoinRequest
 import link.yologram.api.domain.ums.dto.JoinResponse
 import link.yologram.api.domain.ums.dto.UserData
@@ -7,11 +8,10 @@ import link.yologram.api.domain.ums.dto.WithdrawResponse
 import link.yologram.api.domain.ums.exception.DuplicateUserException
 import link.yologram.api.domain.ums.exception.UserAlreadyDeletedException
 import link.yologram.api.domain.ums.exception.UserNotFoundException
-import link.yologram.api.infrastructure.entity.User
-import link.yologram.api.infrastructure.enum.BoardStatus
-import link.yologram.api.infrastructure.enum.UserStatus
-import link.yologram.api.infrastructure.repository.BoardRepository
-import link.yologram.api.infrastructure.repository.UserRepository
+import link.yologram.api.domain.ums.entity.User
+import link.yologram.api.domain.bms.repository.BoardRepository
+import link.yologram.api.domain.ums.enum.UserStatus
+import link.yologram.api.domain.ums.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder

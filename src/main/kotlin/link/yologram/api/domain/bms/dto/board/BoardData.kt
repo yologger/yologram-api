@@ -1,6 +1,6 @@
-package link.yologram.api.domain.bms.dto
+package link.yologram.api.domain.bms.dto.board
 
-import link.yologram.api.infrastructure.entity.Board
+import link.yologram.api.domain.bms.entity.Board
 import java.time.LocalDateTime
 
 data class BoardData(

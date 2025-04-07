@@ -1,7 +1,8 @@
 package link.yologram.api.infrastructure.repository
 
 
-import link.yologram.api.infrastructure.entity.User
+import link.yologram.api.domain.ums.entity.User
+import link.yologram.api.domain.ums.repository.UserRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName

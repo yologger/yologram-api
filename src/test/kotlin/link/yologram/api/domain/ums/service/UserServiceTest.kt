@@ -3,12 +3,11 @@ package link.yologram.api.domain.ums.service
 import any
 import link.yologram.api.domain.ums.dto.JoinRequest
 import link.yologram.api.domain.ums.exception.DuplicateUserException
-import link.yologram.api.infrastructure.entity.User
-import link.yologram.api.infrastructure.repository.BoardRepository
-import link.yologram.api.infrastructure.repository.UserRepository
+import link.yologram.api.domain.ums.entity.User
+import link.yologram.api.domain.bms.repository.BoardRepository
+import link.yologram.api.domain.ums.repository.UserRepository
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

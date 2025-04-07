@@ -9,7 +9,7 @@ import link.yologram.api.domain.auth.exception.InvalidTokenOwnerException
 import link.yologram.api.domain.auth.exception.UserNotFoundException
 import link.yologram.api.domain.auth.exception.WrongPasswordException
 import link.yologram.api.domain.ums.dto.ValidateAccessTokenResponse
-import link.yologram.api.infrastructure.repository.UserRepository
+import link.yologram.api.domain.ums.repository.UserRepository
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

@@ -1,8 +1,8 @@
-package link.yologram.api.infrastructure.repository
+package link.yologram.api.domain.bms.repository
 
 import com.querydsl.jpa.impl.JPAQueryFactory
-import link.yologram.api.infrastructure.entity.Board
-import link.yologram.api.infrastructure.entity.QBoard
+import link.yologram.api.domain.bms.entity.Board
+import link.yologram.api.domain.bms.entity.QBoard
 import org.springframework.transaction.support.TransactionTemplate
 
 class BoardCustomRepositoryImpl(
@@ -13,7 +13,7 @@ class BoardCustomRepositoryImpl(
     private val qBoard = QBoard.board
 
     override fun findBoardsByUidOrderByCreateDateDesc(uid: Long, page: Long, size: Long): List<Board> {
-        return template.execute {
+        return template.execute<List<Board>> {
             jpaQueryFactory.selectFrom(qBoard)
                 .where(qBoard.uid.eq(uid))
                 .offset(page * size)

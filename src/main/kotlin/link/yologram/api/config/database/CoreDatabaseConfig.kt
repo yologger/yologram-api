@@ -21,7 +21,7 @@ import javax.sql.DataSource
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-    basePackages = ["link.yologram.api.infrastructure.repository"],
+    basePackages = ["link.yologram.api"],
     entityManagerFactoryRef = "coreEntityManager",
     transactionManagerRef = "coreTransactionManager"
 )
@@ -85,7 +85,7 @@ class CoreDatabaseConfig {
     ): LocalContainerEntityManagerFactoryBean {
         return builder
             .dataSource(coreRoutingDataSource)
-            .packages("link.yologram.api.infrastructure.entity")
+            .packages("link.yologram.api")
             .build()
     }
 

@@ -1,4 +1,4 @@
-package link.yologram.api.infrastructure.enum
+package link.yologram.api.domain.ums.enum
 
 enum class UserStatus(val value: String) {
     ACTIVE("ACTIVE"),

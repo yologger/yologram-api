@@ -1,4 +1,4 @@
-package link.yologram.api.infrastructure.enum
+package link.yologram.api.domain.bms.enum
 
 enum class BoardStatus(val value: String) {
     ACTIVE("ACTIVE"),

@@ -1,6 +1,6 @@
 package link.yologram.api.domain.ums.dto
 
-import link.yologram.api.infrastructure.entity.User
+import link.yologram.api.domain.ums.entity.User
 import java.time.LocalDateTime
 
 data class UserData (

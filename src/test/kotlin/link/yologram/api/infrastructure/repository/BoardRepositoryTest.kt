@@ -1,6 +1,7 @@
 package link.yologram.api.infrastructure.repository
 
-import link.yologram.api.infrastructure.entity.Board
+import link.yologram.api.domain.bms.entity.Board
+import link.yologram.api.domain.bms.repository.BoardRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
