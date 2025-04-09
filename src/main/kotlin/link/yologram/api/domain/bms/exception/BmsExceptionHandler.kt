@@ -2,7 +2,6 @@ package link.yologram.api.domain.bms.exception
 
 import link.yologram.api.domain.bms.dto.BmsErrorResponse
 import link.yologram.api.domain.auth.exception.UserNotFoundException
-import link.yologram.api.domain.bms.resource.BmsResource
 import link.yologram.api.global.Response
 import link.yologram.api.global.wrapBadRequest
 import org.slf4j.LoggerFactory

@@ -16,15 +16,14 @@ data class Comment(
     @Column(columnDefinition = "int unsigned")
     val id: Long = 0,
 
-
     @Column(name = "uid", columnDefinition = "int unsigned")
     val uid: Long,
 
     @Column(name = "bid", columnDefinition = "int unsigned")
     val bid: Long,
 
+    @Column(name = "content", columnDefinition = "text")
     val content: String,
-
 ) {
     @Column(name = "created_date")
     @CreatedDate

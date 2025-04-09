@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/bms/v1", produces = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
-class BmsResource(
+class BoardResource(
     private val boardService: BoardService,
     private val commentService: CommentService
 ) {
