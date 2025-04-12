@@ -5,8 +5,8 @@ import link.yologram.api.domain.bms.dto.DeleteBoardResponse
 import link.yologram.api.domain.bms.dto.GetBoardsByUidResponse
 import link.yologram.api.domain.bms.dto.GetBoardsResponse
 import link.yologram.api.domain.bms.exception.BoardNotFoundException
-import link.yologram.api.domain.bms.exception.WrongBoardWriterException
-import link.yologram.api.domain.ums.exception.UserNotFoundException
+import link.yologram.api.domain.bms.exception.BoardWrongWriterException
+import link.yologram.api.domain.bms.exception.UserNotFoundException
 import link.yologram.api.domain.bms.entity.Board
 import link.yologram.api.domain.bms.repository.BoardRepository
 import link.yologram.api.domain.ums.repository.UserRepository
@@ -24,7 +24,7 @@ class BoardService(
     @Transactional(rollbackFor = [Exception::class])
     @Throws(UserNotFoundException::class)
     fun createBoard(uid: Long, title: String, body: String): BoardData {
-        if (!userRepository.existsById(uid)) throw UserNotFoundException("User not found")
+        if (!userRepository.existsById(uid)) throw UserNotFoundException("User not exist")
         val saved = boardRepository.save(
             Board(
                 uid = uid,
@@ -36,7 +36,7 @@ class BoardService(
     }
 
     @Transactional(rollbackFor = [Exception::class])
-    @Throws(UserNotFoundException::class, BoardNotFoundException::class, WrongBoardWriterException::class)
+    @Throws(UserNotFoundException::class, BoardNotFoundException::class, BoardWrongWriterException::class)
     fun editBoard(uid: Long, bid: Long, newTitle: String, newBody: String): BoardData {
         val board = validateBoard(bid, uid)
         board.get().title = newTitle
@@ -45,7 +45,7 @@ class BoardService(
     }
 
     @Transactional(rollbackFor = [Exception::class])
-    @Throws(UserNotFoundException::class, BoardNotFoundException::class, WrongBoardWriterException::class)
+    @Throws(UserNotFoundException::class, BoardNotFoundException::class, BoardWrongWriterException::class)
     fun deleteBoard(uid: Long, bid: Long): DeleteBoardResponse {
         validateBoard(bid, uid)
         boardRepository.deleteById(bid)
@@ -67,12 +67,12 @@ class BoardService(
         return GetBoardsByUidResponse(size = boards.size, boards = boards)
     }
 
-    @Throws(UserNotFoundException::class, BoardNotFoundException::class, WrongBoardWriterException::class)
+    @Throws(UserNotFoundException::class, BoardNotFoundException::class, BoardWrongWriterException::class)
     private fun validateBoard(bid: Long, uid: Long): Optional<Board> {
         if (!userRepository.existsById(uid)) throw UserNotFoundException("User not found")
         val board = boardRepository.findById(bid)
         if (board.isEmpty) throw BoardNotFoundException("Board not found")
-        if (board.get().uid != uid) throw WrongBoardWriterException("Wrong board writer")
+        if (board.get().uid != uid) throw BoardWrongWriterException("Wrong board writer")
         return board;
     }
 

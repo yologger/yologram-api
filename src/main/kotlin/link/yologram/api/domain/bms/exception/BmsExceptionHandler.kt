@@ -1,7 +1,6 @@
 package link.yologram.api.domain.bms.exception
 
 import link.yologram.api.domain.bms.dto.BmsErrorResponse
-import link.yologram.api.domain.bms.exception.UserNotFoundException
 import link.yologram.api.global.Response
 import link.yologram.api.global.wrapBadRequest
 import org.slf4j.LoggerFactory
@@ -20,18 +19,18 @@ class BmsExceptionHandler {
     @ExceptionHandler(value = [UserNotFoundException::class])
     fun handle(e: UserNotFoundException): ResponseEntity<Response<BmsErrorResponse>> {
         logger.error(e.message)
-        return BmsErrorResponse(message = e.message!!).wrapBadRequest()
+        return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.USER_NOT_FOUND).wrapBadRequest()
     }
 
     @ExceptionHandler(value = [BoardNotFoundException::class])
     fun handle(e: BoardNotFoundException): ResponseEntity<Response<BmsErrorResponse>> {
         logger.error(e.message)
-        return BmsErrorResponse(message = e.message!!).wrapBadRequest()
+        return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.BOARD_NOT_FOUND).wrapBadRequest()
     }
 
-    @ExceptionHandler(value = [WrongBoardWriterException::class])
-    fun handle(e: WrongBoardWriterException): ResponseEntity<Response<BmsErrorResponse>> {
+    @ExceptionHandler(value = [BoardWrongWriterException::class])
+    fun handle(e: BoardWrongWriterException): ResponseEntity<Response<BmsErrorResponse>> {
         logger.error(e.message)
-        return BmsErrorResponse(message = e.message!!).wrapBadRequest()
+        return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.BOARD_WRONG_WRITER).wrapBadRequest()
     }
 }

@@ -1,5 +1,6 @@
 package link.yologram.api.domain.bms.resource
 
+import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
 import link.yologram.api.domain.bms.service.BoardService
@@ -19,21 +20,36 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/bms/v1", produces = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
 class BoardResource(
-    private val boardService: BoardService,
-    private val commentService: CommentService
+    private val boardService: BoardService
 ) {
 
+    @Operation(
+        summary = "게시글 작성",
+        description = "uid, title, body로 게시글을 생성한다.",
+    )
     @PostMapping("/board", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun createBoard(@Validated @RequestBody request: CreateBoardRequest) = boardService.createBoard(uid = request.uid, title = request.title, body = request.body).wrapCreated()
 
+    @Operation(
+        summary = "게시글 조회",
+        description = "bid로 게시글을 생성한다.",
+    )
+    @GetMapping("/board/{bid}")
+    fun getBoard(@PathVariable(name = "bid") bid: Long) = boardService.getBoard(bid).wrapOk()
+
+    @Operation(
+        summary = "게시글 수정",
+        description = "uid, bid로 게시글을 생성한다.",
+    )
     @PatchMapping("/board")
     fun editBoard(@Validated @RequestBody request: EditBoardRequest) = boardService.editBoard(uid = request.uid, bid = request.bid, newTitle = request.title, newBody = request.body).wrapOk()
 
+    @Operation(
+        summary = "게시글 삭제",
+        description = "uid, bid로 게시글을 생성한다.",
+    )
     @DeleteMapping("/board", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun deleteBoard(@Validated @RequestBody request: DeleteBoardRequest) = boardService.deleteBoard(uid = request.uid, bid = request.bid).wrapOk()
-
-    @GetMapping("/board/{bid}")
-    fun getBoard(@PathVariable(name = "bid") bid: Long) = boardService.getBoard(bid).wrapOk()
 
     @GetMapping("/user/{uid}/boards", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun getBoardsByUid(
@@ -44,19 +60,4 @@ class BoardResource(
     @GetMapping("/boards", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun getBoards(@Validated @RequestBody request: GetBoardsRequest)
     = boardService.getBoards(page = request.page, size = request.size)
-
-    @PostMapping("/board/{bid}/comments")
-    fun createComment(
-        @PathVariable bid: Long,
-        @RequestBody request: CreateCommentRequest
-    ): ResponseEntity<Response<Long>> {
-        return commentService.createComment(bid = bid, uid = request.uid, content = request.content).wrapCreated()
-    }
-
-    @GetMapping("/board/{bid}/comments")
-    fun getCommentsByBid(
-        @PathVariable bid: Long
-    ): ResponseEntity<Response<List<CommentData>>> {
-        return commentService.getCommentsByBid(bid = bid).wrapOk()
-    }
 }
