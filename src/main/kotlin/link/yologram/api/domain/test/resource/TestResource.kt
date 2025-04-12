@@ -1,5 +1,6 @@
 package link.yologram.api.domain.test.resource
 
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
@@ -13,6 +14,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
+
+@Tag(name = "테스트", description = "테스트 관련 엔드포인트 (test/TestResource)")
 @RestController
 @RequestMapping("/api/test/v1", produces = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
 class TestResource {

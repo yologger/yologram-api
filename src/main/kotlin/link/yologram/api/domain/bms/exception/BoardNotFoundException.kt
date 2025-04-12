@@ -1,3 +1,3 @@
 package link.yologram.api.domain.bms.exception
 
-class BoardNotFoundException(message: String): Exception(message)
+class BoardNotFoundException(message: String): BmsException(message)

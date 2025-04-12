@@ -1,5 +1,6 @@
 package link.yologram.api.domain.auth.resource
 
+import io.swagger.v3.oas.annotations.tags.Tag
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
 import link.yologram.api.domain.auth.dto.AuthData
 import link.yologram.api.domain.auth.service.AuthService
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
+@Tag(name = "인증", description = "인증 관련 엔드포인트 (auth/AuthResource)")
 @RestController
 @RequestMapping("/api/auth/v1", produces = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
 class AuthResource(

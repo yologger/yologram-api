@@ -1,5 +1,6 @@
 package link.yologram.api.domain.bms.resource
 
+import io.swagger.v3.oas.annotations.tags.Tag
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
 import link.yologram.api.domain.bms.service.BoardService
 import link.yologram.api.domain.bms.dto.*
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
+@Tag(name = "게시글", description = "게시글 관련 엔드포인트 (bms/BoardResource)")
 @RestController
 @RequestMapping("/api/bms/v1", produces = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
 class BoardResource(

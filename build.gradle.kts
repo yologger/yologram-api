@@ -4,6 +4,7 @@ object DependencyVersions {
     const val TEST_CONTAINERS_VERSION = "1.19.5"
     const val QUERY_DSL_VERSION = "5.1.0"
     const val SPRING_CLOUD_AWS_VERSION = "3.1.0"
+    const val SPRINGDOC_VERSION = "2.3.0"
 }
 
 plugins {
@@ -71,6 +72,9 @@ dependencies {
     testImplementation(platform("org.testcontainers:testcontainers-bom:${DependencyVersions.TEST_CONTAINERS_VERSION}"))
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:mysql")
+
+    // API Documentation
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${DependencyVersions.SPRINGDOC_VERSION}")
 }
 
 tasks.getByName<Jar>("jar") {
