@@ -5,7 +5,7 @@ import link.yologram.api.domain.ums.dto.JoinRequest
 import link.yologram.api.domain.ums.dto.JoinResponse
 import link.yologram.api.domain.ums.dto.UserData
 import link.yologram.api.domain.ums.dto.WithdrawResponse
-import link.yologram.api.domain.ums.exception.DuplicateUserException
+import link.yologram.api.domain.ums.exception.UserDuplicateException
 import link.yologram.api.domain.ums.exception.UserAlreadyDeletedException
 import link.yologram.api.domain.ums.exception.UserNotFoundException
 import link.yologram.api.domain.ums.entity.User
@@ -28,10 +28,10 @@ class UserService(
     private val logger = LoggerFactory.getLogger(UserService::class.java)
 
     @Transactional(rollbackFor = [Exception::class])
-    @Throws(DuplicateUserException::class)
+    @Throws(UserDuplicateException::class)
     fun join(request: JoinRequest): JoinResponse {
 
-        userRepository.findByEmail(request.email).ifPresent { throw DuplicateUserException("user '${request.email}' already exists.") }
+        userRepository.findByEmail(request.email).ifPresent { throw UserDuplicateException("user '${request.email}' already exists.") }
 
         val saved = userRepository.save(
             User(

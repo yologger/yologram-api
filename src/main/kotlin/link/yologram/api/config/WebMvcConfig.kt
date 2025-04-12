@@ -1,7 +1,7 @@
 package link.yologram.api.config
 
-import link.yologram.api.domain.auth.resolver.AuthenticatedUserResolver
-import link.yologram.api.domain.auth.JwtUtil
+import link.yologram.api.domain.ums.resolver.AuthenticatedUserResolver
+import link.yologram.api.domain.ums.util.JwtUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.cors.CorsConfiguration

@@ -1,9 +1,10 @@
-package link.yologram.api.domain.auth.resolver
+package link.yologram.api.domain.ums.resolver
 
-import link.yologram.api.domain.auth.dto.AuthData
-import link.yologram.api.domain.auth.isAuthTokenHeader
-import link.yologram.api.domain.auth.JwtUtil
-import link.yologram.api.domain.auth.exception.AuthException
+import link.yologram.api.domain.ums.dto.AuthData
+import link.yologram.api.domain.ums.exception.AuthHeaderEmptyException
+import link.yologram.api.domain.ums.exception.UmsException
+import link.yologram.api.domain.ums.extension.isAuthTokenHeader
+import link.yologram.api.domain.ums.util.JwtUtil
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.MethodParameter
@@ -33,7 +34,7 @@ class AuthenticatedUserResolver(
             ?.firstOrNull()
             ?.takeIf {it.isNotBlank()}
             ?.let { webRequest.getHeader(it) }
-            ?: throw AuthException("Empty auth header")
+            ?: throw AuthHeaderEmptyException("Empty auth header")
 
         val uid = jwtUtil.getTokenClaim(accessToken).uid
         return AuthData(uid = uid, accessToken = accessToken)

@@ -3,8 +3,20 @@ package link.yologram.api.domain.ums.exception
 import link.yologram.api.global.excpetion.ErrorCode
 
 enum class UmsErrorCode: ErrorCode {
-    DUPLICATE_USER,
+
+    /** AUTH **/
+    AUTH_WRONG_PASSWORD,
+    AUTH_INVALID_TOKEN_OWNER,
+    AUTH_EXPIRED_TOKEN,
+    AUTH_INVALID_TOKEN,
+    AUTH_TOKEN_CREATION_FAILURE,
+    AUTH_HEADER_EMPTY,
+
+    /** USER **/
+    USER_DUPLICATE,
     USER_NOT_FOUND,
     USER_ALREADY_DELETED,
-    UNKNOWN_ERROR
+
+    /** UMS **/
+    UMS_UNKNOWN_ERROR
 }

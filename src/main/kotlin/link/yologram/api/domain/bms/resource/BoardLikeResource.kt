@@ -2,7 +2,7 @@ package link.yologram.api.domain.bms.resource
 
 import io.swagger.v3.oas.annotations.tags.Tag
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
-import link.yologram.api.domain.auth.dto.AuthData
+import link.yologram.api.domain.ums.dto.AuthData
 import link.yologram.api.domain.bms.service.BoardLikeService
 import link.yologram.api.global.wrapOk
 import org.springframework.http.MediaType

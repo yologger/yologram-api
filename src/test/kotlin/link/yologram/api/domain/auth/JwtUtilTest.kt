@@ -1,9 +1,9 @@
 package link.yologram.api.domain.auth
 
 import link.yologram.api.config.JwtConfig
-import link.yologram.api.domain.auth.dto.JwtClaim
-import link.yologram.api.domain.auth.exception.AuthException
-import link.yologram.api.domain.auth.exception.InvalidTokenException
+import link.yologram.api.domain.ums.dto.JwtClaim
+import link.yologram.api.domain.ums.exception.AuthTokenInvalidException
+import link.yologram.api.domain.ums.util.JwtUtil
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -39,6 +39,6 @@ class JwtUtilTest(
 
         assertThatThrownBy {
             jwtUtil.validateToken(jwtToken)
-        }.isExactlyInstanceOf(InvalidTokenException::class.java)
+        }.isExactlyInstanceOf(AuthTokenInvalidException::class.java)
     }
 }

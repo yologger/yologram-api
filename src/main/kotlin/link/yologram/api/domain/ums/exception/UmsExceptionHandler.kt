@@ -1,17 +1,14 @@
 package link.yologram.api.domain.ums.exception
 
 import link.yologram.api.domain.ums.dto.UmsErrorResponse
-import link.yologram.api.domain.ums.resource.UserResource
-import link.yologram.api.global.Response
-import link.yologram.api.global.wrapBadRequest
-import link.yologram.api.global.wrapConflict
-import link.yologram.api.global.wrapUnauthorized
+import link.yologram.api.global.*
 import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import link.yologram.api.domain.ums.exception.UserNotFoundException
 
 @RestControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE - 2)
@@ -19,10 +16,10 @@ class UmsExceptionHandler {
 
     private val logger = LoggerFactory.getLogger(UmsExceptionHandler::class.java)
 
-    @ExceptionHandler(value = [DuplicateUserException::class])
-    fun handle(e: DuplicateUserException): ResponseEntity<Response<UmsErrorResponse>> {
+    @ExceptionHandler(value = [UserDuplicateException::class])
+    fun handle(e: UserDuplicateException): ResponseEntity<Response<UmsErrorResponse>> {
         logger.error(e.message)
-        return UmsErrorResponse(errorMessage = e.message, errorCode = UmsErrorCode.DUPLICATE_USER).wrapConflict()
+        return UmsErrorResponse(errorMessage = e.message, errorCode = UmsErrorCode.USER_DUPLICATE).wrapConflict()
     }
 
     @ExceptionHandler(value = [UserNotFoundException::class])
@@ -31,15 +28,51 @@ class UmsExceptionHandler {
         return UmsErrorResponse(errorMessage = e.message, errorCode = UmsErrorCode.USER_NOT_FOUND).wrapBadRequest()
     }
 
+    @ExceptionHandler(value = [AuthWrongPasswordException::class])
+    fun handle(e: AuthWrongPasswordException): ResponseEntity<Response<UmsErrorResponse>> {
+        logger.error(e.message)
+        return UmsErrorResponse(errorMessage = e.message!!, errorCode = UmsErrorCode.AUTH_WRONG_PASSWORD).wrapUnauthorized()
+    }
+
+    @ExceptionHandler(value = [AuthTokenCreationFailureException::class])
+    fun handle(e: AuthTokenCreationFailureException): ResponseEntity<Response<UmsErrorResponse>> {
+        logger.error(e.message)
+        return UmsErrorResponse(errorMessage = e.message!!, errorCode = UmsErrorCode.AUTH_TOKEN_CREATION_FAILURE).wrapUnauthorized()
+    }
+
+    @ExceptionHandler(value = [AuthTokenExpiredException::class])
+    fun handle(e: AuthTokenExpiredException): ResponseEntity<Response<UmsErrorResponse>> {
+        logger.error(e.message)
+        return UmsErrorResponse(errorMessage = e.message!!, errorCode = UmsErrorCode.AUTH_EXPIRED_TOKEN).wrapUnauthorized()
+    }
+
+    @ExceptionHandler(value = [AuthTokenInvalidException::class])
+    fun handle(e: AuthTokenInvalidException): ResponseEntity<Response<UmsErrorResponse>> {
+        logger.error(e.message)
+        return UmsErrorResponse(errorMessage = e.message!!, errorCode = UmsErrorCode.AUTH_INVALID_TOKEN).wrapUnauthorized()
+    }
+
+    @ExceptionHandler(value = [AuthInvalidTokenOwnerException::class])
+    fun handle(e: AuthInvalidTokenOwnerException): ResponseEntity<Response<UmsErrorResponse>> {
+        logger.error(e.message)
+        return UmsErrorResponse(errorMessage = e.message!!, errorCode = UmsErrorCode.AUTH_INVALID_TOKEN_OWNER).wrapUnauthorized()
+    }
+
     @ExceptionHandler(value = [UserAlreadyDeletedException::class])
     fun handle(e: UserAlreadyDeletedException): ResponseEntity<Response<UmsErrorResponse>> {
         logger.error(e.message)
-        return UmsErrorResponse(errorMessage = e.message, errorCode = UmsErrorCode.USER_ALREADY_DELETED).wrapBadRequest()
+        return UmsErrorResponse(errorMessage = e.message, errorCode = UmsErrorCode.USER_NOT_FOUND).wrapBadRequest()
+    }
+
+    @ExceptionHandler(value = [AuthHeaderEmptyException::class])
+    fun handle(e: AuthHeaderEmptyException): ResponseEntity<Response<UmsErrorResponse>> {
+        logger.error(e.message)
+        return UmsErrorResponse(errorMessage = e.message!!, errorCode = UmsErrorCode.AUTH_HEADER_EMPTY).wrapUnauthorized()
     }
 
     @ExceptionHandler(value = [UmsException::class])
     fun handle(e: UmsException): ResponseEntity<Response<UmsErrorResponse>> {
         logger.error(e.message)
-        return UmsErrorResponse(errorMessage = e.message!!, errorCode = UmsErrorCode.UNKNOWN_ERROR).wrapUnauthorized()
+        return UmsErrorResponse(errorMessage = e.message!!, errorCode = UmsErrorCode.UMS_UNKNOWN_ERROR).wrapUnauthorized()
     }
 }

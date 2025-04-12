@@ -1,10 +1,11 @@
 package link.yologram.api.domain.test.resource
 
+import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
-import link.yologram.api.domain.auth.dto.AuthData
+import link.yologram.api.domain.ums.dto.AuthData
 import link.yologram.api.domain.test.dto.JsonPayload
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,6 +23,10 @@ class TestResource {
 
     private val logger = LoggerFactory.getLogger(TestResource::class.java)
 
+    @Operation(
+        summary = "test 엔드포인트",
+        description = "문자열 'test'를 반환합니다.",
+    )
     @GetMapping("/test")
     fun test(): String {
         return "test"

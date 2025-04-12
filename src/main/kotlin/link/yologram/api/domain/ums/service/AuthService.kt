@@ -1,14 +1,14 @@
-package link.yologram.api.domain.auth.service
+package link.yologram.api.domain.ums.service
 
-import link.yologram.api.domain.auth.JwtUtil
-import link.yologram.api.domain.auth.dto.JwtClaim
+import link.yologram.api.domain.ums.util.JwtUtil
+import link.yologram.api.domain.ums.dto.JwtClaim
 import link.yologram.api.domain.ums.dto.LogoutResponse
 import link.yologram.api.domain.ums.dto.LoginResponse
-import link.yologram.api.domain.auth.exception.AuthException
-import link.yologram.api.domain.auth.exception.InvalidTokenOwnerException
-import link.yologram.api.domain.auth.exception.UserNotFoundException
-import link.yologram.api.domain.auth.exception.WrongPasswordException
+import link.yologram.api.domain.ums.exception.UserNotFoundException
+import link.yologram.api.domain.ums.exception.AuthWrongPasswordException
 import link.yologram.api.domain.ums.dto.ValidateAccessTokenResponse
+import link.yologram.api.domain.ums.exception.AuthInvalidTokenOwnerException
+import link.yologram.api.domain.ums.exception.UmsException
 import link.yologram.api.domain.ums.repository.UserRepository
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -21,19 +21,19 @@ class AuthService(
     private val jwtUtil: JwtUtil
 ) {
     @Transactional(rollbackFor = [Exception::class])
-    @Throws(UserNotFoundException::class, WrongPasswordException::class)
+    @Throws(UserNotFoundException::class, AuthWrongPasswordException::class)
     fun login(email: String, password: String) : LoginResponse {
         val user = userRepository.findByEmail(email).orElseThrow { UserNotFoundException("User not found") }
 
         /** Wrong password */
-        if (!passwordEncoder.matches(password, user.password)) throw WrongPasswordException("Wrong password.")
+        if (!passwordEncoder.matches(password, user.password)) throw AuthWrongPasswordException("Wrong password.")
 
         /** Access token has already been issued */
         if (!user.accessToken.isNullOrBlank()) {
             return try {
                 jwtUtil.validateToken(user.accessToken!!)
                 LoginResponse(uid = user.id, accessToken = user.accessToken!!, email = user.email, name = user.name, nickname = user.nickname)
-            } catch (e: AuthException) {
+            } catch (e: UmsException) {
                 val accessToken = jwtUtil.createToken(JwtClaim(uid = user.id))
                 user.accessToken = accessToken
                 LoginResponse(uid = user.id, accessToken = accessToken, email = user.email, name = user.name, nickname = user.nickname)
@@ -48,19 +48,19 @@ class AuthService(
 
     @Transactional(rollbackFor = [Exception::class])
     @Throws
-    fun logout(uid: Long, accessToken: String): LogoutResponse {
+    fun validateToken(accessToken: String, uid: Long): ValidateAccessTokenResponse {
         val user = userRepository.findById(uid).orElseThrow { UserNotFoundException("User not found") }
-        if (uid != user.id) throw InvalidTokenOwnerException("Invalid token owner")
-        jwtUtil.validateToken(accessToken)
-        user.accessToken = null
-        return LogoutResponse(uid = uid)
+        if (uid != user.id) throw AuthInvalidTokenOwnerException("Invalid token owner")
+        return ValidateAccessTokenResponse(accessToken = accessToken, uid = uid, email = user.email, name = user.name, nickname = user.nickname)
     }
 
     @Transactional(rollbackFor = [Exception::class])
     @Throws
-    fun validateToken(accessToken: String, uid: Long): ValidateAccessTokenResponse {
+    fun logout(uid: Long, accessToken: String): LogoutResponse {
         val user = userRepository.findById(uid).orElseThrow { UserNotFoundException("User not found") }
-        if (uid != user.id) throw InvalidTokenOwnerException("Invalid token owner")
-        return ValidateAccessTokenResponse(accessToken = accessToken, uid = uid, email = user.email, name = user.name, nickname = user.nickname)
+        if (uid != user.id) throw AuthInvalidTokenOwnerException("Invalid token owner")
+        jwtUtil.validateToken(accessToken)
+        user.accessToken = null
+        return LogoutResponse(uid = uid)
     }
 }

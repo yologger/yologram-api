@@ -1,5 +1,8 @@
-package link.yologram.api.domain.auth.dto
+package link.yologram.api.domain.ums.dto
 
+import io.swagger.v3.oas.annotations.media.Schema
+
+@Schema(description = "유저 토큰 검증을 위한 모델")
 data class AuthData(
     val uid: Long,
     val accessToken: String

@@ -1,4 +1,4 @@
-package link.yologram.api.domain.auth
+package link.yologram.api.domain.ums.util
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
@@ -9,10 +9,10 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import link.yologram.api.config.JwtConfig
 import link.yologram.api.global.decodeBase64
 import link.yologram.api.global.deserialize
-import link.yologram.api.domain.auth.dto.JwtClaim
-import link.yologram.api.domain.auth.exception.ExpiredTokenException
-import link.yologram.api.domain.auth.exception.TokenCreationFailException
-import link.yologram.api.domain.auth.exception.InvalidTokenException
+import link.yologram.api.domain.ums.dto.JwtClaim
+import link.yologram.api.domain.ums.exception.AuthTokenExpiredException
+import link.yologram.api.domain.ums.exception.AuthTokenCreationFailureException
+import link.yologram.api.domain.ums.exception.AuthTokenInvalidException
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -37,21 +37,21 @@ class JwtUtil(
             .withClaim("uid", jwtClaim.uid)
             .sign(Algorithm.HMAC256(jwtConfig.secret))
     } catch (e: JWTCreationException) {
-        throw TokenCreationFailException("Fail to create jwt token. ${e.message}")
+        throw AuthTokenCreationFailureException("Fail to create jwt token. ${e.message}")
     }
 
     fun getTokenClaim(token: String): JwtClaim = try {
         val json = validateToken(token)
         json deserialize JwtClaim::class
     } catch (e: MismatchedInputException) {
-        throw InvalidTokenException("Fail to parse jwt token")
+        throw AuthTokenInvalidException("Fail to parse jwt token")
     }
 
     fun validateToken(token: String): String = try {
         jwtVerifier.verify(token).payload.decodeBase64()
     } catch (e: TokenExpiredException) {
-        throw ExpiredTokenException("Expired jwt token")
+        throw AuthTokenExpiredException("Expired jwt token")
     } catch (e: JWTVerificationException) {
-        throw InvalidTokenException("Invalid jwt token")
+        throw AuthTokenInvalidException("Invalid jwt token")
     }
 }

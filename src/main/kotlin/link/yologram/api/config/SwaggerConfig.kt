@@ -18,8 +18,8 @@ class SwaggerConfig {
 
     private fun apiInfo(): Info {
         return Info()
-            .title("Springdoc 테스트")
-            .description("Springdoc을 사용한 Swagger UI 테스트")
+            .title("yologram API v1")
+            .description("yologram API v1")
             .version("1.0.0")
     }
 

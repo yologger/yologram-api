@@ -2,7 +2,7 @@ package link.yologram.api.domain.ums.service
 
 import any
 import link.yologram.api.domain.ums.dto.JoinRequest
-import link.yologram.api.domain.ums.exception.DuplicateUserException
+import link.yologram.api.domain.ums.exception.UserDuplicateException
 import link.yologram.api.domain.ums.entity.User
 import link.yologram.api.domain.bms.repository.BoardRepository
 import link.yologram.api.domain.ums.repository.UserRepository
@@ -88,7 +88,7 @@ class UserServiceTest {
             // When, Then
             Assertions.assertThatThrownBy {
                 service.join(request)
-            }.isExactlyInstanceOf(DuplicateUserException::class.java)
+            }.isExactlyInstanceOf(UserDuplicateException::class.java)
         }
     }
 }
