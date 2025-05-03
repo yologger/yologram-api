@@ -11,16 +11,18 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class CommentService(
     private val boardRepository: BoardRepository,
-    private val commentRepository: CommentRepository
+    private val commentRepository: CommentRepository,
+    private val boardCommentCountService: BoardCommentCountService
 ) {
     @Transactional
-    fun createComment(bid: Long, uid: Long, content: String): Long {
+    fun createComment(bid: Long, uid: Long, content: String): CommentData {
         val board = boardRepository.findById(bid).orElseThrow { BoardNotFoundException("Board not found") }
-        val comment = commentRepository.save(Comment(uid = uid, content = content, bid = bid))
-        return comment.id
+        val comment = commentRepository.save(Comment(uid = uid, content = content, bid = board.id))
+        boardCommentCountService.increaseCount(board.id)
+        return CommentData.fromEntity(comment)
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     fun getCommentsByBid(bid: Long): List<CommentData> {
         val board = boardRepository.findById(bid).orElseThrow { BoardNotFoundException("Board not found") }
         return commentRepository.findByBid(board.id).map { CommentData.fromEntity(it) }
