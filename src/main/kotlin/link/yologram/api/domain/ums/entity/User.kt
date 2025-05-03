@@ -39,9 +39,9 @@ class User (
     @Column(name = "deleted_date")
     var deletedDate: LocalDateTime? = null
 ) {
-    @Column(name = "join_date")
+    @Column(name = "joined_date")
     @CreatedDate
-    lateinit var joinDate: LocalDateTime
+    lateinit var joinedDate: LocalDateTime
 
     @Column(name = "modified_date", columnDefinition = "timestamp on update CURRENT_TIMESTAMP")
     @ColumnDefault("CURRENT_TIMESTAMP")

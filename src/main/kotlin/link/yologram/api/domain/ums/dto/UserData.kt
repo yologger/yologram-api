@@ -9,7 +9,7 @@ data class UserData (
     var name: String,
     var nickname: String,
     var accessToken: String? = null,
-    var joinDate: LocalDateTime
+    var joinedDate: LocalDateTime
 ) {
     companion object {
         fun fromEntity(user: User): UserData {
@@ -19,7 +19,7 @@ data class UserData (
                 name = user.name,
                 nickname = user.nickname,
                 accessToken = user.accessToken,
-                joinDate = user.joinDate
+                joinedDate = user.joinedDate
             )
         }
     }

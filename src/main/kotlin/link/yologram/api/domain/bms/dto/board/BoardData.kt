@@ -8,7 +8,7 @@ data class BoardData(
     val uid: Long,
     val title: String,
     val body: String,
-    val createDate: LocalDateTime,
+    val createdDate: LocalDateTime,
     val modifiedDate: LocalDateTime
 ) {
     companion object {
@@ -18,7 +18,7 @@ data class BoardData(
                 uid = board.uid,
                 title = board.title,
                 body = board.body,
-                createDate = board.createDate,
+                createdDate = board.createdDate,
                 modifiedDate = board.modifiedDate
             )
         }

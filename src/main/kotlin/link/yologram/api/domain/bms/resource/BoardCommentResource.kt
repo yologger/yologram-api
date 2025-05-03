@@ -6,6 +6,7 @@ import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
 import link.yologram.api.domain.bms.dto.comment.CommentData
 import link.yologram.api.domain.bms.dto.comment.CreateCommentRequest
 import link.yologram.api.domain.bms.service.CommentService
+import link.yologram.api.domain.ums.dto.AuthData
 import link.yologram.api.global.Response
 import link.yologram.api.global.wrapCreated
 import link.yologram.api.global.wrapOk
@@ -26,10 +27,21 @@ class BoardCommentResource(
     )
     @PostMapping("/board/{bid}/comment")
     fun createComment(
+        authData: AuthData,
         @PathVariable bid: Long,
         @Validated @RequestBody request: CreateCommentRequest
     ): ResponseEntity<Response<CommentData>> {
-        return commentService.createComment(bid = bid, uid = request.uid, content = request.content).wrapCreated()
+        return commentService.createComment(boardId = bid, userId = authData.uid, content = request.content).wrapCreated()
+    }
+
+    @DeleteMapping("/board/{bid}/comment/{cid}")
+    fun deleteComment(
+        authData: AuthData,
+        @PathVariable bid: Long,
+        @PathVariable cid: Long,
+    ): ResponseEntity<Void>{
+        commentService.deleteComment(boardId = bid, commentId = cid)
+        return ResponseEntity.noContent().build()
     }
 
     @GetMapping("/board/{bid}/comments")

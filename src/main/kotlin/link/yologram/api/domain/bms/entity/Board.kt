@@ -33,9 +33,9 @@ class Board (
     @Column(name = "deleted_date")
     var deletedDate: LocalDateTime? = null
 ) {
-    @Column(name = "create_date")
+    @Column(name = "created_date")
     @CreatedDate
-    lateinit var createDate: LocalDateTime
+    lateinit var createdDate: LocalDateTime
 
     @Column(name = "modified_date", columnDefinition = "timestamp on update CURRENT_TIMESTAMP")
     @ColumnDefault("CURRENT_TIMESTAMP")
