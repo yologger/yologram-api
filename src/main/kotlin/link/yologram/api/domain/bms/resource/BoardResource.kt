@@ -5,9 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
 import link.yologram.api.domain.bms.service.BoardService
 import link.yologram.api.domain.bms.dto.*
-import link.yologram.api.domain.bms.dto.comment.CommentData
-import link.yologram.api.domain.bms.dto.comment.CreateCommentRequest
-import link.yologram.api.domain.bms.service.CommentService
+import link.yologram.api.domain.bms.dto.board.BoardDataWithMetrics
 import link.yologram.api.global.Response
 import link.yologram.api.global.wrapCreated
 import link.yologram.api.global.wrapOk

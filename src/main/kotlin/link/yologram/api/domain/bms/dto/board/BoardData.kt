@@ -9,8 +9,13 @@ data class BoardData(
     val title: String,
     val body: String,
     val createdDate: LocalDateTime,
-    val modifiedDate: LocalDateTime
+    val modifiedDate: LocalDateTime,
 ) {
+    data class Metrics (
+        val commentCount: Long,
+        val viewCount: Long,
+    )
+
     companion object {
         fun fromEntity(board: Board): BoardData {
             return BoardData(

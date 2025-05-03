@@ -4,6 +4,7 @@ import link.yologram.api.domain.bms.dto.board.BoardData
 import link.yologram.api.domain.bms.dto.DeleteBoardResponse
 import link.yologram.api.domain.bms.dto.GetBoardsByUidResponse
 import link.yologram.api.domain.bms.dto.GetBoardsResponse
+import link.yologram.api.domain.bms.dto.board.BoardDataWithMetrics
 import link.yologram.api.domain.bms.exception.BoardNotFoundException
 import link.yologram.api.domain.bms.exception.BoardWrongWriterException
 import link.yologram.api.domain.bms.exception.UserNotFoundException
@@ -19,7 +20,7 @@ import java.util.*
 @Service
 class BoardService(
     private val boardRepository: BoardRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) {
     @Transactional(rollbackFor = [Exception::class])
     @Throws(UserNotFoundException::class)
@@ -53,11 +54,11 @@ class BoardService(
     }
 
     @Transactional(readOnly = true, rollbackFor = [Exception::class])
-    fun getBoard(bid: Long): BoardData = BoardData.fromEntity(boardRepository.findById(bid).orElseThrow { BoardNotFoundException("Board not found") }!!)
+    fun getBoard(bid: Long): BoardDataWithMetrics? = boardRepository.findOneById(bid)
 
     @Transactional(readOnly = true, rollbackFor = [Exception::class])
     fun getBoards(page: Int, size: Int): GetBoardsResponse {
-        val boards = boardRepository.findAll(PageRequest.of(page, size, Sort.by("id").descending())).map { BoardData.fromEntity(it) }.content
+        val boards = boardRepository.findAllBoards()
         return GetBoardsResponse(size = boards.size, boards = boards)
     }
 
