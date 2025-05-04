@@ -7,9 +7,9 @@ import com.auth0.jwt.exceptions.JWTVerificationException
 import com.auth0.jwt.exceptions.TokenExpiredException
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import link.yologram.api.config.JwtConfig
-import link.yologram.api.global.decodeBase64
-import link.yologram.api.global.deserialize
-import link.yologram.api.domain.ums.dto.JwtClaim
+import link.yologram.api.global.extension.decodeBase64
+import link.yologram.api.global.extension.deserialize
+import link.yologram.api.domain.ums.model.JwtClaim
 import link.yologram.api.domain.ums.exception.AuthTokenExpiredException
 import link.yologram.api.domain.ums.exception.AuthTokenCreationFailureException
 import link.yologram.api.domain.ums.exception.AuthTokenInvalidException

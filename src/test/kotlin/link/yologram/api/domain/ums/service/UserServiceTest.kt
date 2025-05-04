@@ -1,7 +1,7 @@
 package link.yologram.api.domain.ums.service
 
 import any
-import link.yologram.api.domain.ums.dto.JoinRequest
+import link.yologram.api.domain.ums.model.JoinRequest
 import link.yologram.api.domain.ums.exception.UserDuplicateException
 import link.yologram.api.domain.ums.entity.User
 import link.yologram.api.domain.bms.repository.BoardRepository
@@ -59,7 +59,7 @@ class UserServiceTest {
 
             // When, Then
             val response = service.join(request)
-            assertThat(response.uid).isNotNull
+            assertThat(response.data.uid).isNotNull
         }
 
         @Test

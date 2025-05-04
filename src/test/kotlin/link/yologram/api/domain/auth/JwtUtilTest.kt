@@ -1,7 +1,7 @@
 package link.yologram.api.domain.auth
 
 import link.yologram.api.config.JwtConfig
-import link.yologram.api.domain.ums.dto.JwtClaim
+import link.yologram.api.domain.ums.model.JwtClaim
 import link.yologram.api.domain.ums.exception.AuthTokenInvalidException
 import link.yologram.api.domain.ums.util.JwtUtil
 import org.assertj.core.api.Assertions.assertThat

@@ -9,11 +9,11 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
-import link.yologram.api.domain.ums.dto.AuthData
+import link.yologram.api.domain.ums.model.AuthData
 import link.yologram.api.domain.ums.service.AuthService
-import link.yologram.api.domain.ums.dto.*
-import link.yologram.api.global.Response
-import link.yologram.api.global.wrapOk
+import link.yologram.api.domain.ums.model.*
+import link.yologram.api.global.model.APIEnvelop
+import link.yologram.api.global.rest.wrapOk
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -88,7 +88,7 @@ class AuthResource(
         ]
     )
     @PostMapping("/auth/login", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun login(@Validated @RequestBody request: LoginRequest): ResponseEntity<Response<LoginResponse>> {
+    fun login(@Validated @RequestBody request: LoginRequest): ResponseEntity<APIEnvelop<LoginResponse>> {
          return authService.login(request.email, request.password).wrapOk()
     }
 
@@ -164,7 +164,7 @@ class AuthResource(
     @PostMapping("/auth/validate_token")
     fun validateToken(
         @Parameter(hidden = true) authData: AuthData
-    ): ResponseEntity<Response<ValidateAccessTokenResponse>>
+    ): ResponseEntity<APIEnvelop<ValidateAccessTokenResponse>>
     = authService.validateToken(authData.accessToken, authData.uid).wrapOk()
 
     @Operation(
@@ -174,6 +174,7 @@ class AuthResource(
     @PostMapping("/auth/logout")
     fun logout(
         @Parameter(hidden = true) authData: AuthData
-    )
-    = authService.logout(uid = authData.uid, accessToken = authData.accessToken).wrapOk()
+    ): ResponseEntity<APIEnvelop<LogoutResponse>> {
+        return authService.logout(uid = authData.uid, accessToken = authData.accessToken).wrapOk()
+    }
 }

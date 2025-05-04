@@ -1,8 +1,7 @@
 package link.yologram.api.domain.bms.exception
 
-import link.yologram.api.domain.bms.dto.BmsErrorResponse
-import link.yologram.api.global.Response
-import link.yologram.api.global.wrapBadRequest
+import link.yologram.api.domain.bms.model.BmsErrorResponse
+import link.yologram.api.global.rest.wrapBadRequest
 import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
@@ -17,37 +16,37 @@ class BmsExceptionHandler {
     private val logger = LoggerFactory.getLogger(BmsExceptionHandler::class.java)
 
     @ExceptionHandler(value = [UserNotFoundException::class])
-    fun handle(e: UserNotFoundException): ResponseEntity<Response<BmsErrorResponse>> {
+    fun handle(e: UserNotFoundException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
         return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.USER_NOT_FOUND).wrapBadRequest()
     }
 
     @ExceptionHandler(value = [BoardNotFoundException::class])
-    fun handle(e: BoardNotFoundException): ResponseEntity<Response<BmsErrorResponse>> {
+    fun handle(e: BoardNotFoundException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
         return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.BOARD_NOT_FOUND).wrapBadRequest()
     }
 
     @ExceptionHandler(value = [BoardWrongWriterException::class])
-    fun handle(e: BoardWrongWriterException): ResponseEntity<Response<BmsErrorResponse>> {
+    fun handle(e: BoardWrongWriterException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
         return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.BOARD_WRONG_WRITER).wrapBadRequest()
     }
 
     @ExceptionHandler(value = [CommentNotFoundException::class])
-    fun handle(e: CommentNotFoundException): ResponseEntity<Response<BmsErrorResponse>> {
+    fun handle(e: CommentNotFoundException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
         return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.COMMENT_NOT_FOUND).wrapBadRequest()
     }
 
     @ExceptionHandler(value = [BoardCommentMismatchException::class])
-    fun handle(e: BoardCommentMismatchException): ResponseEntity<Response<BmsErrorResponse>> {
+    fun handle(e: BoardCommentMismatchException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
         return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.BOARD_COMMENT_MISMATCH).wrapBadRequest()
     }
 
     @ExceptionHandler(value = [BoardCommentCountException::class])
-    fun handle(e: BoardCommentCountException): ResponseEntity<Response<BmsErrorResponse>> {
+    fun handle(e: BoardCommentCountException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
         return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.BOARD_COMMENT_COUNT_NOT_FOUND).wrapBadRequest()
     }

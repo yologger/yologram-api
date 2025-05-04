@@ -9,12 +9,12 @@ import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
 
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
-import link.yologram.api.domain.ums.dto.AuthData
+import link.yologram.api.domain.ums.model.AuthData
 import link.yologram.api.domain.ums.service.UserService
-import link.yologram.api.domain.ums.dto.JoinRequest
-import link.yologram.api.domain.ums.dto.UmsErrorResponse
-import link.yologram.api.global.wrapCreated
-import link.yologram.api.global.wrapOk
+import link.yologram.api.domain.ums.model.JoinRequest
+import link.yologram.api.domain.ums.model.UmsErrorResponse
+import link.yologram.api.global.rest.wrapCreated
+import link.yologram.api.global.rest.wrapOk
 import org.springframework.http.MediaType
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*

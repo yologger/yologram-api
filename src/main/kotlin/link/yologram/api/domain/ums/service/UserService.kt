@@ -1,10 +1,10 @@
 package link.yologram.api.domain.ums.service
 
 import link.yologram.api.domain.bms.enum.BoardStatus
-import link.yologram.api.domain.ums.dto.JoinRequest
-import link.yologram.api.domain.ums.dto.JoinResponse
-import link.yologram.api.domain.ums.dto.UserData
-import link.yologram.api.domain.ums.dto.WithdrawResponse
+import link.yologram.api.domain.ums.model.JoinRequest
+import link.yologram.api.domain.ums.model.JoinResponse
+import link.yologram.api.domain.ums.model.UserData
+import link.yologram.api.domain.ums.model.WithdrawResponse
 import link.yologram.api.domain.ums.exception.UserDuplicateException
 import link.yologram.api.domain.ums.exception.UserAlreadyDeletedException
 import link.yologram.api.domain.ums.exception.UserNotFoundException
@@ -12,6 +12,7 @@ import link.yologram.api.domain.ums.entity.User
 import link.yologram.api.domain.bms.repository.BoardRepository
 import link.yologram.api.domain.ums.enum.UserStatus
 import link.yologram.api.domain.ums.repository.UserRepository
+import link.yologram.api.global.model.APIEnvelop
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -29,7 +30,7 @@ class UserService(
 
     @Transactional(rollbackFor = [Exception::class])
     @Throws(UserDuplicateException::class)
-    fun join(request: JoinRequest): JoinResponse {
+    fun join(request: JoinRequest): APIEnvelop<JoinResponse> {
 
         userRepository.findByEmail(request.email).ifPresent { throw UserDuplicateException("user '${request.email}' already exists.") }
 
@@ -41,22 +42,23 @@ class UserService(
                 password = passwordEncoder.encode(request.password)
             )
         )
-        return JoinResponse(uid = saved.id)
+        return APIEnvelop(data = JoinResponse(uid = saved.id))
     }
 
     @Transactional(readOnly = true, rollbackFor = [Exception::class])
     @Throws(UserNotFoundException::class)
-    fun getUser(uid: Long): UserData {
-        return UserData.fromEntity(userRepository.findByIdOrNull(uid) ?: throw UserNotFoundException("User uid: $uid not found."))
+    fun getUser(uid: Long): APIEnvelop<UserData> {
+        val user = UserData.fromEntity(userRepository.findByIdOrNull(uid) ?: throw UserNotFoundException("User uid: $uid not found."))
+        return APIEnvelop(data = user)
     }
 
     @Transactional(rollbackFor = [Exception::class])
-    fun withdraw(uid: Long): WithdrawResponse {
+    fun withdraw(uid: Long): APIEnvelop<WithdrawResponse> {
         val user = userRepository.findById(uid).orElseThrow { UserNotFoundException("User not exists") }
         if (user.status == UserStatus.DELETED) throw UserAlreadyDeletedException("User already deleted")
         val deletedBoardCount = boardRepository.updateBoardStatusByUid(uid = user.id, status = BoardStatus.DELETED)
         user.status = UserStatus.DELETED
         user.deletedDate = LocalDateTime.now()
-        return WithdrawResponse(uid = uid, deletedAt = user.deletedDate, deletedBoardsCount = deletedBoardCount)
+        return APIEnvelop(data = WithdrawResponse(uid = uid, deletedAt = user.deletedDate, deletedBoardsCount = deletedBoardCount))
     }
 }

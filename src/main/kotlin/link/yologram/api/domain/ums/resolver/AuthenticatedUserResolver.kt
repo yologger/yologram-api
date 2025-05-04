@@ -1,8 +1,7 @@
 package link.yologram.api.domain.ums.resolver
 
-import link.yologram.api.domain.ums.dto.AuthData
+import link.yologram.api.domain.ums.model.AuthData
 import link.yologram.api.domain.ums.exception.AuthHeaderEmptyException
-import link.yologram.api.domain.ums.exception.UmsException
 import link.yologram.api.domain.ums.extension.isAuthTokenHeader
 import link.yologram.api.domain.ums.util.JwtUtil
 import org.slf4j.Logger

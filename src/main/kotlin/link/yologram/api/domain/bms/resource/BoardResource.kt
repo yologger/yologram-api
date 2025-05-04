@@ -4,12 +4,13 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
 import link.yologram.api.domain.bms.service.BoardService
-import link.yologram.api.domain.bms.dto.*
-import link.yologram.api.domain.bms.dto.board.BoardDataWithMetrics
+import link.yologram.api.domain.bms.model.*
+import link.yologram.api.domain.bms.model.board.BoardDataWithMetrics
 import link.yologram.api.global.model.APIEnvelopNextCursorPage
-import link.yologram.api.global.wrapCreated
-import link.yologram.api.global.wrapOk
+import link.yologram.api.global.rest.wrapCreated
+import link.yologram.api.global.rest.wrapOk
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -65,7 +66,7 @@ class BoardResource(
     @GetMapping("/boards", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun getBoards(
         @Validated @RequestBody request: GetBoardsRequest
-    ): APIEnvelopNextCursorPage<BoardDataWithMetrics> {
-        return boardService.getBoardsWithMetricsV2(nextCursorId = request.nextCursor, size = request.size)
+    ): ResponseEntity<APIEnvelopNextCursorPage<BoardDataWithMetrics>> {
+        return boardService.getBoardsWithMetricsV2(nextCursorId = request.nextCursor, size = request.size).wrapOk()
     }
 }

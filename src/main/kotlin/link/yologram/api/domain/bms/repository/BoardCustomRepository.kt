@@ -2,8 +2,8 @@ package link.yologram.api.domain.bms.repository
 
 import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
-import link.yologram.api.domain.bms.dto.board.BoardData
-import link.yologram.api.domain.bms.dto.board.BoardDataWithMetrics
+import link.yologram.api.domain.bms.model.board.BoardData
+import link.yologram.api.domain.bms.model.board.BoardDataWithMetrics
 import link.yologram.api.domain.bms.entity.Board
 import link.yologram.api.domain.bms.entity.QBoard
 import link.yologram.api.domain.bms.entity.QBoardCommentCount

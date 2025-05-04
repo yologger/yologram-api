@@ -1,7 +1,7 @@
 package link.yologram.api.domain.bms.service
 
-import link.yologram.api.domain.bms.dto.LikeBoardResponse
-import link.yologram.api.domain.bms.dto.UnlikeBoardResponse
+import link.yologram.api.domain.bms.model.LikeBoardResponse
+import link.yologram.api.domain.bms.model.UnlikeBoardResponse
 import link.yologram.api.domain.bms.entity.BoardLike
 import link.yologram.api.domain.bms.entity.BoardLikeCount
 import link.yologram.api.domain.bms.exception.BoardNotFoundException
@@ -10,9 +10,9 @@ import link.yologram.api.domain.bms.exception.UserNotLikeBoardException
 import link.yologram.api.domain.bms.repository.BoardLikeCountRepository
 import link.yologram.api.domain.bms.repository.BoardLikeRepository
 import link.yologram.api.domain.bms.repository.BoardRepository
+import link.yologram.api.global.model.APIEnvelop
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import kotlin.jvm.optionals.getOrElse
 
 @Service
 class BoardLikeService(
@@ -22,7 +22,7 @@ class BoardLikeService(
 ) {
 
     @Transactional
-    fun likeBoard(uid: Long, bid: Long): LikeBoardResponse {
+    fun likeBoard(uid: Long, bid: Long): APIEnvelop<LikeBoardResponse> {
         // 게시글 조회
         val board = boardRepository.findById(bid).orElseThrow { BoardNotFoundException("Board Not Found") }
 
@@ -44,7 +44,7 @@ class BoardLikeService(
             boardLikeCountRepository.save(likeCount)
 
             // 응답 반환
-            return LikeBoardResponse(uid = like.uid, bid = like.bid)
+            return APIEnvelop(data = LikeBoardResponse(uid = like.uid, bid = like.bid))
         } else {
             // 이미 좋아요를 누른 경우 예외 처리
             throw UserAlreadyLikeBoard("User $uid already liked board $bid")
@@ -53,12 +53,12 @@ class BoardLikeService(
 
 
     @Transactional
-    fun unlikeBoard(uid: Long, bid: Long): UnlikeBoardResponse {
+    fun unlikeBoard(uid: Long, bid: Long): APIEnvelop<UnlikeBoardResponse> {
         val board = boardRepository.findById(bid).orElseThrow { BoardNotFoundException("Board Not Found") }
         val like =  boardLikeRepository.findByUidAndBid(uid = uid, bid = board.id).orElseThrow { UserNotLikeBoardException("User $uid not like board $bid") }
         val boardLikeCount = boardLikeCountRepository.findByBid(bid = bid).orElseThrow { UserNotLikeBoardException("User $uid not like board $bid") }
         boardLikeRepository.delete(like)
         boardLikeCount.count += 1
-        return UnlikeBoardResponse(uid = like.uid, bid = like.bid)
+        return APIEnvelop(data = UnlikeBoardResponse(uid = like.uid, bid = like.bid))
     }
 }

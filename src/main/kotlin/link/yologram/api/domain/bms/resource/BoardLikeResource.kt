@@ -2,9 +2,9 @@ package link.yologram.api.domain.bms.resource
 
 import io.swagger.v3.oas.annotations.tags.Tag
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
-import link.yologram.api.domain.ums.dto.AuthData
+import link.yologram.api.domain.ums.model.AuthData
 import link.yologram.api.domain.bms.service.BoardLikeService
-import link.yologram.api.global.wrapOk
+import link.yologram.api.global.rest.wrapOk
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable

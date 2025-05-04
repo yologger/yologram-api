@@ -1,13 +1,14 @@
 package link.yologram.api.domain.bms.service
 
-import link.yologram.api.domain.bms.dto.comment.CommentData
+import link.yologram.api.domain.bms.model.comment.CommentData
 import link.yologram.api.domain.bms.entity.Comment
-import link.yologram.api.domain.bms.exception.BmsException
 import link.yologram.api.domain.bms.exception.BoardCommentMismatchException
 import link.yologram.api.domain.bms.exception.BoardNotFoundException
 import link.yologram.api.domain.bms.exception.CommentNotFoundException
 import link.yologram.api.domain.bms.repository.BoardRepository
 import link.yologram.api.domain.bms.repository.CommentRepository
+import link.yologram.api.global.model.APIEnvelop
+import link.yologram.api.global.model.APIEnvelopList
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -18,11 +19,11 @@ class CommentService(
     private val boardCommentCountService: BoardCommentCountService
 ) {
     @Transactional
-    fun createComment(boardId: Long, userId: Long, content: String): CommentData {
+    fun createComment(boardId: Long, userId: Long, content: String): APIEnvelop<CommentData> {
         val board = boardRepository.findById(boardId).orElseThrow { BoardNotFoundException("Board not found") }
         val comment = commentRepository.save(Comment(uid = userId, content = content, bid = board.id))
         boardCommentCountService.increaseCount(board.id)
-        return CommentData.fromEntity(comment)
+        return APIEnvelop(data = CommentData.fromEntity(comment))
     }
 
     @Transactional
@@ -35,8 +36,8 @@ class CommentService(
     }
 
     @Transactional(readOnly = true)
-    fun getCommentsByBid(bid: Long): List<CommentData> {
+    fun getCommentsByBid(bid: Long): APIEnvelopList<CommentData> {
         val board = boardRepository.findById(bid).orElseThrow { BoardNotFoundException("Board not found") }
-        return commentRepository.findByBid(board.id).map { CommentData.fromEntity(it) }
+        return APIEnvelopList(data = commentRepository.findByBid(board.id).map { CommentData.fromEntity(it) })
     }
 }

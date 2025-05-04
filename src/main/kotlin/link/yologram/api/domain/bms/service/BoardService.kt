@@ -1,16 +1,16 @@
 package link.yologram.api.domain.bms.service
 
-import link.yologram.api.domain.bms.dto.board.BoardData
-import link.yologram.api.domain.bms.dto.DeleteBoardResponse
-import link.yologram.api.domain.bms.dto.GetBoardsByUidResponse
-import link.yologram.api.domain.bms.dto.GetBoardsResponse
-import link.yologram.api.domain.bms.dto.board.BoardDataWithMetrics
+import link.yologram.api.domain.bms.model.board.BoardData
+import link.yologram.api.domain.bms.model.DeleteBoardResponse
+import link.yologram.api.domain.bms.model.GetBoardsByUidResponse
+import link.yologram.api.domain.bms.model.board.BoardDataWithMetrics
 import link.yologram.api.domain.bms.exception.BoardNotFoundException
 import link.yologram.api.domain.bms.exception.BoardWrongWriterException
 import link.yologram.api.domain.bms.exception.UserNotFoundException
 import link.yologram.api.domain.bms.entity.Board
 import link.yologram.api.domain.bms.repository.BoardRepository
 import link.yologram.api.domain.ums.repository.UserRepository
+import link.yologram.api.global.model.APIEnvelop
 import link.yologram.api.global.model.APIEnvelopNextCursorPage
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -23,7 +23,7 @@ class BoardService(
 ) {
     @Transactional(rollbackFor = [Exception::class])
     @Throws(UserNotFoundException::class)
-    fun createBoard(uid: Long, title: String, body: String): BoardData {
+    fun createBoard(uid: Long, title: String, body: String): APIEnvelop<BoardData> {
         if (!userRepository.existsById(uid)) throw UserNotFoundException("User not exist")
         val saved = boardRepository.save(
             Board(
@@ -32,28 +32,28 @@ class BoardService(
                 body = body
             )
         )
-        return BoardData.fromEntity(board = saved)
+        return APIEnvelop(data = BoardData.fromEntity(board = saved))
     }
 
     @Transactional(rollbackFor = [Exception::class])
     @Throws(UserNotFoundException::class, BoardNotFoundException::class, BoardWrongWriterException::class)
-    fun editBoard(uid: Long, bid: Long, newTitle: String, newBody: String): BoardData {
+    fun editBoard(uid: Long, bid: Long, newTitle: String, newBody: String): APIEnvelop<BoardData> {
         val board = validateBoard(bid, uid)
         board.get().title = newTitle
         board.get().body = newBody
-        return BoardData.fromEntity(board.get())
+        return APIEnvelop(data = BoardData.fromEntity(board.get()))
     }
 
     @Transactional(rollbackFor = [Exception::class])
     @Throws(UserNotFoundException::class, BoardNotFoundException::class, BoardWrongWriterException::class)
-    fun deleteBoard(uid: Long, bid: Long): DeleteBoardResponse {
+    fun deleteBoard(uid: Long, bid: Long): APIEnvelop<DeleteBoardResponse> {
         validateBoard(bid, uid)
         boardRepository.deleteById(bid)
-        return DeleteBoardResponse(uid = uid, bid = bid)
+        return APIEnvelop(data = DeleteBoardResponse(uid = uid, bid = bid))
     }
 
     @Transactional(readOnly = true, rollbackFor = [Exception::class])
-    fun getBoard(bid: Long): BoardDataWithMetrics? = boardRepository.findOneById(bid)
+    fun getBoard(bid: Long): APIEnvelop<BoardDataWithMetrics?> = APIEnvelop(data = boardRepository.findOneById(bid))
 
     @Transactional(readOnly = true, rollbackFor = [Exception::class])
     fun getBoardsWithMetricsV2(nextCursorId: String?, size: Long): APIEnvelopNextCursorPage<BoardDataWithMetrics> {
@@ -66,9 +66,9 @@ class BoardService(
     }
 
     @Transactional(readOnly = true, rollbackFor = [Exception::class])
-    fun getBoardsByUid(uid: Long, page: Long, size: Long): GetBoardsByUidResponse {
+    fun getBoardsByUid(uid: Long, page: Long, size: Long): APIEnvelop<GetBoardsByUidResponse> {
         val boards = boardRepository.findBoardsByUidOrderByCreateDateDesc(uid = uid, page = page, size = size).map { BoardData.fromEntity(it) }
-        return GetBoardsByUidResponse(size = boards.size, boards = boards)
+        return APIEnvelop(data = GetBoardsByUidResponse(size = boards.size, boards = boards))
     }
 
     @Throws(UserNotFoundException::class, BoardNotFoundException::class, BoardWrongWriterException::class)

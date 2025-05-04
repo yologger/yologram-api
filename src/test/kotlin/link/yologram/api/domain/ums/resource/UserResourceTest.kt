@@ -1,11 +1,11 @@
 package link.yologram.api.domain.ums.resource
 
 import any
-import link.yologram.api.domain.ums.dto.JoinResponse
+import link.yologram.api.domain.ums.model.JoinResponse
 import link.yologram.api.global.AbstractWebMvcTest
+import link.yologram.api.global.model.APIEnvelop
 import link.yologram.api.utlis.isCreated
 import org.mockito.BDDMockito.given
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -32,7 +32,7 @@ class UserResourceTest: AbstractWebMvcTest() {
             // Given
             given(
                 userService.join(any())
-            ).willReturn(JoinResponse(1))
+            ).willReturn(APIEnvelop(data = JoinResponse(1)))
 
             // When & Then
             client.post()

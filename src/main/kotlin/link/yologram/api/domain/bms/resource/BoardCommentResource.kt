@@ -3,13 +3,14 @@ package link.yologram.api.domain.bms.resource
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
-import link.yologram.api.domain.bms.dto.comment.CommentData
-import link.yologram.api.domain.bms.dto.comment.CreateCommentRequest
+import link.yologram.api.domain.bms.model.comment.CommentData
+import link.yologram.api.domain.bms.model.comment.CreateCommentRequest
 import link.yologram.api.domain.bms.service.CommentService
-import link.yologram.api.domain.ums.dto.AuthData
-import link.yologram.api.global.Response
-import link.yologram.api.global.wrapCreated
-import link.yologram.api.global.wrapOk
+import link.yologram.api.domain.ums.model.AuthData
+import link.yologram.api.global.model.APIEnvelop
+import link.yologram.api.global.model.APIEnvelopList
+import link.yologram.api.global.rest.wrapCreated
+import link.yologram.api.global.rest.wrapOk
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
@@ -30,7 +31,7 @@ class BoardCommentResource(
         authData: AuthData,
         @PathVariable bid: Long,
         @Validated @RequestBody request: CreateCommentRequest
-    ): ResponseEntity<Response<CommentData>> {
+    ): ResponseEntity<APIEnvelop<CommentData>> {
         return commentService.createComment(boardId = bid, userId = authData.uid, content = request.content).wrapCreated()
     }
 
@@ -47,7 +48,7 @@ class BoardCommentResource(
     @GetMapping("/board/{bid}/comments")
     fun getCommentsByBid(
         @PathVariable bid: Long
-    ): ResponseEntity<Response<List<CommentData>>> {
+    ): ResponseEntity<APIEnvelopList<CommentData>> {
         return commentService.getCommentsByBid(bid = bid).wrapOk()
     }
 }

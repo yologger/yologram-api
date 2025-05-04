@@ -1,6 +1,6 @@
 package link.yologram.api.domain.ums.extension
 
-import link.yologram.api.domain.ums.dto.AuthData
+import link.yologram.api.domain.ums.model.AuthData
 
 fun isAuthTokenHeader(headerKey: String): Boolean {
     return authTokenHeaderKeys.firstOrNull { key ->
