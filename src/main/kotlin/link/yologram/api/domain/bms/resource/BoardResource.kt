@@ -6,11 +6,10 @@ import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
 import link.yologram.api.domain.bms.service.BoardService
 import link.yologram.api.domain.bms.dto.*
 import link.yologram.api.domain.bms.dto.board.BoardDataWithMetrics
-import link.yologram.api.global.Response
+import link.yologram.api.global.model.APIEnvelopNextCursorPage
 import link.yologram.api.global.wrapCreated
 import link.yologram.api.global.wrapOk
 import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -26,7 +25,8 @@ class BoardResource(
         description = "uid, title, body로 게시글을 생성한다.",
     )
     @PostMapping("/board", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun createBoard(@Validated @RequestBody request: CreateBoardRequest) = boardService.createBoard(uid = request.uid, title = request.title, body = request.body).wrapCreated()
+    fun createBoard(@Validated @RequestBody request: CreateBoardRequest) =
+        boardService.createBoard(uid = request.uid, title = request.title, body = request.body).wrapCreated()
 
     @Operation(
         summary = "게시글 조회",
@@ -40,14 +40,17 @@ class BoardResource(
         description = "uid, bid로 게시글을 생성한다.",
     )
     @PatchMapping("/board")
-    fun editBoard(@Validated @RequestBody request: EditBoardRequest) = boardService.editBoard(uid = request.uid, bid = request.bid, newTitle = request.title, newBody = request.body).wrapOk()
+    fun editBoard(@Validated @RequestBody request: EditBoardRequest) =
+        boardService.editBoard(uid = request.uid, bid = request.bid, newTitle = request.title, newBody = request.body)
+            .wrapOk()
 
     @Operation(
         summary = "게시글 삭제",
         description = "uid, bid로 게시글을 생성한다.",
     )
     @DeleteMapping("/board", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun deleteBoard(@Validated @RequestBody request: DeleteBoardRequest) = boardService.deleteBoard(uid = request.uid, bid = request.bid).wrapOk()
+    fun deleteBoard(@Validated @RequestBody request: DeleteBoardRequest) =
+        boardService.deleteBoard(uid = request.uid, bid = request.bid).wrapOk()
 
     @GetMapping("/user/{uid}/boards", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun getBoardsByUid(
@@ -55,7 +58,14 @@ class BoardResource(
         @Validated @RequestBody request: GetBoardsByUidRequest
     ) = boardService.getBoardsByUid(uid = uid, page = request.page, size = request.size).wrapOk()
 
+    @Operation(
+        summary = "최신 게시글 조회",
+        description = "Home 화면의 Infinite Scrolling 용. cursor based pagination",
+    )
     @GetMapping("/boards", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun getBoards(@Validated @RequestBody request: GetBoardsRequest)
-    = boardService.getBoards(page = request.page, size = request.size)
+    fun getBoards(
+        @Validated @RequestBody request: GetBoardsRequest
+    ): APIEnvelopNextCursorPage<BoardDataWithMetrics> {
+        return boardService.getBoardsWithMetricsV2(nextCursorId = request.nextCursor, size = request.size)
+    }
 }

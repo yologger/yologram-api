@@ -2,6 +2,7 @@ package link.yologram.api.domain.bms.repository
 
 import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
+import link.yologram.api.domain.bms.dto.board.BoardData
 import link.yologram.api.domain.bms.dto.board.BoardDataWithMetrics
 import link.yologram.api.domain.bms.entity.Board
 import link.yologram.api.domain.bms.entity.QBoard
@@ -10,7 +11,8 @@ import org.springframework.transaction.support.TransactionTemplate
 
 interface BoardCustomRepository {
     fun findOneById(id: Long): BoardDataWithMetrics?
-    fun findAllBoards(): List<BoardDataWithMetrics>
+    fun findBoards(cursorId: Long?, pageSize: Long): List<BoardData>
+    fun findBoardsWithMetrics(cursorId: Long?, pageSize: Long): List<BoardDataWithMetrics>
     fun findBoardsByUidOrderByCreateDateDesc(uid: Long, page: Long, size: Long): List<Board>
 }
 
@@ -47,7 +49,27 @@ class BoardCustomRepositoryImpl(
             .fetchOne()
     }
 
-    override fun findAllBoards(): List<BoardDataWithMetrics> {
+    override fun findBoards(cursorId: Long?, pageSize: Long): List<BoardData> {
+        return jpaQueryFactory
+            .select(
+                Projections.constructor(
+                    BoardData::class.java,
+                    qBoard.id,
+                    qBoard.uid,
+                    qBoard.title,
+                    qBoard.body,
+                    qBoard.createdDate,
+                    qBoard.modifiedDate
+                )
+            )
+            .from(qBoard)
+            .where(cursorId?.let { qBoard.id.lt(it) })
+            .orderBy(qBoard.id.desc())
+            .limit(pageSize)
+            .fetch()
+    }
+
+    override fun findBoardsWithMetrics(cursorId: Long?, pageSize: Long): List<BoardDataWithMetrics> {
         return jpaQueryFactory
             .select(
                 Projections.constructor(
@@ -67,6 +89,9 @@ class BoardCustomRepositoryImpl(
             .from(qBoard)
             .leftJoin(qBoardCommentCount)
             .on(qBoard.id.eq(qBoardCommentCount.bid))
+            .where(cursorId?.let { qBoard.id.lt(it) })
+            .orderBy(qBoard.id.desc())
+            .limit(pageSize)
             .fetch()
     }
 

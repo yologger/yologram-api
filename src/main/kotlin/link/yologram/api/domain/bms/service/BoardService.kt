@@ -11,8 +11,7 @@ import link.yologram.api.domain.bms.exception.UserNotFoundException
 import link.yologram.api.domain.bms.entity.Board
 import link.yologram.api.domain.bms.repository.BoardRepository
 import link.yologram.api.domain.ums.repository.UserRepository
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Sort
+import link.yologram.api.global.model.APIEnvelopNextCursorPage
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -57,9 +56,13 @@ class BoardService(
     fun getBoard(bid: Long): BoardDataWithMetrics? = boardRepository.findOneById(bid)
 
     @Transactional(readOnly = true, rollbackFor = [Exception::class])
-    fun getBoards(page: Int, size: Int): GetBoardsResponse {
-        val boards = boardRepository.findAllBoards()
-        return GetBoardsResponse(size = boards.size, boards = boards)
+    fun getBoardsWithMetricsV2(nextCursorId: String?, size: Long): APIEnvelopNextCursorPage<BoardDataWithMetrics> {
+        val decodedNextCursorId = CursorUtil.decode(nextCursorId)
+        val boards = boardRepository.findBoardsWithMetrics(decodedNextCursorId, size)
+
+        val nextCursorId = boards.lastOrNull()?.bid
+        val encodedNextCursor = nextCursorId?.let { CursorUtil.encode(it) }
+        return APIEnvelopNextCursorPage(nextCursor = encodedNextCursor, data = boards)
     }
 
     @Transactional(readOnly = true, rollbackFor = [Exception::class])
@@ -77,4 +80,26 @@ class BoardService(
         return board;
     }
 
+    class CursorUtil {
+
+        companion object {
+            private const val CURSOR_PREFIX = "cursor_prefix:"
+
+            fun encode(id: Long): String {
+                val raw = "$CURSOR_PREFIX$id"
+                return Base64.getUrlEncoder().encodeToString(raw.toByteArray(Charsets.UTF_8))
+            }
+
+            fun decode(cursor: String?): Long? {
+                if (cursor.isNullOrBlank()) return null
+                return try {
+                    val decoded = String(Base64.getUrlDecoder().decode(cursor), Charsets.UTF_8)
+                    if (!decoded.startsWith(CURSOR_PREFIX)) null
+                    else decoded.removePrefix(CURSOR_PREFIX).toLongOrNull()
+                } catch (e: Exception) {
+                    null
+                }
+            }
+        }
+    }
 }
