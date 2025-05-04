@@ -8,7 +8,7 @@ import link.yologram.api.domain.bms.exception.CommentNotFoundException
 import link.yologram.api.domain.bms.repository.BoardRepository
 import link.yologram.api.domain.bms.repository.CommentRepository
 import link.yologram.api.global.model.APIEnvelop
-import link.yologram.api.global.model.APIEnvelopList
+import link.yologram.api.global.model.APIEnvelopPage
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -36,8 +36,8 @@ class CommentService(
     }
 
     @Transactional(readOnly = true)
-    fun getCommentsByBid(bid: Long): APIEnvelopList<CommentData> {
+    fun getCommentsByBid(bid: Long): APIEnvelopPage<CommentData> {
         val board = boardRepository.findById(bid).orElseThrow { BoardNotFoundException("Board not found") }
-        return APIEnvelopList(data = commentRepository.findByBid(board.id).map { CommentData.fromEntity(it) })
+        return APIEnvelopPage(data = commentRepository.findByBid(board.id).map { CommentData.fromEntity(it) })
     }
 }

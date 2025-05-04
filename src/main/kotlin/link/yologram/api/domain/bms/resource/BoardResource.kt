@@ -6,7 +6,9 @@ import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
 import link.yologram.api.domain.bms.service.BoardService
 import link.yologram.api.domain.bms.model.*
 import link.yologram.api.domain.bms.model.board.BoardDataWithMetrics
-import link.yologram.api.global.model.APIEnvelopNextCursorPage
+import link.yologram.api.global.model.APIEnvelop
+import link.yologram.api.global.model.APIEnvelopCursorPage
+import link.yologram.api.global.model.APIEnvelopPage
 import link.yologram.api.global.rest.wrapCreated
 import link.yologram.api.global.rest.wrapOk
 import org.springframework.http.MediaType
@@ -53,12 +55,6 @@ class BoardResource(
     fun deleteBoard(@Validated @RequestBody request: DeleteBoardRequest) =
         boardService.deleteBoard(uid = request.uid, bid = request.bid).wrapOk()
 
-    @GetMapping("/user/{uid}/boards", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun getBoardsByUid(
-        @PathVariable(name = "uid") uid: Long,
-        @Validated @RequestBody request: GetBoardsByUidRequest
-    ) = boardService.getBoardsByUid(uid = uid, page = request.page, size = request.size).wrapOk()
-
     @Operation(
         summary = "최신 게시글 조회",
         description = "Home 화면의 Infinite Scrolling 용. cursor based pagination",
@@ -66,7 +62,15 @@ class BoardResource(
     @GetMapping("/boards", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun getBoards(
         @Validated @RequestBody request: GetBoardsRequest
-    ): ResponseEntity<APIEnvelopNextCursorPage<BoardDataWithMetrics>> {
-        return boardService.getBoardsWithMetricsV2(nextCursorId = request.nextCursor, size = request.size).wrapOk()
+    ): ResponseEntity<APIEnvelopCursorPage<BoardDataWithMetrics>> {
+        return boardService.getBoardsWithMetrics(nextCursorId = request.nextCursor, size = request.size).wrapOk()
+    }
+
+    @GetMapping("/user/{uid}/boards", consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun getBoardsByUid(
+        @PathVariable(name = "uid") uid: Long,
+        @Validated @RequestBody request: GetBoardsByUidRequest
+    ): ResponseEntity<APIEnvelopPage<BoardDataWithMetrics>> {
+        return boardService.getBoardsByUid(uid = uid, page = request.page, size = request.size).wrapOk()
     }
 }

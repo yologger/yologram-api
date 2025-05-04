@@ -11,7 +11,8 @@ import link.yologram.api.domain.bms.entity.Board
 import link.yologram.api.domain.bms.repository.BoardRepository
 import link.yologram.api.domain.ums.repository.UserRepository
 import link.yologram.api.global.model.APIEnvelop
-import link.yologram.api.global.model.APIEnvelopNextCursorPage
+import link.yologram.api.global.model.APIEnvelopCursorPage
+import link.yologram.api.global.model.APIEnvelopPage
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -56,19 +57,29 @@ class BoardService(
     fun getBoard(bid: Long): APIEnvelop<BoardDataWithMetrics?> = APIEnvelop(data = boardRepository.findOneById(bid))
 
     @Transactional(readOnly = true, rollbackFor = [Exception::class])
-    fun getBoardsWithMetricsV2(nextCursorId: String?, size: Long): APIEnvelopNextCursorPage<BoardDataWithMetrics> {
+    fun getBoardsWithMetrics(nextCursorId: String?, size: Long): APIEnvelopCursorPage<BoardDataWithMetrics> {
         val decodedNextCursorId = CursorUtil.decode(nextCursorId)
         val boards = boardRepository.findBoardsWithMetrics(decodedNextCursorId, size)
-
         val nextCursorId = boards.lastOrNull()?.bid
         val encodedNextCursor = nextCursorId?.let { CursorUtil.encode(it) }
-        return APIEnvelopNextCursorPage(nextCursor = encodedNextCursor, data = boards)
+        return APIEnvelopCursorPage(nextCursor = encodedNextCursor, data = boards)
     }
 
     @Transactional(readOnly = true, rollbackFor = [Exception::class])
-    fun getBoardsByUid(uid: Long, page: Long, size: Long): APIEnvelop<GetBoardsByUidResponse> {
-        val boards = boardRepository.findBoardsByUidOrderByCreateDateDesc(uid = uid, page = page, size = size).map { BoardData.fromEntity(it) }
-        return APIEnvelop(data = GetBoardsByUidResponse(size = boards.size, boards = boards))
+    fun getBoardsByUid(uid: Long, page: Long, size: Long): APIEnvelopPage<BoardDataWithMetrics> {
+        val offset = page * size
+        val boards = boardRepository.findBoardsWithMetricsByUid(uid, size, offset)
+        val totalCount = boardRepository.countBoardsByUid(uid)
+        val totalPages = if (totalCount == 0L) 1 else ((totalCount + size - 1) / size)
+        return APIEnvelopPage(
+            data = boards,
+            page = page,
+            size = size,
+            totalPages = totalPages,
+            totalCount = totalCount,
+            first = page == 0L,
+            last = page >= totalPages - 1
+        )
     }
 
     @Throws(UserNotFoundException::class, BoardNotFoundException::class, BoardWrongWriterException::class)
@@ -81,7 +92,6 @@ class BoardService(
     }
 
     class CursorUtil {
-
         companion object {
             private const val CURSOR_PREFIX = "cursor_prefix:"
 

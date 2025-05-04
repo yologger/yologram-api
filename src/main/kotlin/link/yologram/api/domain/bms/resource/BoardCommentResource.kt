@@ -8,7 +8,7 @@ import link.yologram.api.domain.bms.model.comment.CreateCommentRequest
 import link.yologram.api.domain.bms.service.CommentService
 import link.yologram.api.domain.ums.model.AuthData
 import link.yologram.api.global.model.APIEnvelop
-import link.yologram.api.global.model.APIEnvelopList
+import link.yologram.api.global.model.APIEnvelopPage
 import link.yologram.api.global.rest.wrapCreated
 import link.yologram.api.global.rest.wrapOk
 import org.springframework.http.ResponseEntity
@@ -48,7 +48,7 @@ class BoardCommentResource(
     @GetMapping("/board/{bid}/comments")
     fun getCommentsByBid(
         @PathVariable bid: Long
-    ): ResponseEntity<APIEnvelopList<CommentData>> {
+    ): ResponseEntity<APIEnvelopPage<CommentData>> {
         return commentService.getCommentsByBid(bid = bid).wrapOk()
     }
 }
