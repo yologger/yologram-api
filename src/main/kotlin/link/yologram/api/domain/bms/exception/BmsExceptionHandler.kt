@@ -50,4 +50,16 @@ class BmsExceptionHandler {
         logger.error(e.message)
         return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.BOARD_COMMENT_COUNT_NOT_FOUND).wrapBadRequest()
     }
+
+    @ExceptionHandler(value = [UserAlreadyLikeBoardException::class])
+    fun handle(e: UserAlreadyLikeBoardException): ResponseEntity<BmsErrorResponse> {
+        logger.error(e.message)
+        return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.USER_ALREADY_LIKE_BOARD).wrapBadRequest()
+    }
+
+    @ExceptionHandler(value = [UserNotLikeBoardException::class])
+    fun handle(e: UserNotLikeBoardException): ResponseEntity<BmsErrorResponse> {
+        logger.error(e.message)
+        return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.USER_NOT_LIKE_BOARD).wrapBadRequest()
+    }
 }

@@ -5,7 +5,7 @@ import link.yologram.api.domain.bms.model.UnlikeBoardResponse
 import link.yologram.api.domain.bms.entity.BoardLike
 import link.yologram.api.domain.bms.entity.BoardLikeCount
 import link.yologram.api.domain.bms.exception.BoardNotFoundException
-import link.yologram.api.domain.bms.exception.UserAlreadyLikeBoard
+import link.yologram.api.domain.bms.exception.UserAlreadyLikeBoardException
 import link.yologram.api.domain.bms.exception.UserNotLikeBoardException
 import link.yologram.api.domain.bms.repository.BoardLikeCountRepository
 import link.yologram.api.domain.bms.repository.BoardLikeRepository
@@ -44,10 +44,10 @@ class BoardLikeService(
             boardLikeCountRepository.save(likeCount)
 
             // 응답 반환
-            return APIEnvelop(data = LikeBoardResponse(uid = like.uid, bid = like.bid))
+            return APIEnvelop(data = LikeBoardResponse(uid = uid, bid = bid))
         } else {
             // 이미 좋아요를 누른 경우 예외 처리
-            throw UserAlreadyLikeBoard("User $uid already liked board $bid")
+            throw UserAlreadyLikeBoardException("User $uid already liked board $bid")
         }
     }
 
@@ -58,7 +58,8 @@ class BoardLikeService(
         val like =  boardLikeRepository.findByUidAndBid(uid = uid, bid = board.id).orElseThrow { UserNotLikeBoardException("User $uid not like board $bid") }
         val boardLikeCount = boardLikeCountRepository.findByBid(bid = bid).orElseThrow { UserNotLikeBoardException("User $uid not like board $bid") }
         boardLikeRepository.delete(like)
-        boardLikeCount.count += 1
+        boardLikeCount.count -= 1
+        if (boardLikeCount.count == 0L) boardLikeCountRepository.delete(boardLikeCount)
         return APIEnvelop(data = UnlikeBoardResponse(uid = like.uid, bid = like.bid))
     }
 }

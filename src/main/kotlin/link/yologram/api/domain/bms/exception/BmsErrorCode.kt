@@ -10,5 +10,9 @@ enum class BmsErrorCode: ErrorCode {
     // Comment
     COMMENT_NOT_FOUND,
     BOARD_COMMENT_COUNT_NOT_FOUND,
-    BOARD_COMMENT_MISMATCH
+    BOARD_COMMENT_MISMATCH,
+
+    // Like
+    USER_ALREADY_LIKE_BOARD,
+    USER_NOT_LIKE_BOARD
 }

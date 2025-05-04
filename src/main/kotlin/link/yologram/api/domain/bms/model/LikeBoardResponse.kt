@@ -1,6 +1,6 @@
 package link.yologram.api.domain.bms.model
 
-class LikeBoardResponse(
-    uid: Long,
-    bid: Long
+data class LikeBoardResponse(
+    val uid: Long,
+    val bid: Long
 )
