@@ -6,7 +6,6 @@ import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
 import link.yologram.api.domain.bms.service.BoardService
 import link.yologram.api.domain.bms.model.*
 import link.yologram.api.domain.bms.model.board.BoardDataWithMetrics
-import link.yologram.api.global.model.APIEnvelop
 import link.yologram.api.global.model.APIEnvelopCursorPage
 import link.yologram.api.global.model.APIEnvelopPage
 import link.yologram.api.global.rest.wrapCreated

@@ -7,6 +7,7 @@ import link.yologram.api.domain.bms.model.board.BoardDataWithMetrics
 import link.yologram.api.domain.bms.entity.QBoard
 import link.yologram.api.domain.bms.entity.QBoardCommentCount
 import link.yologram.api.domain.bms.entity.QBoardLikeCount
+import link.yologram.api.domain.bms.entity.QBoardViewCount
 
 interface BoardCustomRepository {
     fun findOneById(id: Long): BoardDataWithMetrics?
@@ -23,6 +24,7 @@ class BoardCustomRepositoryImpl(
     private val qBoard = QBoard.board
     private val qBoardCommentCount = QBoardCommentCount.boardCommentCount
     private val qBoardLikeCount = QBoardLikeCount.boardLikeCount
+    private val qBoardViewCount = QBoardViewCount.boardViewCount
 
     override fun findOneById(id: Long): BoardDataWithMetrics? {
 
@@ -40,6 +42,7 @@ class BoardCustomRepositoryImpl(
                         BoardDataWithMetrics.Metrics::class.java,
                         qBoardCommentCount.count.coalesce(0L),
                         qBoardLikeCount.count.coalesce(0L),
+                        qBoardViewCount.count.coalesce(0L),
                     )
                 )
             )
@@ -48,6 +51,8 @@ class BoardCustomRepositoryImpl(
             .on(qBoard.id.eq(qBoardCommentCount.bid))
             .leftJoin(qBoardLikeCount)
             .on(qBoard.id.eq(qBoardLikeCount.bid))
+            .leftJoin(qBoardViewCount)
+            .on(qBoard.id.eq(qBoardViewCount.bid))
             .where(qBoard.id.eq(id))
             .fetchOne()
     }
@@ -87,6 +92,7 @@ class BoardCustomRepositoryImpl(
                         BoardDataWithMetrics.Metrics::class.java,
                         qBoardCommentCount.count.coalesce(0L),
                         qBoardLikeCount.count.coalesce(0L),
+                        qBoardViewCount.count.coalesce(0L),
                     )
                 )
             )
@@ -95,6 +101,8 @@ class BoardCustomRepositoryImpl(
             .on(qBoard.id.eq(qBoardCommentCount.bid))
             .leftJoin(qBoardLikeCount)
             .on(qBoard.id.eq(qBoardLikeCount.bid))
+            .leftJoin(qBoardViewCount)
+            .on(qBoard.id.eq(qBoardViewCount.bid))
             .where(cursorId?.let { qBoard.id.lt(it) })
             .orderBy(qBoard.id.desc())
             .limit(pageSize)
@@ -116,6 +124,7 @@ class BoardCustomRepositoryImpl(
                         BoardDataWithMetrics.Metrics::class.java,
                         qBoardCommentCount.count.coalesce(0L),
                         qBoardLikeCount.count.coalesce(0L),
+                        qBoardViewCount.count.coalesce(0L),
                     )
                 )
             )
@@ -124,6 +133,8 @@ class BoardCustomRepositoryImpl(
             .on(qBoard.id.eq(qBoardCommentCount.bid))
             .leftJoin(qBoardLikeCount)
             .on(qBoard.id.eq(qBoardLikeCount.bid))
+            .leftJoin(qBoardViewCount)
+            .on(qBoard.id.eq(qBoardViewCount.bid))
             .where(qBoard.uid.eq(uid))
             .orderBy(qBoard.id.desc())
             .offset(offset)

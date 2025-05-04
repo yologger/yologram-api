@@ -13,6 +13,7 @@ data class BoardDataWithMetrics(
 ) {
     data class Metrics (
         val commentCount: Long = 0,
-        val likeCount: Long = 0
+        val likeCount: Long = 0,
+        val viewCount: Long = 0,
     )
 }

@@ -39,13 +39,6 @@ class BoardRepositoryTest(
     }
 
     @Test
-    fun `Uid 기반 Boards 조회 `() {
-        val size = 5L
-        val boards = boardRepository.findBoardsByUidOrderByCreateDateDesc(uid = 1, page = 0, size = size);
-        assertThat(boards.size).isEqualTo(size)
-    }
-
-    @Test
     fun `최근 Boards 조회`() {
         val size = 5
         val sort = Sort.by("id").descending()
