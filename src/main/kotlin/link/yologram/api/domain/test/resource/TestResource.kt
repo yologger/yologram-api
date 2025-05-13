@@ -7,8 +7,11 @@ import jakarta.servlet.http.HttpServletRequest
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
 import link.yologram.api.domain.test.model.EchoResponse
 import link.yologram.api.domain.ums.model.AuthData
+import link.yologram.api.domain.ums.model.UserData
 import link.yologram.api.global.model.APIEnvelop
 import link.yologram.api.global.rest.wrapOk
+import link.yologram.api.infra.cache.CacheService
+import link.yologram.api.infra.cache.Cache
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -20,7 +23,9 @@ import java.util.*
 @Tag(name = "테스트", description = "테스트 관련 엔드포인트 (test/TestResource)")
 @RestController
 @RequestMapping("/api/test/v1", produces = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
-class TestResource {
+class TestResource(
+    private val cacheService: CacheService
+) {
 
     private val logger = LoggerFactory.getLogger(TestResource::class.java)
 
@@ -88,4 +93,14 @@ class TestResource {
     fun authNotNecessary(): ResponseEntity<APIEnvelop<String>> {
         return APIEnvelop(data = "auth_not_necessary").wrapOk()
     }
+
+//    @PostMapping("/redis")
+//    fun saveDataToRedis() {
+//        cacheService.set(Cache.user(1), UserData(uid = 1, email = "sample@gmail.com", "sample", "samlple")
+//    }
+//
+//    @GetMapping("/redis")
+//    fun getDataFromRedis() {
+//        cacheService.getOrNull(Cache)
+//    }
 }

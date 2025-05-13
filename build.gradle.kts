@@ -5,6 +5,7 @@ object DependencyVersions {
     const val QUERY_DSL_VERSION = "5.1.0"
     const val SPRING_CLOUD_AWS_VERSION = "3.1.0"
     const val SPRINGDOC_VERSION = "2.3.0"
+    const val KOTLIN_LOGGING_VERSION = "6.0.3"
 }
 
 plugins {
@@ -44,6 +45,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.security:spring-security-crypto")
 
     // MySQL Driver
@@ -75,6 +77,13 @@ dependencies {
 
     // API Documentation
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${DependencyVersions.SPRINGDOC_VERSION}")
+
+    if (isAppleSilicon()) {
+        runtimeOnly("io.netty:netty-resolver-dns-native-macos:4.1.94.Final:osx-aarch_64")
+    }
+
+    // Logging
+    implementation("io.github.oshai:kotlin-logging-jvm:${DependencyVersions.KOTLIN_LOGGING_VERSION}")
 }
 
 tasks.getByName<Jar>("jar") {
@@ -114,3 +123,6 @@ when {
         }
     }
 }
+
+fun isAppleSilicon(): Boolean =
+    System.getProperty("os.name") == "Mac OS X" && System.getProperty("os.arch") == "aarch64"

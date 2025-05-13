@@ -31,7 +31,8 @@ core:
       hibernate.hbm2ddl.auto: none
       hibernate.jdbc.time_zone: Asia/Seoul
     show-sql: false
-    database: mysql
+    open-in-view: false
+    database-platform: link.yologram.api.config.database.CustomMySQLDialect
 
 yologram:
   auth:

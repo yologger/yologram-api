@@ -10,6 +10,14 @@ spring:
     aws:
       credentials:
         instance-profile: true
+  data:
+    redis:
+      # cluster:
+      #   nodes: service-staging.padpvo.ng.0001.apn2.cache.amazonaws.com:6379
+      host: service-staging.padpvo.ng.0001.apn2.cache.amazonaws.com
+      port: 6379
+      repositories:
+        enabled: false
 
 core:
   master:
@@ -19,7 +27,7 @@ core:
       username: yologram_api
       hikari:
         pool-name: hikaricp.service-staging.yologram.master
-        max-lifetime: 1800000 # 30m
+        max-lifetime: 1800000
         minimum-idle: 1
         maximum-pool-size: 10
   slave:
@@ -29,6 +37,6 @@ core:
       username: yologram_api
       hikari:
         pool-name: hikaricp.service-staging.yologram.slave
-        max-lifetime: 1800000 # 30m
+        max-lifetime: 1800000
         minimum-idle: 1
         maximum-pool-size: 10
