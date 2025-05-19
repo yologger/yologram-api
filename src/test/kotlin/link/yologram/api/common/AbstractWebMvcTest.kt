@@ -1,21 +1,20 @@
-package link.yologram.api.global
+package link.yologram.api.common
 
-import link.yologram.api.domain.ums.service.UserService
+import link.yologram.api.config.JwtConfig
 import link.yologram.api.domain.ums.resource.UserResource
+import link.yologram.api.domain.ums.util.JwtUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.context.annotation.Import
 import org.springframework.test.web.reactive.server.WebTestClient
 
 @WebMvcTest(controllers = [
     UserResource::class
 ])
+@Import(JwtUtil::class, JwtConfig::class)
 @AutoConfigureWebTestClient(timeout = "1500000")
 abstract class AbstractWebMvcTest {
-
-    @MockBean
-    lateinit var userService: UserService
 
     @Autowired
     lateinit var client: WebTestClient

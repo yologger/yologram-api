@@ -21,7 +21,8 @@ class UserServiceTest {
     private val userRepository: UserRepository = mock()
     private val boardRepository: BoardRepository = mock()
     private val passwordEncoder: PasswordEncoder = BCryptPasswordEncoder()
-    private val service = UserService(userRepository = userRepository, passwordEncoder = passwordEncoder, boardRepository = boardRepository)
+    private val service = UserService(userRepository = userRepository, passwordEncoder = passwordEncoder, boardRepository = boardRepository
+)
 
     @Nested
     @DisplayName("회원가입")

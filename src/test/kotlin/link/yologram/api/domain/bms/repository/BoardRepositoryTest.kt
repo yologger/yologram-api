@@ -1,21 +1,27 @@
-package link.yologram.api.infrastructure.repository
+package link.yologram.api.domain.bms.repository
 
 import link.yologram.api.domain.bms.entity.Board
-import link.yologram.api.domain.bms.repository.BoardRepository
+import link.yologram.api.common.AbstractRepositoryDataJpaTest
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import org.springframework.test.context.jdbc.Sql
 
-@Disabled
-@Sql(scripts = ["/sql/repository/insert_bulk_users.sql", "/sql/repository/insert_bulk_boards.sql"])
 class BoardRepositoryTest(
     @Autowired private val boardRepository: BoardRepository
-): AbstractDataJpaTest() {
+) : AbstractRepositoryDataJpaTest() {
+
     @Test
+    @DisplayName("Board 단건 조회")
+    fun `Board 단건 조회`() {
+        val board = boardRepository.findById(1)
+        assertThat(board.isPresent).isTrue()
+    }
+
+    @Test
+    @DisplayName("Board 단건 추가")
     fun `Board 단건 추가`() {
 
         // Given
@@ -39,7 +45,8 @@ class BoardRepositoryTest(
     }
 
     @Test
-    fun `최근 Boards 조회`() {
+    @DisplayName("최근 Boards 5개 조회")
+    fun `최근 Boards 5개 조회`() {
         val size = 5
         val sort = Sort.by("id").descending()
         val pageable = PageRequest.of(0, size, sort)

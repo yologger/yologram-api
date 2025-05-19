@@ -8,6 +8,7 @@ import org.springframework.context.annotation.DependsOn
 
 @TestConfiguration
 class TestDataSourceConfig {
+
     @Bean
     @DependsOn("TestMySQLContainer")
     fun dataSource(): HikariDataSource {
