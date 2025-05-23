@@ -1,5 +1,32 @@
 # yologram api 서버
 
+## Architecture
+
+### Infra architecture
+![Infra architecture](/assets/images/infra-architecture.drawio.png)
+- AWS Route 53
+- AWS CloudFront
+- AWS Elastic Load Balancing (ALB)
+- AWS Elastic Beanstalk
+
+### Application architecture
+
+## CI/CD
+![CI/CD](/assets/images/cicd.drawio.png)
+- GitHub
+- GitHub Actions ([.github/workflow/staging.yaml](.github/workflow/staging.yaml))
+
+## Environment
+
+## Observability
+
+### Trace
+- AWS CloudWatch
+
+### Logging
+
+### Metrics
+
 ## Todo List
 - [x] 댓글 기능 구현
 - [ ] 조회수 기능 구현
