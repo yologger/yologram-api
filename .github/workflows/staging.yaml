@@ -8,23 +8,38 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Set up jdk
         uses: actions/setup-java@v4
         with:
           distribution: 'corretto'
           java-version: '17'
           cache: gradle
+
       - name: Build with gradle
-        run: ./gradlew clean build
+        run: ./gradlew clean build --exclude-task test
+
       - name: Rename jar
         run: mv ./build/libs/*.jar ./build/libs/application.jar
+
+      - name: Set up environment variables
+        id: set-env-vars
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          COMMIT_ID=$(git rev-parse --short HEAD)
+          BUILD_TIME=$(date +'%Y%m%dT%H:%M:%S.%N')
+          AWS_BEANSTALK_VERSION_LABEL="${BRANCH_NAME}-${COMMIT_ID}-${BUILD_TIME}"
+          echo "AWS_BEANSTALK_VERSION_LABEL=${AWS_BEANSTALK_VERSION_LABEL}"
+          echo "AWS_BEANSTALK_VERSION_LABEL=${AWS_BEANSTALK_VERSION_LABEL}" >> $GITHUB_ENV
+
       - name: Deploy to Beanstalk
         uses: einaregilsson/beanstalk-deploy@v22
         with:
           aws_access_key: ${{ secrets.AWS_GITHUB_ACTIONS_DEPLOYER_ACCESS_KEY }}
           aws_secret_key: ${{ secrets.AWS_GITHUB_ACTIONS_DEPLOYER_SECRET_KEY }}
-          application_name: yologram-api-stg
-          environment_name: yologram-api-stg
-          version_label: ${{ github.sha }}
-          region: ap-northeast-2
+          application_name: ${{ secrets.SERVICE_NAME }}-staging
+          environment_name: ${{ secrets.SERVICE_NAME }}-staging-env
+          version_label: ${{ env.AWS_BEANSTALK_VERSION_LABEL }}
+          region: ${{ secrets.AWS_REGION }}
           deployment_package: ./build/libs/application.jar
+          use_existing_version_if_available: true

@@ -1,3 +1,5 @@
+[README.md]
+
 # yologram api 서버
 
 ## Architecture
@@ -16,12 +18,9 @@
 - GitHub
 - GitHub Actions ([.github/workflow/staging.yaml](.github/workflow/staging.yaml))
 
-## Environment
-
 ## Observability
 
-### Trace
-- AWS CloudWatch
+### APM & Trace
 
 ### Logging
 
@@ -40,4 +39,3 @@
 - [ ] 테스트 코드 작성
 - [ ] 조회수 집계 api → log 엔드포인트로 분리 → kinesis 또는 kafka 기반으로 전환
 - [ ] 조회수 중복 검증 로직 개선
-  
