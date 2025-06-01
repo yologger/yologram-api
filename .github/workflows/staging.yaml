@@ -22,6 +22,24 @@ jobs:
       - name: Rename jar
         run: mv ./build/libs/*.jar ./build/libs/application.jar
 
+      - name: Download New Relic Java Agent
+        run: |
+          curl -L -o newrelic-java.zip https://download.newrelic.com/newrelic/java-agent/newrelic-agent/current/newrelic-java.zip
+          unzip -o newrelic-java.zip
+          mv newrelic/newrelic.jar ./build/libs/
+          rm -rf newrelic newrelic-java.zip
+
+      - name: Copy newrelic.yml
+        run: cp newrelic.yml ./build/libs/
+
+      - name: Copy Procfile
+        run: cp Procfile ./build/libs/
+
+      - name: Package deployment files
+        run: |
+          cd build/libs
+          zip -r ../deploy.zip application.jar newrelic.jar newrelic.yml Procfile
+
       - name: Set up environment variables
         id: set-env-vars
         run: |
@@ -41,5 +59,5 @@ jobs:
           environment_name: ${{ secrets.SERVICE_NAME }}-staging-env
           version_label: ${{ env.AWS_BEANSTALK_VERSION_LABEL }}
           region: ${{ secrets.AWS_REGION }}
-          deployment_package: ./build/libs/application.jar
+          deployment_package: ./build/deploy.zip
           use_existing_version_if_available: true

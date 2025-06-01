@@ -21,6 +21,7 @@
 ## Observability
 
 ### APM & Trace
+- New Relic Java Agent
 
 ### Logging
 
