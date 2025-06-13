@@ -3,9 +3,8 @@
 ## Architecture
 
 ### Infra architecture
-![Infra architecture](/assets/images/infra-architecture.drawio.png)
+![Infra architecture](/assets/images/infra_architecture.drawio.png)
 - AWS Route 53
-- AWS CloudFront
 - AWS Elastic Load Balancing (ALB)
 - AWS Elastic Beanstalk
 
