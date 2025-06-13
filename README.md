@@ -1,5 +1,3 @@
-[README.md]
-
 # yologram api 서버
 
 ## Architecture
@@ -19,13 +17,9 @@
 - GitHub Actions ([.github/workflow/staging.yaml](.github/workflow/staging.yaml))
 
 ## Observability
-
-### APM & Trace
-- New Relic Java Agent
-
-### Logging
-
-### Metrics
+New Relic
+- Application monitoring & Log: New Relic APM Java Agent
+- Infra monitoring: New Relic Infra Agent
 
 ## Todo List
 - [x] 댓글 기능 구현

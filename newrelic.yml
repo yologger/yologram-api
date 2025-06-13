@@ -372,18 +372,7 @@ common: &default_settings
   # An example label
   #label_name: label_value
 
-# Application Environments
-# ------------------------------------------
-# Environment specific settings are in this section.
-# You can use the environment to override the default settings.
-# For example, to change the app_name setting.
-# Use -Dnewrelic.environment=<environment> on the Java startup command line
-# to set the environment.
-# The default environment is production.
-
-# NOTE if your application has other named environments, you should
-# provide configuration settings for these environments here.
-
+# Application Environments: NEW_RELIC_ENVIRONMENT
 test:
   <<: *default_settings
   app_name: 'yologram-api (Test)'
