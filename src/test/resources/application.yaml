@@ -17,6 +17,6 @@ spring:
 yologram:
   auth:
     jwt:
-      secret: X_YOLOGRAM_AUTH_TOKEN
+      secret: X-YOLOGRAM-USER-AUTH-TOKEN
     access-token:
       expire_in_seconds: 10  # 10 seconds
