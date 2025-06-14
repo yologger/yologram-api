@@ -29,12 +29,14 @@ class AuthService(
         /** Wrong password */
         if (!passwordEncoder.matches(password, user.password)) throw AuthWrongPasswordException("Wrong password.")
 
-        /** Access token has already been issued */
+        /** Access token has already been issued **/
         if (!user.accessToken.isNullOrBlank()) {
             return try {
+                // 기존 token이 아직 유효하면 그대로 응답
                 jwtUtil.validateToken(user.accessToken!!)
                 APIEnvelop(data = LoginResponse(uid = user.id, accessToken = user.accessToken!!, email = user.email, name = user.name, nickname = user.nickname))
             } catch (e: UmsException) {
+                // 기존 token이 아직 유효하지 않으면 새로 생성한 후 응답
                 val accessToken = jwtUtil.createToken(JwtClaim(uid = user.id))
                 user.accessToken = accessToken
                 APIEnvelop(data = LoginResponse(uid = user.id, accessToken = accessToken, email = user.email, name = user.name, nickname = user.nickname))
@@ -49,7 +51,7 @@ class AuthService(
 
     @Transactional(rollbackFor = [Exception::class])
     @Throws
-    fun validateToken(accessToken: String, uid: Long): APIEnvelop<ValidateAccessTokenResponse> {
+        fun validateToken(accessToken: String, uid: Long): APIEnvelop<ValidateAccessTokenResponse> {
         val user = userRepository.findById(uid).orElseThrow { UserNotFoundException("User not found") }
         if (uid != user.id) throw AuthInvalidTokenOwnerException("Invalid token owner")
         return APIEnvelop(data = ValidateAccessTokenResponse(accessToken = accessToken, uid = uid, email = user.email, name = user.name, nickname = user.nickname))
