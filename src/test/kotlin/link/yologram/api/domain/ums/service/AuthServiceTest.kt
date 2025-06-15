@@ -124,11 +124,11 @@ class AuthServiceTest(
 
     @Nested
     @DisplayName("토큰 검증")
-    inner class ValidateTokenTen {
+    inner class ValidateTokenTest {
 
 
         @Test
-        @DisplayName("token이 유효할 때 테스트")
+        @DisplayName("token이 유효할 때 토큰검증에 성공한다.")
         fun `token이 유효할 때 테스트`() {
             // Given
             val email = "tester@example.com"
@@ -213,6 +213,97 @@ class AuthServiceTest(
             }.isExactlyInstanceOf(UserNotFoundException::class.java)
         }
     }
+
+    @Nested
+    @DisplayName("로그아웃")
+    inner class LogoutTest {
+
+        @Test
+        @DisplayName("uid가 존재하지 않을 때, UserNotFoundException가 발생한다")
+        fun `token 유저가 존재하지 않을 때`() {
+            // Given
+            val email = "tester@example.com"
+            val password = "tester_password_1234@"
+
+            BDDMockito.given(
+                userRepository.findById(any())
+            ).willReturn(Optional.empty())
+
+            val accessToken = jwtUtil.createToken(JwtClaim(uid = UID))
+
+            // When & Then
+            assertThatThrownBy {
+                authService.logout(uid = UID, accessToken = accessToken)
+            }.isExactlyInstanceOf(UserNotFoundException::class.java)
+        }
+
+        @Test
+        @DisplayName("token이 유효하나 소유주가 아닐 때 AuthInvalidTokenOwnerException가 발생한다.")
+        fun `token이 유효하나 소유주가 아닐 때`() {
+            // Given
+            val email = "tester@example.com"
+            val password = "tester_password_1234@"
+
+            BDDMockito.given(
+                userRepository.findById(any())
+            ).willReturn(
+                Optional.of(
+                    User(
+                        id = UID,
+                        email = email,
+                        name = "yologger",
+                        nickname = "yologger",
+                        password = password,
+                        status = UserStatus.ACTIVE
+                    ).apply {
+                        joinedDate = LocalDateTime.now()
+                    }
+                )
+            )
+
+            val accessToken = jwtUtil.createToken(JwtClaim(uid = UID))
+
+            // When
+            assertThatThrownBy {
+                authService.logout(uid = UID + 1, accessToken = accessToken)
+            }.isExactlyInstanceOf(AuthInvalidTokenOwnerException::class.java)
+        }
+
+        @Test
+        @DisplayName("로그아웃에 성공한다")
+        fun `로그아웃에 성공한다`() {
+
+            // Given
+            val email = "tester@example.com"
+            val password = "tester_password_1234@"
+
+            BDDMockito.given(
+                userRepository.findById(any())
+            ).willReturn(
+                Optional.of(
+                    User(
+                        id = UID,
+                        email = email,
+                        name = "yologger",
+                        nickname = "yologger",
+                        password = password,
+                        status = UserStatus.ACTIVE
+                    ).apply {
+                        joinedDate = LocalDateTime.now()
+                    }
+                )
+            )
+
+            val accessToken = jwtUtil.createToken(JwtClaim(uid = UID))
+
+            // When
+            assertDoesNotThrow {
+                val result = authService.logout(uid = UID, accessToken = accessToken)
+                assertThat(result.data.uid).isEqualTo(UID)
+            }
+        }
+    }
+
 
     companion object {
         const val UID: Long = 1

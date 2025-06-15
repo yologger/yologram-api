@@ -2,21 +2,18 @@ package link.yologram.api.common
 
 import link.yologram.api.config.JwtConfig
 import link.yologram.api.config.WebMvcConfig
-import link.yologram.api.domain.ums.resource.UserResource
 import link.yologram.api.domain.ums.util.JwtUtil
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
-import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import kotlin.reflect.KClass
 
-@WebMvcTest(controllers = [
-    UserResource::class
-])
+
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+@WebMvcTest
 @Import(JwtUtil::class, JwtConfig::class, WebMvcConfig::class)
 @AutoConfigureWebTestClient(timeout = "1500000")
-abstract class AbstractWebMvcTest {
-
-    @Autowired
-    lateinit var client: WebTestClient
-}
+annotation class WebMvcTestSupport(
+    val controllers: Array<KClass<*>> = []
+)

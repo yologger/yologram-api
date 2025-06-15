@@ -1,8 +1,7 @@
 package link.yologram.api.domain.ums.resource
 
 import any
-import link.yologram.api.common.AbstractWebMvcTest
-import link.yologram.api.config.JwtConfig
+import link.yologram.api.common.WebMvcTestSupport
 import link.yologram.api.domain.ums.exception.UserDuplicateException
 import link.yologram.api.domain.ums.model.*
 import link.yologram.api.domain.ums.service.UserService
@@ -10,19 +9,22 @@ import link.yologram.api.domain.ums.util.JwtUtil
 import link.yologram.api.global.model.APIEnvelop
 import link.yologram.api.utlis.isCreated
 import org.mockito.BDDMockito.given
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.test.web.reactive.server.WebTestClient
 import java.time.LocalDateTime
 
+@WebMvcTestSupport(
+    controllers = [UserResource::class]
+)
 class UserResourceTest(
     @Autowired val jwtUtil: JwtUtil,
-): AbstractWebMvcTest() {
+    @Autowired var client: WebTestClient
+) {
 
     @MockBean
     lateinit var userService: UserService
