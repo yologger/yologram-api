@@ -18,48 +18,54 @@ class BmsExceptionHandler {
     @ExceptionHandler(value = [UserNotFoundException::class])
     fun handle(e: UserNotFoundException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
-        return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.USER_NOT_FOUND).wrapBadRequest()
+        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.USER_NOT_FOUND).wrapBadRequest()
     }
 
     @ExceptionHandler(value = [BoardNotFoundException::class])
     fun handle(e: BoardNotFoundException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
-        return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.BOARD_NOT_FOUND).wrapBadRequest()
+        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.BOARD_NOT_FOUND).wrapBadRequest()
     }
 
     @ExceptionHandler(value = [BoardWrongWriterException::class])
     fun handle(e: BoardWrongWriterException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
-        return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.BOARD_WRONG_WRITER).wrapBadRequest()
+        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.BOARD_WRONG_WRITER).wrapBadRequest()
     }
 
     @ExceptionHandler(value = [CommentNotFoundException::class])
     fun handle(e: CommentNotFoundException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
-        return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.COMMENT_NOT_FOUND).wrapBadRequest()
+        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.COMMENT_NOT_FOUND).wrapBadRequest()
     }
 
     @ExceptionHandler(value = [BoardCommentMismatchException::class])
     fun handle(e: BoardCommentMismatchException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
-        return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.BOARD_COMMENT_MISMATCH).wrapBadRequest()
+        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.BOARD_COMMENT_MISMATCH).wrapBadRequest()
     }
 
     @ExceptionHandler(value = [BoardCommentCountException::class])
     fun handle(e: BoardCommentCountException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
-        return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.BOARD_COMMENT_COUNT_NOT_FOUND).wrapBadRequest()
+        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.BOARD_COMMENT_COUNT_NOT_FOUND).wrapBadRequest()
     }
 
     @ExceptionHandler(value = [UserAlreadyLikeBoardException::class])
     fun handle(e: UserAlreadyLikeBoardException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
-        return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.USER_ALREADY_LIKE_BOARD).wrapBadRequest()
+        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.USER_ALREADY_LIKE_BOARD).wrapBadRequest()
     }
 
     @ExceptionHandler(value = [UserNotLikeBoardException::class])
     fun handle(e: UserNotLikeBoardException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
-        return BmsErrorResponse(message = e.message!!, errorCode = BmsErrorCode.USER_NOT_LIKE_BOARD).wrapBadRequest()
+        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.USER_NOT_LIKE_BOARD).wrapBadRequest()
+    }
+
+    @ExceptionHandler(value = [InvalidPaginationCursorException::class])
+    fun handle(e: InvalidPaginationCursorException): ResponseEntity<BmsErrorResponse> {
+        logger.error(e.message)
+        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.INVALID_PAGINATION_CURSOR).wrapBadRequest()
     }
 }

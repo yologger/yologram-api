@@ -6,6 +6,7 @@ enum class BmsErrorCode: ErrorCode {
     USER_NOT_FOUND,
     BOARD_NOT_FOUND,
     BOARD_WRONG_WRITER,
+    INVALID_PAGINATION_CURSOR,
 
     // Comment
     COMMENT_NOT_FOUND,

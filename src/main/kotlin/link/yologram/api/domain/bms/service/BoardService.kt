@@ -7,6 +7,7 @@ import link.yologram.api.domain.bms.exception.BoardNotFoundException
 import link.yologram.api.domain.bms.exception.BoardWrongWriterException
 import link.yologram.api.domain.bms.exception.UserNotFoundException
 import link.yologram.api.domain.bms.entity.Board
+import link.yologram.api.domain.bms.exception.InvalidPaginationCursorException
 import link.yologram.api.domain.bms.repository.board.BoardRepository
 import link.yologram.api.domain.ums.repository.UserRepository
 import link.yologram.api.global.model.APIEnvelop
@@ -56,6 +57,7 @@ class BoardService(
     fun getBoard(bid: Long): APIEnvelop<BoardDataWithMetrics?> = APIEnvelop(data = boardRepository.findBoardWithMetricsById(bid))
 
     @Transactional(readOnly = true, rollbackFor = [Exception::class])
+    @Throws(InvalidPaginationCursorException::class)
     fun getBoardsWithMetrics(nextCursorId: String?, size: Long): APIEnvelopCursorPage<BoardDataWithMetrics> {
         val decodedNextCursorId = CursorUtil.decode(nextCursorId)
         val boards = boardRepository.findBoardsWithMetrics(decodedNextCursorId, size)
@@ -94,19 +96,26 @@ class BoardService(
         companion object {
             private const val CURSOR_PREFIX = "cursor_prefix:"
 
+            @Throws(InvalidPaginationCursorException::class)
             fun encode(id: Long): String {
-                val raw = "$CURSOR_PREFIX$id"
-                return Base64.getUrlEncoder().encodeToString(raw.toByteArray(Charsets.UTF_8))
+                return try {
+                    val raw = "$CURSOR_PREFIX$id"
+                    Base64.getUrlEncoder().encodeToString(raw.toByteArray(Charsets.UTF_8))
+                } catch (e: Exception) {
+                    throw InvalidPaginationCursorException("Failed to encode cursor ID")
+                }
             }
 
+            @Throws(InvalidPaginationCursorException::class)
             fun decode(cursor: String?): Long? {
                 if (cursor.isNullOrBlank()) return null
                 return try {
                     val decoded = String(Base64.getUrlDecoder().decode(cursor), Charsets.UTF_8)
                     if (!decoded.startsWith(CURSOR_PREFIX)) null
                     else decoded.removePrefix(CURSOR_PREFIX).toLongOrNull()
+                        ?: throw InvalidPaginationCursorException("Cursor ID is not a valid number: $decoded")
                 } catch (e: Exception) {
-                    null
+                    throw InvalidPaginationCursorException("Invalid cursor format")
                 }
             }
         }
