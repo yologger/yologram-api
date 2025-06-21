@@ -9,8 +9,8 @@ import java.time.LocalDateTime
 
 @Entity
 @EntityListeners(AuditingEntityListener::class)
-@Table(name = "`comment`")
-data class Comment(
+@Table(name = "`board_comment`")
+data class BoardComment(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "int unsigned")

@@ -14,11 +14,3 @@ INSERT INTO `board`(id, uid, title, body) VALUES(11, 3, 'user3 title2', 'user3 b
 INSERT INTO `board`(id, uid, title, body) VALUES(12, 3, 'user3 title3', 'user3 body3');
 INSERT INTO `board`(id, uid, title, body) VALUES(13, 3, 'user3 title4', 'user3 body4');
 INSERT INTO `board`(id, uid, title, body) VALUES(14, 3, 'user3 title5', 'user3 body5');
-
-INSERT INTO `board_comment_count`(bid, count) VALUES(1, 3);
-INSERT INTO `board_like_count`(bid, count)    VALUES(1, 4);
-INSERT INTO `board_view_count`(bid, count)    VALUES(1, 5);
-
-INSERT INTO `board_comment_count`(bid, count) VALUES(2, 7);
-INSERT INTO `board_like_count`(bid, count)    VALUES(2, 8);
-INSERT INTO `board_view_count`(bid, count)    VALUES(2, 9);

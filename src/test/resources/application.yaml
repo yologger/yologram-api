@@ -12,7 +12,7 @@ spring:
     init:
       mode: always
       schema-locations: classpath:sql/schema.sql
-      data-locations: classpath:sql/users.sql, classpath:sql/boards.sql
+      data-locations: classpath:sql/user.sql, classpath:sql/board.sql, classpath:sql/board_comment.sql, classpath:sql/count.sql
 
 yologram:
   auth:

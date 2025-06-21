@@ -1,6 +1,6 @@
 package link.yologram.api.domain.bms.model.comment
 
-import link.yologram.api.domain.bms.entity.Comment
+import link.yologram.api.domain.bms.entity.BoardComment
 import java.time.LocalDateTime
 
 data class CommentData(
@@ -12,7 +12,7 @@ data class CommentData(
     val modifiedDate: LocalDateTime
 ) {
     companion object {
-        fun fromEntity(entity: Comment): CommentData {
+        fun fromEntity(entity: BoardComment): CommentData {
             return CommentData(
                 id = entity.id,
                 bid = entity.bid,

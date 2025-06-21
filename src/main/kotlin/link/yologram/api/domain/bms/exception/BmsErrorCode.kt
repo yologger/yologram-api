@@ -8,7 +8,7 @@ enum class BmsErrorCode: ErrorCode {
     BOARD_WRONG_WRITER,
     INVALID_PAGINATION_CURSOR,
 
-    // Comment
+    // BoardComment
     COMMENT_NOT_FOUND,
     BOARD_COMMENT_COUNT_NOT_FOUND,
     BOARD_COMMENT_MISMATCH,

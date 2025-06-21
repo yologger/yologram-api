@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
 import link.yologram.api.domain.bms.model.comment.CommentData
 import link.yologram.api.domain.bms.model.comment.CreateCommentRequest
-import link.yologram.api.domain.bms.service.CommentService
+import link.yologram.api.domain.bms.service.BoardCommentService
 import link.yologram.api.domain.ums.model.AuthData
 import link.yologram.api.global.model.APIEnvelop
 import link.yologram.api.global.model.APIEnvelopPage
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/bms/v1", produces = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
 class BoardCommentResource(
-    private val commentService: CommentService
+    private val boardCommentService: BoardCommentService
 ) {
 
     @Operation(
@@ -32,7 +32,7 @@ class BoardCommentResource(
         @PathVariable bid: Long,
         @Validated @RequestBody request: CreateCommentRequest
     ): ResponseEntity<APIEnvelop<CommentData>> {
-        return commentService.createComment(boardId = bid, userId = authData.uid, content = request.content).wrapCreated()
+        return boardCommentService.createComment(boardId = bid, userId = authData.uid, content = request.content).wrapCreated()
     }
 
     @DeleteMapping("/board/{bid}/comment/{cid}")
@@ -41,7 +41,7 @@ class BoardCommentResource(
         @PathVariable bid: Long,
         @PathVariable cid: Long,
     ): ResponseEntity<Void>{
-        commentService.deleteComment(boardId = bid, commentId = cid)
+        boardCommentService.deleteComment(boardId = bid, commentId = cid)
         return ResponseEntity.noContent().build()
     }
 
@@ -49,6 +49,6 @@ class BoardCommentResource(
     fun getCommentsByBid(
         @PathVariable bid: Long
     ): ResponseEntity<APIEnvelopPage<CommentData>> {
-        return commentService.getCommentsByBid(bid = bid).wrapOk()
+        return boardCommentService.getCommentsByBid(bid = bid).wrapOk()
     }
 }
