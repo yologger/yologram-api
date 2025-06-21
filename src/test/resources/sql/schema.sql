@@ -37,6 +37,13 @@ create table if not exists `board_comment_count` (
     count int unsigned default '0' not null
 );
 
+create table if not exists `board_like` (
+    id  int unsigned auto_increment  primary key,
+    uid int unsigned default '0' not null,
+    bid int unsigned default '0' not null,
+    constraint udx__uid__pid unique (uid, bid)
+);
+
 create table if not exists `board_like_count` (
     bid   int unsigned             not null primary key,
     count int unsigned default '0' not null

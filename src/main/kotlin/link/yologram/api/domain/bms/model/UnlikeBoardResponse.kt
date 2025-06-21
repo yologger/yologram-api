@@ -1,6 +1,6 @@
 package link.yologram.api.domain.bms.model
 
 class UnlikeBoardResponse(
-    uid: Long,
-    bid: Long
+    val uid: Long,
+    val bid: Long
 )

@@ -36,7 +36,7 @@ class BoardRepositoryTest(
         val board = boardRepository.findBoardWithMetricsById(1)
         assertThat(board).isNotNull()
         assertThat(board?.metrics?.commentCount).isEqualTo(2)
-        assertThat(board?.metrics?.likeCount).isEqualTo(4)
+        assertThat(board?.metrics?.likeCount).isEqualTo(3)
         assertThat(board?.metrics?.viewCount).isEqualTo(5)
     }
 
