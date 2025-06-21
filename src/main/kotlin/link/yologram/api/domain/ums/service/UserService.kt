@@ -9,7 +9,7 @@ import link.yologram.api.domain.ums.exception.UserDuplicateException
 import link.yologram.api.domain.ums.exception.UserAlreadyDeletedException
 import link.yologram.api.domain.ums.exception.UserNotFoundException
 import link.yologram.api.domain.ums.entity.User
-import link.yologram.api.domain.bms.repository.BoardRepository
+import link.yologram.api.domain.bms.repository.board.BoardRepository
 import link.yologram.api.domain.ums.enum.UserStatus
 import link.yologram.api.domain.ums.repository.UserRepository
 import link.yologram.api.global.model.APIEnvelop

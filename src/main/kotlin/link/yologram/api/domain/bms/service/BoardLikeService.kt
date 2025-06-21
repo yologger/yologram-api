@@ -9,7 +9,7 @@ import link.yologram.api.domain.bms.exception.UserAlreadyLikeBoardException
 import link.yologram.api.domain.bms.exception.UserNotLikeBoardException
 import link.yologram.api.domain.bms.repository.BoardLikeCountRepository
 import link.yologram.api.domain.bms.repository.BoardLikeRepository
-import link.yologram.api.domain.bms.repository.BoardRepository
+import link.yologram.api.domain.bms.repository.board.BoardRepository
 import link.yologram.api.global.model.APIEnvelop
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

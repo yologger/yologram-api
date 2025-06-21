@@ -5,7 +5,7 @@ import link.yologram.api.domain.bms.entity.Comment
 import link.yologram.api.domain.bms.exception.BoardCommentMismatchException
 import link.yologram.api.domain.bms.exception.BoardNotFoundException
 import link.yologram.api.domain.bms.exception.CommentNotFoundException
-import link.yologram.api.domain.bms.repository.BoardRepository
+import link.yologram.api.domain.bms.repository.board.BoardRepository
 import link.yologram.api.domain.bms.repository.CommentRepository
 import link.yologram.api.global.model.APIEnvelop
 import link.yologram.api.global.model.APIEnvelopPage

@@ -1,7 +1,7 @@
 package link.yologram.api.domain.bms.repository
 
-import link.yologram.api.domain.bms.entity.Board
 import link.yologram.api.common.AbstractRepositoryDataJpaTest
+import link.yologram.api.domain.bms.repository.board.BoardRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -21,30 +21,6 @@ class BoardRepositoryTest(
     }
 
     @Test
-    @DisplayName("Board 단건 추가")
-    fun `Board 단건 추가`() {
-
-        // Given
-        val uid = 1L
-        val title = "제목입니다."
-        val body = "본문입니다."
-
-        // When
-        val saved = boardRepository.save(
-            Board(
-                uid = uid,
-                title = title,
-                body = body
-            )
-        )
-
-        val board = boardRepository.findById(saved.id)
-
-        assertThat(saved.title).isEqualTo(title)
-        assertThat(board.get().title).isEqualTo(title)
-    }
-
-    @Test
     @DisplayName("최근 Boards 5개 조회")
     fun `최근 Boards 5개 조회`() {
         val size = 5
@@ -52,5 +28,101 @@ class BoardRepositoryTest(
         val pageable = PageRequest.of(0, size, sort)
         val boards = boardRepository.findAll(pageable)
         assertThat(boards.size).isEqualTo(size)
+    }
+
+    @Test
+    @DisplayName("BoardWithMetrics 단건 조회")
+    fun `BoardWithMetrics 단건 조회`() {
+        val board = boardRepository.findBoardWithMetricsById(1)
+        assertThat(board).isNotNull()
+        assertThat(board?.metrics?.commentCount).isEqualTo(3)
+        assertThat(board?.metrics?.likeCount).isEqualTo(4)
+        assertThat(board?.metrics?.viewCount).isEqualTo(5)
+    }
+
+    @Test
+    @DisplayName("Board 다건 조회")
+    fun `Board 다건 조회`() {
+        val pageSize: Long = 5
+
+        var nextCursorId: Long? = null
+        var boards = boardRepository.findBoards(cursorId = nextCursorId, pageSize = pageSize)
+        assertThat(boards.size).isEqualTo(pageSize)
+        assertThat(boards[0].title).isEqualTo("user3 title5")
+
+        nextCursorId = boards.lastOrNull()?.bid
+        boards = boardRepository.findBoards(cursorId = nextCursorId, pageSize = pageSize)
+        assertThat(boards.size).isEqualTo(pageSize)
+        assertThat(boards[0].title).isEqualTo("user2 title5")
+
+        nextCursorId = boards.lastOrNull()?.bid
+        boards = boardRepository.findBoards(cursorId = nextCursorId, pageSize = pageSize)
+        assertThat(boards.size).isEqualTo(4)
+        assertThat(boards[0].title).isEqualTo("user1 title4")
+
+        nextCursorId = boards.lastOrNull()?.bid
+        boards = boardRepository.findBoards(cursorId = nextCursorId, pageSize = pageSize)
+        assertThat(boards.size).isEqualTo(0)
+    }
+
+    @Test
+    @DisplayName("BoardWithMetrics 다건 조회")
+    fun `BoardWithMetrics 다건 조회`() {
+        val pageSize: Long = 5
+
+        var nextCursorId: Long? = null
+        var boards = boardRepository.findBoardsWithMetrics(cursorId = nextCursorId, pageSize = pageSize)
+        assertThat(boards.size).isEqualTo(pageSize)
+        assertThat(boards[0].title).isEqualTo("user3 title5")
+
+        nextCursorId = boards.lastOrNull()?.bid
+        boards = boardRepository.findBoardsWithMetrics(cursorId = nextCursorId, pageSize = pageSize)
+        assertThat(boards.size).isEqualTo(pageSize)
+        assertThat(boards[0].title).isEqualTo("user2 title5")
+
+        nextCursorId = boards.lastOrNull()?.bid
+        boards = boardRepository.findBoardsWithMetrics(cursorId = nextCursorId, pageSize = pageSize)
+        assertThat(boards.size).isEqualTo(4)
+        assertThat(boards[0].title).isEqualTo("user1 title4")
+
+        nextCursorId = boards.lastOrNull()?.bid
+        boards = boardRepository.findBoardsWithMetrics(cursorId = nextCursorId, pageSize = pageSize)
+        assertThat(boards.size).isEqualTo(0)
+    }
+
+    @Test
+    @DisplayName("Uid로 게시글 수 조회")
+    fun `Uid로 게시글 수 조회`() {
+        var count = boardRepository.countBoardsByUid(uid = 1)
+        assertThat(count).isEqualTo(4)
+
+        count = boardRepository.countBoardsByUid(uid = 2)
+        assertThat(count).isEqualTo(5)
+
+        count = boardRepository.countBoardsByUid(uid = 5)
+        assertThat(count).isEqualTo(0)
+    }
+
+    @Test
+    @DisplayName("Uid로 BoardWithMetrics 다건 조회")
+    fun `Uid로 BoardWithMetrics 다건 조회`() {
+
+        var uid: Long = 2
+        var page: Long = 0
+        var size : Long= 3
+        var offset = page * size
+
+        var boards = boardRepository.findBoardsWithMetricsByUid(uid, size, offset)
+        assertThat(boards.size).isEqualTo(3)
+
+        page ++
+        offset = page * size
+        boards = boardRepository.findBoardsWithMetricsByUid(uid, size, offset)
+        assertThat(boards.size).isEqualTo(2)
+
+        page ++
+        offset = page * size
+        boards = boardRepository.findBoardsWithMetricsByUid(uid, size, offset)
+        assertThat(boards.size).isEqualTo(0)
     }
 }

@@ -1,4 +1,4 @@
-package link.yologram.api.domain.bms.repository
+package link.yologram.api.domain.bms.repository.board
 
 import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
@@ -10,7 +10,7 @@ import link.yologram.api.domain.bms.entity.QBoardLikeCount
 import link.yologram.api.domain.bms.entity.QBoardViewCount
 
 interface BoardCustomRepository {
-    fun findOneById(id: Long): BoardDataWithMetrics?
+    fun findBoardWithMetricsById(id: Long): BoardDataWithMetrics?
     fun findBoards(cursorId: Long?, pageSize: Long): List<BoardData>
     fun findBoardsWithMetrics(cursorId: Long?, pageSize: Long): List<BoardDataWithMetrics>
     fun findBoardsWithMetricsByUid(uid: Long, limit: Long, offset: Long): List<BoardDataWithMetrics>
@@ -26,7 +26,7 @@ class BoardCustomRepositoryImpl(
     private val qBoardLikeCount = QBoardLikeCount.boardLikeCount
     private val qBoardViewCount = QBoardViewCount.boardViewCount
 
-    override fun findOneById(id: Long): BoardDataWithMetrics? {
+    override fun findBoardWithMetricsById(id: Long): BoardDataWithMetrics? {
 
         return jpaQueryFactory
             .select(
@@ -57,6 +57,7 @@ class BoardCustomRepositoryImpl(
             .fetchOne()
     }
 
+    /** cursor-based pagination (Infinite Scrolling) **/
     override fun findBoards(cursorId: Long?, pageSize: Long): List<BoardData> {
         return jpaQueryFactory
             .select(
@@ -77,6 +78,7 @@ class BoardCustomRepositoryImpl(
             .fetch()
     }
 
+    /** cursor-based pagination (Infinite Scrolling) **/
     override fun findBoardsWithMetrics(cursorId: Long?, pageSize: Long): List<BoardDataWithMetrics> {
         return jpaQueryFactory
             .select(
@@ -109,6 +111,7 @@ class BoardCustomRepositoryImpl(
             .fetch()
     }
 
+    /** offset-based pagination (Pagination Bar) **/
     override fun findBoardsWithMetricsByUid(uid: Long, limit: Long, offset: Long): List<BoardDataWithMetrics> {
         return jpaQueryFactory
             .select(

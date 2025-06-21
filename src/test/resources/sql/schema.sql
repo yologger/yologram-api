@@ -22,3 +22,18 @@ create table if not exists board (
     modified_date timestamp   default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP,
     deleted_date  timestamp                             null
 ) comment '게시글';
+
+create table if not exists board_comment_count (
+    bid   int unsigned             not null primary key,
+    count int unsigned default '0' not null
+);
+
+create table if not exists board_like_count (
+    bid   int unsigned             not null primary key,
+    count int unsigned default '0' not null
+);
+
+create table if not exists board_view_count (
+    bid   int unsigned             not null primary key,
+    count int unsigned default '0' not null
+);

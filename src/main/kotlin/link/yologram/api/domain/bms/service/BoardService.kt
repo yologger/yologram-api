@@ -2,13 +2,12 @@ package link.yologram.api.domain.bms.service
 
 import link.yologram.api.domain.bms.model.board.BoardData
 import link.yologram.api.domain.bms.model.DeleteBoardResponse
-import link.yologram.api.domain.bms.model.GetBoardsByUidResponse
 import link.yologram.api.domain.bms.model.board.BoardDataWithMetrics
 import link.yologram.api.domain.bms.exception.BoardNotFoundException
 import link.yologram.api.domain.bms.exception.BoardWrongWriterException
 import link.yologram.api.domain.bms.exception.UserNotFoundException
 import link.yologram.api.domain.bms.entity.Board
-import link.yologram.api.domain.bms.repository.BoardRepository
+import link.yologram.api.domain.bms.repository.board.BoardRepository
 import link.yologram.api.domain.ums.repository.UserRepository
 import link.yologram.api.global.model.APIEnvelop
 import link.yologram.api.global.model.APIEnvelopCursorPage
@@ -54,7 +53,7 @@ class BoardService(
     }
 
     @Transactional(readOnly = true, rollbackFor = [Exception::class])
-    fun getBoard(bid: Long): APIEnvelop<BoardDataWithMetrics?> = APIEnvelop(data = boardRepository.findOneById(bid))
+    fun getBoard(bid: Long): APIEnvelop<BoardDataWithMetrics?> = APIEnvelop(data = boardRepository.findBoardWithMetricsById(bid))
 
     @Transactional(readOnly = true, rollbackFor = [Exception::class])
     fun getBoardsWithMetrics(nextCursorId: String?, size: Long): APIEnvelopCursorPage<BoardDataWithMetrics> {

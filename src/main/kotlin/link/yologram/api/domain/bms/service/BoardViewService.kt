@@ -5,7 +5,7 @@ import link.yologram.api.domain.bms.entity.BoardViewCount
 import link.yologram.api.domain.bms.entity.BoardViewEvent
 import link.yologram.api.domain.bms.exception.BoardNotFoundException
 import link.yologram.api.domain.bms.exception.UserNotFoundException
-import link.yologram.api.domain.bms.repository.BoardRepository
+import link.yologram.api.domain.bms.repository.board.BoardRepository
 import link.yologram.api.domain.bms.repository.BoardViewCountRepository
 import link.yologram.api.domain.bms.repository.BoardViewEventRepository
 import link.yologram.api.domain.ums.repository.UserRepository
