@@ -49,6 +49,15 @@ create table if not exists `board_like_count` (
     count int unsigned default '0' not null
 );
 
+create table if not exists board_view_event (
+    id        int unsigned auto_increment         primary key,
+    bid       int unsigned                        not null,
+    uid       varchar(255)                        null,
+    ip        varchar(64)                         null,
+    viewed_at timestamp default CURRENT_TIMESTAMP not null,
+    constraint udx__bid___uid___ip unique (bid, uid, ip)
+);
+
 create table if not exists `board_view_count` (
     bid   int unsigned             not null primary key,
     count int unsigned default '0' not null

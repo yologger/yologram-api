@@ -37,7 +37,7 @@ class BoardRepositoryTest(
         assertThat(board).isNotNull()
         assertThat(board?.metrics?.commentCount).isEqualTo(2)
         assertThat(board?.metrics?.likeCount).isEqualTo(3)
-        assertThat(board?.metrics?.viewCount).isEqualTo(5)
+        assertThat(board?.metrics?.viewCount).isEqualTo(4)
     }
 
     @Test
