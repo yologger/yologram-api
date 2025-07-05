@@ -11,7 +11,7 @@ spring:
       credentials:
         instance-profile: false
         profile:
-          name: yologram
+          name: yologram202507
   data:
     redis:
       # cluster:
@@ -25,20 +25,20 @@ core:
   master:
     datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://service-staging.c56as866g5sl.ap-northeast-2.rds.amazonaws.com:3306/yologram?useUnicode=true&charset=utf8mb4&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul&useSSL=false&rewriteBatchedStatements=true
+      url: jdbc:mysql://serivce-prod.cv4imowma8xe.ap-northeast-2.rds.amazonaws.com:3306/yologram?useUnicode=true&charset=utf8mb4&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul&useSSL=false&rewriteBatchedStatements=true
       username: yologram_api
       hikari:
-        pool-name: hikaricp.service-staging.yologram.master
+        pool-name: hikaricp.service-prod.yologram.master
         max-lifetime: 1800000
         minimum-idle: 1
         maximum-pool-size: 10
   slave:
     datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://service-staging.c56as866g5sl.ap-northeast-2.rds.amazonaws.com:3306/yologram?useUnicode=true&charset=utf8mb4&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul&useSSL=false
+      url: jdbc:mysql://serivce-prod.cv4imowma8xe.ap-northeast-2.rds.amazonaws.com:3306/yologram?useUnicode=true&charset=utf8mb4&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul&useSSL=false
       username: yologram_api
       hikari:
-        pool-name: hikaricp.service-staging.yologram.slave
+        pool-name: hikaricp.service-prod.yologram.slave
         max-lifetime: 1800000
         minimum-idle: 1
         maximum-pool-size: 10

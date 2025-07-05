@@ -375,16 +375,16 @@ common: &default_settings
 # Application Environments: NEW_RELIC_ENVIRONMENT
 test:
   <<: *default_settings
-  app_name: 'yologram-api (Test)'
+  app_name: 'yologram-api (test)'
 
 development:
   <<: *default_settings
-  app_name: 'yologram-api (Development)'
+  app_name: 'yologram-api (development)'
 
 staging:
   <<: *default_settings
-  app_name: 'yologram-api (Staging)'
+  app_name: 'yologram-api (staging)'
 
 production:
   <<: *default_settings
-  app_name: 'yologram-api (Production)'
+  app_name: 'yologram-api (production)'

@@ -1,6 +1,6 @@
 on:
   push:
-    branches: [ staging ]
+    branches: [ master ]
 
 jobs:
   build:
@@ -61,8 +61,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_GITHUB_ACTIONS_DEPLOYER_ACCESS_KEY }}
           aws_secret_key: ${{ secrets.AWS_GITHUB_ACTIONS_DEPLOYER_SECRET_KEY }}
-          application_name: ${{ secrets.SERVICE_NAME }}-staging
-          environment_name: ${{ secrets.SERVICE_NAME }}-staging-env
+          application_name: ${{ secrets.SERVICE_NAME }}-prod
+          environment_name: ${{ secrets.SERVICE_NAME }}-prod-env
           version_label: ${{ env.AWS_BEANSTALK_VERSION_LABEL }}
           region: ${{ secrets.AWS_REGION }}
           deployment_package: ./build/deploy.zip
