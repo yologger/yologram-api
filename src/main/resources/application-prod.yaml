@@ -10,6 +10,14 @@ spring:
     aws:
       credentials:
         instance-profile: true
+#  data:
+#    redis:
+#      # cluster:
+#      #   nodes: service-prod.sik4zk.ng.0001.apn2.cache.amazonaws.com:6379
+#      host: service-prod.sik4zk.ng.0001.apn2.cache.amazonaws.com
+#      port: 6379
+#      repositories:
+#        enabled: false
 
 core:
   master:
@@ -19,9 +27,9 @@ core:
       username: yologram_api
       hikari:
         pool-name: hikaricp.service-prod.yologram.master
-        max-lifetime: 900000
+        max-lifetime: 1800000
         minimum-idle: 1
-        maximum-pool-size: 5
+        maximum-pool-size: 10
   slave:
     datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -29,6 +37,6 @@ core:
       username: yologram_api
       hikari:
         pool-name: hikaricp.service-prod.yologram.slave
-        max-lifetime: 900000
+        max-lifetime: 1800000
         minimum-idle: 1
-        maximum-pool-size: 5
+        maximum-pool-size: 10

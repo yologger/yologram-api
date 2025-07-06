@@ -24,7 +24,7 @@ import java.util.*
 @RestController
 @RequestMapping("/api/test/v1", produces = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
 class TestResource(
-    private val cacheService: CacheService
+    // private val cacheService: CacheService
 ) {
 
     private val logger = LoggerFactory.getLogger(TestResource::class.java)
