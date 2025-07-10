@@ -10,14 +10,14 @@ spring:
     aws:
       credentials:
         instance-profile: true
-#  data:
-#    redis:
-#      # cluster:
-#      #   nodes: service-prod.sik4zk.ng.0001.apn2.cache.amazonaws.com:6379
-#      host: service-prod.sik4zk.ng.0001.apn2.cache.amazonaws.com
-#      port: 6379
-#      repositories:
-#        enabled: false
+  data:
+    redis:
+      # cluster:
+      #   nodes: service-prod.sik4zk.ng.0001.apn2.cache.amazonaws.com:6379
+      host: service-prod.sik4zk.ng.0001.apn2.cache.amazonaws.com
+      port: 6379
+      repositories:
+        enabled: false
 
 core:
   master:

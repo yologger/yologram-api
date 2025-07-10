@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDateTime
 import java.util.*
 
 
@@ -24,7 +25,7 @@ import java.util.*
 @RestController
 @RequestMapping("/api/test/v1", produces = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
 class TestResource(
-    // private val cacheService: CacheService
+     private val cacheService: CacheService
 ) {
 
     private val logger = LoggerFactory.getLogger(TestResource::class.java)
@@ -94,13 +95,15 @@ class TestResource(
         return APIEnvelop(data = "auth_not_necessary").wrapOk()
     }
 
-//    @PostMapping("/redis")
-//    fun saveDataToRedis() {
-//        cacheService.set(Cache.user(1), UserData(uid = 1, email = "sample@gmail.com", "sample", "samlple")
-//    }
-//
-//    @GetMapping("/redis")
-//    fun getDataFromRedis() {
-//        cacheService.getOrNull(Cache)
-//    }
+    @PostMapping("/redis")
+    fun saveDataToRedis(): Long {
+        val uid: Long = 1
+        cacheService.set(Cache.user(uid), UserData(uid = 1, email = "sample@gmail.com", "sample", "samlple", joinedDate = LocalDateTime.now()))
+        return uid
+    }
+
+    @GetMapping("/redis")
+    fun getDataFromRedis(): UserData? {
+        return cacheService.getOrNull(Cache.user(1))
+    }
 }
