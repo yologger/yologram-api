@@ -61,7 +61,7 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_GITHUB_ACTIONS_DEPLOYER_ACCESS_KEY }}
           aws_secret_key: ${{ secrets.AWS_GITHUB_ACTIONS_DEPLOYER_SECRET_KEY }}
-          application_name: ${{ secrets.SERVICE_NAME }}-prod
+          application_name: ${{ secrets.SERVICE_NAME }}-prod-app
           environment_name: ${{ secrets.SERVICE_NAME }}-prod-env
           version_label: ${{ env.AWS_BEANSTALK_VERSION_LABEL }}
           region: ${{ secrets.AWS_REGION }}

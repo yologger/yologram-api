@@ -1,1 +1,1 @@
-web: java -Xmx512m -javaagent:newrelic.jar -jar application.jar
+web: java -Xmx1512m -javaagent:newrelic.jar -jar application.jar
