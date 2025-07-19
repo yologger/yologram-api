@@ -45,7 +45,7 @@ class BoardServiceTest() {
             // Given
             val uid: Long = 100
             val title = "dummy title"
-            val body = "dummy body"
+            val content = "dummy body"
 
             BDDMockito.given(
                 userRepository.existsById(any())
@@ -57,7 +57,7 @@ class BoardServiceTest() {
                 Board(
                     uid = uid,
                     title = title,
-                    body = body
+                    content = content
                 ).apply {
                     createdDate = LocalDateTime.now()
                     modifiedDate = LocalDateTime.now()
@@ -65,8 +65,8 @@ class BoardServiceTest() {
             )
 
             // When, Then
-            val result = service.createBoard(uid = uid, title = title, body = body)
-            assertThat(result.data.body).isEqualTo(body)
+            val result = service.createBoard(uid = uid, title = title, content = content)
+            assertThat(result.data.content).isEqualTo(content)
         }
 
         @Test
@@ -76,7 +76,7 @@ class BoardServiceTest() {
             // Given
             val uid: Long = 100
             val title = "dummy title"
-            val body = "dummy body"
+            val content = "dummy body"
 
             BDDMockito.given(
                 userRepository.existsById(any())
@@ -85,7 +85,7 @@ class BoardServiceTest() {
 
             // When & Then
             assertThatThrownBy {
-                service.createBoard(uid = uid, title = title, body = body)
+                service.createBoard(uid = uid, title = title, content = content)
             }.isExactlyInstanceOf(UserNotFoundException::class.java)
         }
     }
@@ -101,7 +101,7 @@ class BoardServiceTest() {
             val bid = 10L
 
             BDDMockito.given(userRepository.existsById(uid)).willReturn(true)
-            BDDMockito.given(boardRepository.findById(bid)).willReturn(Optional.of(Board(id = bid, uid = uid, title = "title", body = "body")))
+            BDDMockito.given(boardRepository.findById(bid)).willReturn(Optional.of(Board(id = bid, uid = uid, title = "title", content = "content")))
             BDDMockito.willDoNothing().given(boardRepository).deleteById(bid)
 
             val result = service.deleteBoard(uid, bid)
@@ -141,7 +141,7 @@ class BoardServiceTest() {
         fun `Board 작성자가 아닌 경우 BoardWrongWriterException를 throw한다`() {
             val uid = 1L
             val bid = 10L
-            val otherUserBoard = Board(id = bid, uid = 2L, title = "title", body = "body")
+            val otherUserBoard = Board(id = bid, uid = 2L, title = "title", content = "content")
 
             BDDMockito.given(userRepository.existsById(uid)).willReturn(true)
             BDDMockito.given(boardRepository.findById(bid)).willReturn(Optional.of(otherUserBoard))
@@ -160,17 +160,22 @@ class BoardServiceTest() {
         fun `게시글 단일 조회에 성공한다`() {
             val bid = 10L
             val board = BoardDataWithMetrics(
-                bid = bid,
-                uid = 1L,
-                title = "test title",
-                body = "test body",
+                2,
+                "title",
+                "body",
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                writer = BoardDataWithMetrics.Writer(
+                    uid = 1L,
+                    name = "tester",
+                    nickname = "tester",
+                    avatar = null
+                ),
                 metrics = BoardDataWithMetrics.Metrics(
                     commentCount = 5,
                     likeCount = 3,
-                    viewCount = 8
-                ),
-                createdDate = LocalDateTime.now(),
-                modifiedDate = LocalDateTime.now()
+                    viewCount = 1
+                )
             )
 
             BDDMockito.given(boardRepository.findBoardWithMetricsById(bid)).willReturn(board)
@@ -201,36 +206,46 @@ class BoardServiceTest() {
             val bid2 = 102L
             val boardList = listOf(
                 BoardDataWithMetrics(
-                    bid = bid1,
-                    uid = 1L,
-                    title = "Title1",
-                    body = "Body1",
-                    createdDate = LocalDateTime.now(),
-                    modifiedDate = LocalDateTime.now(),
-                    metrics = BoardDataWithMetrics.Metrics(
-                        commentCount = 5,
-                        likeCount = 3,
-                        viewCount = 8
+                    bid1,
+                    "title",
+                    "body",
+                    LocalDateTime.now(),
+                    LocalDateTime.now(),
+                    writer = BoardDataWithMetrics.Writer(
+                        uid = 1L,
+                        name = "tester",
+                        nickname = "tester",
+                        avatar = null
                     ),
-                ),
-                BoardDataWithMetrics(
-                    bid = bid2,
-                    uid = 2L,
-                    title = "Title2",
-                    body = "Body2",
-                    createdDate = LocalDateTime.now(),
-                    modifiedDate = LocalDateTime.now(),
                     metrics = BoardDataWithMetrics.Metrics(
                         commentCount = 5,
                         likeCount = 3,
                         viewCount = 1
+                    )
+                ),
+                BoardDataWithMetrics(
+                    bid2,
+                    "title",
+                    "body",
+                    LocalDateTime.now(),
+                    LocalDateTime.now(),
+                    writer = BoardDataWithMetrics.Writer(
+                        uid = 1L,
+                        name = "tester",
+                        nickname = "tester",
+                        avatar = null
                     ),
+                    metrics = BoardDataWithMetrics.Metrics(
+                        commentCount = 5,
+                        likeCount = 3,
+                        viewCount = 1
+                    )
                 )
             )
 
-            val cursor = BoardService.CursorUtil.encode(100L)
+            val cursor = BoardService.CursorUtil.encode(bid1)
 
-            BDDMockito.given(boardRepository.findBoardsWithMetrics(100L, 2)).willReturn(boardList)
+            BDDMockito.given(boardRepository.findBoardsWithMetrics(bid1, 2)).willReturn(boardList)
 
             val result = service.getBoardsWithMetrics(cursor, 2)
 
@@ -267,30 +282,40 @@ class BoardServiceTest() {
 
             val boardList = listOf(
                 BoardDataWithMetrics(
-                    bid = 1L,
-                    uid = uid,
-                    title = "Post 1",
-                    body = "Body 1",
-                    createdDate = LocalDateTime.now(),
-                    modifiedDate = LocalDateTime.now(),
+                    1L,
+                    "title",
+                    "body",
+                    LocalDateTime.now(),
+                    LocalDateTime.now(),
+                    writer = BoardDataWithMetrics.Writer(
+                        uid = 1L,
+                        name = "tester",
+                        nickname = "tester",
+                        avatar = null
+                    ),
                     metrics = BoardDataWithMetrics.Metrics(
                         commentCount = 5,
                         likeCount = 3,
                         viewCount = 1
-                    ),
+                    )
                 ),
                 BoardDataWithMetrics(
-                    bid = 2L,
-                    uid = uid,
-                    title = "Post 2",
-                    body = "Body 2",
-                    createdDate = LocalDateTime.now(),
-                    modifiedDate = LocalDateTime.now(),
+                    2,
+                    "title",
+                    "body",
+                    LocalDateTime.now(),
+                    LocalDateTime.now(),
+                    writer = BoardDataWithMetrics.Writer(
+                        uid = 1L,
+                        name = "tester",
+                        nickname = "tester",
+                        avatar = null
+                    ),
                     metrics = BoardDataWithMetrics.Metrics(
                         commentCount = 5,
                         likeCount = 3,
                         viewCount = 1
-                    ),
+                    )
                 )
             )
 

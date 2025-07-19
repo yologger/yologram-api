@@ -46,7 +46,7 @@ class BoardLikeServiceTest {
         fun `게시글 좋아요에 성공한다`() {
             val uid = 1L
             val bid = 10L
-            val board = Board(id = bid, uid = uid, title = "title", body = "body")
+            val board = Board(id = bid, uid = uid, title = "title", content = "content")
             val like = BoardLike(id = 0L, uid = uid, bid = bid)
             val likeCount = BoardLikeCount(bid = bid, count = 0)
 
@@ -65,7 +65,7 @@ class BoardLikeServiceTest {
         fun `이미 좋아요에 성공한 경우 게시글 좋아요에 실패한다`() {
             val uid = 1L
             val bid = 10L
-            val board = Board(id = bid, uid = uid, title = "title", body = "body")
+            val board = Board(id = bid, uid = uid, title = "title", content = "content")
             val existingLike = BoardLike(id = 100L, uid = uid, bid = bid)
 
             given(boardRepository.findById(bid)).willReturn(Optional.of(board))
@@ -102,7 +102,7 @@ class BoardLikeServiceTest {
         fun `게시글 좋아요 취소에 성공한다`() {
             val uid = 1L
             val bid = 10L
-            val board = Board(id = bid, uid = uid, title = "title", body = "body")
+            val board = Board(id = bid, uid = uid, title = "title", content = "content")
             val like = BoardLike(id = 123L, uid = uid, bid = bid)
             val likeCount = BoardLikeCount(bid = bid, count = 2)
 
@@ -134,7 +134,7 @@ class BoardLikeServiceTest {
         fun `이전 좋아요 정보가 없는 경우, 게시글 좋아요 취소에 실패한다`() {
             val uid = 1L
             val bid = 10L
-            val board = Board(id = bid, uid = uid, title = "title", body = "body")
+            val board = Board(id = bid, uid = uid, title = "title", content = "content")
 
             given(boardRepository.findById(bid)).willReturn(Optional.of(board))
             given(boardLikeRepository.findByUidAndBid(uid, bid)).willReturn(Optional.empty())

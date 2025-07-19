@@ -32,7 +32,7 @@ class BoardResource(
     )
     @PostMapping("/board", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun createBoard(@Validated @RequestBody request: CreateBoardRequest) =
-        boardService.createBoard(uid = request.uid, title = request.title, body = request.body).wrapCreated()
+        boardService.createBoard(uid = request.uid, title = request.title, content = request.content).wrapCreated()
 
     @Operation(
         summary = "게시글 조회",

@@ -23,8 +23,8 @@ class Board (
     @Column(name = "title", columnDefinition = "varchar(256)")
     var title: String,
 
-    @Column(name = "body", columnDefinition = "text")
-    var body: String,
+    @Column(name = "content", columnDefinition = "text")
+    var content: String,
 
     @Column(name = "status", columnDefinition = "varchar(15) default 'ACTIVE'")
     @Enumerated(EnumType.STRING)

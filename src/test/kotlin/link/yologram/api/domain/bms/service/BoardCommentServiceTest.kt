@@ -43,7 +43,7 @@ class BoardCommentServiceTest {
         val boardId = 1L
         val userId = 2L
         val content = "Test comment"
-        val board = Board(uid = userId, title = "title", body = "body", status = BoardStatus.ACTIVE, deletedDate = LocalDateTime.now()).apply {
+        val board = Board(uid = userId, title = "title", content = "content", status = BoardStatus.ACTIVE, deletedDate = LocalDateTime.now()).apply {
             createdDate = LocalDateTime.now()
             modifiedDate = LocalDateTime.now()
         }
@@ -83,7 +83,7 @@ class BoardCommentServiceTest {
     fun `댓글 삭제에 성공한다`() {
         val boardId = 1L
         val commentId = 100L
-        val board = Board(id = boardId, uid = 1L, title = "title", body = "body")
+        val board = Board(id = boardId, uid = 1L, title = "title", content = "content")
         val comment = BoardComment(id = commentId, bid = boardId, uid = 1L, content = "comment")
 
         `when`(boardRepository.findById(boardId)).thenReturn(Optional.of(board))
@@ -113,7 +113,7 @@ class BoardCommentServiceTest {
     fun `없는 댓글을 삭제하려는 경우 실패한다`() {
         val boardId = 1L
         val commentId = 100L
-        val board = Board(id = boardId, uid = 1L, title = "title", body = "body")
+        val board = Board(id = boardId, uid = 1L, title = "title", content = "content")
 
         `when`(boardRepository.findById(boardId)).thenReturn(Optional.of(board))
         `when`(boardCommentRepository.findById(commentId)).thenReturn(Optional.empty())
@@ -131,7 +131,7 @@ class BoardCommentServiceTest {
     fun `삭제하려는 댓글이 게시글과 다른 경우 예외가 발생한다`() {
         val boardId = 1L
         val commentId = 100L
-        val board = Board(id = boardId, uid = 1L, title = "title", body = "body")
+        val board = Board(id = boardId, uid = 1L, title = "title", content = "content")
         val comment = BoardComment(id = commentId, bid = 999L, uid = 1L, content = "comment")
 
         `when`(boardRepository.findById(boardId)).thenReturn(Optional.of(board))
@@ -149,7 +149,7 @@ class BoardCommentServiceTest {
     @DisplayName("Board id로 Comment 들을 조회하는데 성공한다")
     fun `board id로 Comment 목록을 조회하는데 성공한다`() {
         val boardId = 1L
-        val board = Board(id = boardId, uid = 1L, title = "title", body = "body", status = BoardStatus.ACTIVE, deletedDate = null).apply {
+        val board = Board(id = boardId, uid = 1L, title = "title", content = "content", status = BoardStatus.ACTIVE, deletedDate = null).apply {
             createdDate = LocalDateTime.now()
             modifiedDate = LocalDateTime.now()
         }

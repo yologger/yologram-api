@@ -7,7 +7,7 @@ data class BoardData(
     val bid: Long,
     val uid: Long,
     val title: String,
-    val body: String,
+    val content: String,
     val createdDate: LocalDateTime,
     val modifiedDate: LocalDateTime,
 ) {
@@ -22,7 +22,7 @@ data class BoardData(
                 bid = board.id,
                 uid = board.uid,
                 title = board.title,
-                body = board.body,
+                content = board.content,
                 createdDate = board.createdDate,
                 modifiedDate = board.modifiedDate
             )

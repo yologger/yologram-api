@@ -46,7 +46,7 @@ class BoardResourceTest(
         @Test
         @DisplayName("게시글 등록에 성공하면 201을 응답한다")
         fun `게시글 등록에 성공하면 201을 응답한다`() {
-            val request = CreateBoardRequest1(uid = 1, title = "title", body = "body")
+            val request = CreateBoardRequest1(uid = 1, title = "title", content = "content")
             val response =
                 APIEnvelop(
                     BoardData(
@@ -74,7 +74,7 @@ class BoardResourceTest(
         @Test
         @DisplayName("User가 존재하지 않으면 400 에러가 발생한다")
         fun `User가 존재하지 않으면 400 에러가 발생한다`() {
-            val request = CreateBoardRequest1(uid = 1, title = "title from uid=1", body = "body from uid1=")
+            val request = CreateBoardRequest1(uid = 1, title = "title from uid=1", content = "content from uid1=")
 
             given(
                 boardService.createBoard(any(), any(), any())
@@ -102,11 +102,16 @@ class BoardResourceTest(
             val bid = 123L
             val board = BoardDataWithMetrics(
                 bid,
-                1L,
                 "title",
                 "body",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
+                writer = BoardDataWithMetrics.Writer(
+                    uid = 1L,
+                    name = "tester",
+                    nickname = "tester",
+                    avatar = null
+                ),
                 metrics = BoardDataWithMetrics.Metrics(
                     commentCount = 5,
                     likeCount = 3,
@@ -334,30 +339,40 @@ class BoardResourceTest(
 
             val boards = listOf(
                 BoardDataWithMetrics(
-                    bid = 1L,
-                    uid = uid,
-                    title = "title1",
-                    body = "body1",
-                    createdDate = LocalDateTime.now(),
-                    modifiedDate = LocalDateTime.now(),
+                    1L,
+                    "title",
+                    "body",
+                    LocalDateTime.now(),
+                    LocalDateTime.now(),
+                    writer = BoardDataWithMetrics.Writer(
+                        uid = 1L,
+                        name = "tester",
+                        nickname = "tester",
+                        avatar = null
+                    ),
                     metrics = BoardDataWithMetrics.Metrics(
                         commentCount = 5,
                         likeCount = 3,
                         viewCount = 1
-                    ),
+                    )
                 ),
                 BoardDataWithMetrics(
-                    bid = 2L,
-                    uid = uid,
-                    title = "title2",
-                    body = "body2",
-                    createdDate = LocalDateTime.now(),
-                    modifiedDate = LocalDateTime.now(),
+                    2L,
+                    "title",
+                    "body",
+                    LocalDateTime.now(),
+                    LocalDateTime.now(),
+                    writer = BoardDataWithMetrics.Writer(
+                        uid = 1L,
+                        name = "tester",
+                        nickname = "tester",
+                        avatar = null
+                    ),
                     metrics = BoardDataWithMetrics.Metrics(
                         commentCount = 5,
                         likeCount = 3,
                         viewCount = 1
-                    ),
+                    )
                 )
             )
 

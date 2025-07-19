@@ -29,6 +29,9 @@ class User (
     @Column(name = "password", columnDefinition = "varchar(200) charset utf8mb4")
     var password: String,
 
+    @Column(name = "avatar", columnDefinition = "varchar(512) charset utf8mb4")
+    var avatar: String? = null,
+
     @Column(name = "access_token", columnDefinition = "varchar(256) charset utf8mb4")
     var accessToken: String? = null,
 

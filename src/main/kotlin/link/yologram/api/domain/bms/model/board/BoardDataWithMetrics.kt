@@ -4,13 +4,22 @@ import java.time.LocalDateTime
 
 data class BoardDataWithMetrics(
     val bid: Long,
-    val uid: Long,
     val title: String,
-    val body: String,
+    val content: String,
     val createdDate: LocalDateTime,
     val modifiedDate: LocalDateTime,
+    val writer: Writer,
     val metrics: Metrics
+    // val tags: Tag[]
+    // val categories: Category[]
 ) {
+    data class Writer (
+        val uid: Long,
+        val name: String,
+        val nickname: String,
+        val avatar: String?,
+    )
+
     data class Metrics (
         val commentCount: Long = 0,
         val likeCount: Long = 0,

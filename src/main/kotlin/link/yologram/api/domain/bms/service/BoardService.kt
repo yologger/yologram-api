@@ -24,13 +24,13 @@ class BoardService(
 ) {
     @Transactional(rollbackFor = [Exception::class])
     @Throws(UserNotFoundException::class)
-    fun createBoard(uid: Long, title: String, body: String): APIEnvelop<BoardData> {
+    fun createBoard(uid: Long, title: String, content: String): APIEnvelop<BoardData> {
         if (!userRepository.existsById(uid)) throw UserNotFoundException("User not exist")
         val saved = boardRepository.save(
             Board(
                 uid = uid,
                 title = title,
-                body = body
+                content = content
             )
         )
         return APIEnvelop(data = BoardData.fromEntity(board = saved))
@@ -41,7 +41,7 @@ class BoardService(
     fun editBoard(uid: Long, bid: Long, newTitle: String, newBody: String): APIEnvelop<BoardData> {
         val board = validateBoard(bid, uid)
         board.get().title = newTitle
-        board.get().body = newBody
+        board.get().content = newBody
         return APIEnvelop(data = BoardData.fromEntity(board.get()))
     }
 

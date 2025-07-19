@@ -48,7 +48,7 @@ class RedisCacheServiceTest() {
 
     @Test
     fun `게시글 정보 단건 저장, 조회`() {
-        val boardData = BoardData(bid = 10, uid = 1, title = "title10", body = "body10", createdDate = LocalDateTime.now(), modifiedDate = LocalDateTime.now())
+        val boardData = BoardData(bid = 10, uid = 1, title = "title10", content = "content10", createdDate = LocalDateTime.now(), modifiedDate = LocalDateTime.now())
         cacheService.set(cache = Cache.board(boardData.bid), value = boardData)
         val queried = cacheService.getOrNull(cache = Cache.board(boardData.bid))
         assertThat(queried).isNotNull

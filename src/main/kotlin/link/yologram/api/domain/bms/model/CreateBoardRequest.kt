@@ -20,7 +20,7 @@ data class CreateBoardRequest(
     val title: String,
 
     @Schema(description = "게시글 내용", defaultValue = "", required = true)
-    @field:NotBlank(message = "'body' must not be empty.")
-    @field:Size(min = 4, message = "'body' length must be longer than or equal to 4")
-    val body: String
+    @field:NotBlank(message = "'content' must not be empty.")
+    @field:Size(min = 4, message = "'content' length must be longer than or equal to 4")
+    val content: String
 )
