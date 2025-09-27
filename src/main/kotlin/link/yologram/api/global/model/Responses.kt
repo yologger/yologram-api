@@ -6,12 +6,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE
 import com.fasterxml.jackson.annotation.JsonInclude
 import io.swagger.v3.oas.annotations.media.Schema
 
-@JsonAutoDetect(fieldVisibility = ANY, isGetterVisibility = NONE)
-data class APIEnvelop<T>(
-    @Schema(description = "data", type = "object", nullable = false)
-    val data: T
-)
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class APIEnvelopPage<T>(
     val data: List<T>,
@@ -26,6 +20,12 @@ data class APIEnvelopPage<T>(
     val totalCount: Long? = null,
     val first: Boolean? = null,
     val last: Boolean? = null
+)
+
+@JsonAutoDetect(fieldVisibility = ANY, isGetterVisibility = NONE)
+data class APIEnvelop<T>(
+    @Schema(description = "data", type = "object", nullable = false)
+    val data: T
 )
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

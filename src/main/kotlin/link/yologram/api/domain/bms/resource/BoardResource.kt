@@ -2,6 +2,7 @@ package link.yologram.api.domain.bms.resource
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.constraints.Min
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
 import link.yologram.api.domain.bms.service.BoardService
 import link.yologram.api.domain.bms.model.*
@@ -39,7 +40,7 @@ class BoardResource(
         description = "bid로 게시글을 생성한다.",
     )
     @GetMapping("/board/{bid}")
-    fun getBoard(@PathVariable(name = "bid") bid: Long): ResponseEntity<APIEnvelop<BoardDataWithMetrics?>> {
+    fun getBoard(@PathVariable(name = "bid") @Validated @Min(1) bid: Long): ResponseEntity<APIEnvelop<BoardDataWithMetrics?>> {
         return boardService.getBoard(bid).wrapOk()
     }
 

@@ -40,4 +40,6 @@ class BoardCommentService(
         val board = boardRepository.findById(bid).orElseThrow { BoardNotFoundException("Board not found") }
         return APIEnvelopPage(data = boardCommentRepository.findAllByBid(board.id).map { CommentData.fromEntity(it) })
     }
+
+
 }

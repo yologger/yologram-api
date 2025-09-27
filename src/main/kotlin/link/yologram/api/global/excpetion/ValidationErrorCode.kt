@@ -1,6 +1,6 @@
 package link.yologram.api.global.excpetion
 
 enum class ValidationErrorCode {
-    METHOD_ARGUMENT_NOT_VALID,
+    METHOD_ARGUMENT_INVALID,
     HTTP_MESSAGE_NOT_READABLE,
 }

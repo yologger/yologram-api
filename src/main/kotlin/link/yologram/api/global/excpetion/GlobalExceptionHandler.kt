@@ -1,6 +1,7 @@
 package link.yologram.api.global.excpetion
 
 
+import jakarta.validation.ConstraintViolationException
 import link.yologram.api.global.rest.wrapInternalServerError
 import link.yologram.api.global.rest.wrapMethodNotAllowed
 import link.yologram.api.global.rest.wrapNotFound
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.servlet.NoHandlerFoundException
 
 @RestControllerAdvice
@@ -33,6 +35,8 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception::class)
     fun handle(e: Exception): ResponseEntity<GlobalErrorResponse> {
+        val exceptionTypeName = e::class.simpleName
+        logger.error(exceptionTypeName)
         logger.error(e.message)
         return GlobalErrorResponse(errorMessage = "Internal Server Error", errorCode = GlobalErrorCode.INTERNAL_SERVER_ERROR).wrapInternalServerError()
     }
