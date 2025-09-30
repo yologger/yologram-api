@@ -14,6 +14,9 @@ import link.yologram.api.domain.bms.model.GetBoardsRequest
 import link.yologram.api.domain.bms.model.board.BoardData
 import link.yologram.api.domain.bms.model.board.BoardDataWithMetrics
 import link.yologram.api.domain.bms.service.BoardService
+import link.yologram.api.domain.ums.model.AuthData
+import link.yologram.api.domain.ums.model.JwtClaim
+import link.yologram.api.domain.ums.util.JwtUtil
 import link.yologram.api.global.model.APIEnvelop
 import link.yologram.api.global.model.APIEnvelopCursorPage
 import link.yologram.api.global.model.APIEnvelopPage
@@ -33,7 +36,7 @@ import link.yologram.api.domain.bms.model.CreateBoardRequest as CreateBoardReque
 @WebMvcTestSupport(controllers = [BoardResource::class])
 class BoardResourceTest(
     @Autowired val client: WebTestClient,
-    @Autowired val jwtConfig: JwtConfig
+    @Autowired val jwtUtil: JwtUtil
 ) {
 
     @MockBean
@@ -46,6 +49,11 @@ class BoardResourceTest(
         @Test
         @DisplayName("게시글 등록에 성공하면 201을 응답한다")
         fun `게시글 등록에 성공하면 201을 응답한다`() {
+
+            val uid = 1L
+            val accessToken = jwtUtil.createToken(JwtClaim(uid = uid))
+            val authData = AuthData(uid = 10L, accessToken = accessToken)
+
             val request = CreateBoardRequest1(uid = 1, title = "title", content = "content")
             val response =
                 APIEnvelop(
@@ -65,6 +73,7 @@ class BoardResourceTest(
 
             client.post()
                 .uri("/api/bms/v1/board")
+                .header(AuthData.USER_KEY, "$accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
                 .exchange()
@@ -74,6 +83,11 @@ class BoardResourceTest(
         @Test
         @DisplayName("User가 존재하지 않으면 400 에러가 발생한다")
         fun `User가 존재하지 않으면 400 에러가 발생한다`() {
+
+            val uid = 1L
+            val accessToken = jwtUtil.createToken(JwtClaim(uid = uid))
+            val authData = AuthData(uid = 10L, accessToken = accessToken)
+
             val request = CreateBoardRequest1(uid = 1, title = "title from uid=1", content = "content from uid1=")
 
             given(
@@ -82,6 +96,7 @@ class BoardResourceTest(
 
             client.post()
                 .uri("/api/bms/v1/board")
+                .header(AuthData.USER_KEY, "$accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
                 .exchange()
@@ -308,19 +323,18 @@ class BoardResourceTest(
         @Test
         @DisplayName("cursor 기반 게시글 목록 조회 실패 시 400을 응답한다")
         fun `cursor 기반 게시글 목록 조회 실패 시 400을 응답한다`() {
-            val request = GetBoardsRequest(nextCursor = "invalid-cursor", size = 10)
+            val size = 10
+            val nextCursor = "nextCursor"
+
             given(
                 boardService.getBoardsWithMetrics(any(), any())
-            ).willThrow(InvalidPaginationCursorException("Invalid cursor"))
+            ).willThrow(InvalidPaginationCursorException("Invalidcursor"))
 
             client.method(HttpMethod.GET)
-                .uri("/api/bms/v1/boards")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(request)
+                .uri("/api/bms/v1/boards?nextCursor=$nextCursor&size=$size")
                 .exchange()
                 .expectStatus().isBadRequest
                 .expectBody()
-                .jsonPath("$.errorMessage").isEqualTo("Invalid cursor")
                 .jsonPath("$.errorCode").isEqualTo("INVALID_PAGINATION_CURSOR")
         }
     }

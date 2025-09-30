@@ -3,10 +3,12 @@ package link.yologram.api.domain.bms.resource
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.Max
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
 import link.yologram.api.domain.bms.service.BoardService
 import link.yologram.api.domain.bms.model.*
 import link.yologram.api.domain.bms.model.board.BoardDataWithMetrics
+import link.yologram.api.domain.ums.model.AuthData
 import link.yologram.api.global.model.APIEnvelop
 import link.yologram.api.global.model.APIEnvelopCursorPage
 import link.yologram.api.global.model.APIEnvelopPage
@@ -32,7 +34,10 @@ class BoardResource(
         description = "uid, title, body로 게시글을 생성한다.",
     )
     @PostMapping("/board", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun createBoard(@Validated @RequestBody request: CreateBoardRequest) =
+    fun createBoard(
+        @Validated @RequestBody request: CreateBoardRequest,
+        authData: AuthData
+    ) =
         boardService.createBoard(uid = request.uid, title = request.title, content = request.content).wrapCreated()
 
     @Operation(
@@ -65,13 +70,14 @@ class BoardResource(
         summary = "최신 게시글 조회",
         description = "Home 화면의 Infinite Scrolling 용. cursor based pagination",
     )
-    @GetMapping("/boards", consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping("/boards")
     fun getBoards(
-        @Validated @RequestBody request: GetBoardsRequest
-    ): ResponseEntity<APIEnvelopCursorPage<BoardDataWithMetrics>> {
-        return boardService.getBoardsWithMetrics(nextCursorId = request.nextCursor, size = request.size).wrapOk()
-    }
+        @RequestParam(defaultValue = "10") @Min(1) @Max(value = 40) size: Long = 10,
+        @RequestParam(required = false) nextCursor: String? = null
 
+    ): ResponseEntity<APIEnvelopCursorPage<BoardDataWithMetrics>> {
+        return boardService.getBoardsWithMetrics(size = size, nextCursorId = nextCursor).wrapOk()
+    }
 
     @GetMapping("/user/{uid}/boards", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun getBoardsByUid(

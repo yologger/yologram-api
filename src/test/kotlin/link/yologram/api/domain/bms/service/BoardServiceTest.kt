@@ -247,7 +247,7 @@ class BoardServiceTest() {
 
             BDDMockito.given(boardRepository.findBoardsWithMetrics(bid1, 2)).willReturn(boardList)
 
-            val result = service.getBoardsWithMetrics(cursor, 2)
+            val result = service.getBoardsWithMetrics(2L, cursor)
 
             assertThat(result.data).hasSize(2)
             assertThat(result.data[0].bid).isEqualTo(bid1)
@@ -262,7 +262,7 @@ class BoardServiceTest() {
             val cursor = BoardService.CursorUtil.encode(100L)
             BDDMockito.given(boardRepository.findBoardsWithMetrics(100L, 2)).willReturn(boardList)
 
-            val result = service.getBoardsWithMetrics(cursor, 2)
+            val result = service.getBoardsWithMetrics(2, cursor)
 
             assertThat(result.data).isEmpty()
             assertThat(result.nextCursor).isNull()

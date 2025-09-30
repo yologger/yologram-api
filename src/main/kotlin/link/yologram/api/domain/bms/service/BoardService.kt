@@ -58,7 +58,7 @@ class BoardService(
 
     @Transactional(readOnly = true, rollbackFor = [Exception::class])
     @Throws(InvalidPaginationCursorException::class)
-    fun getBoardsWithMetrics(nextCursorId: String?, size: Long): APIEnvelopCursorPage<BoardDataWithMetrics> {
+    fun getBoardsWithMetrics(size: Long, nextCursorId: String?): APIEnvelopCursorPage<BoardDataWithMetrics> {
         val decodedNextCursorId = CursorUtil.decode(nextCursorId)
         val boards = boardRepository.findBoardsWithMetrics(decodedNextCursorId, size)
         val nextCursorId = boards.lastOrNull()?.bid
