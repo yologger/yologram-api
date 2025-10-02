@@ -37,21 +37,21 @@ class JwtUtil(
             .withClaim("uid", jwtClaim.uid)
             .sign(Algorithm.HMAC256(jwtConfig.secret))
     } catch (e: JWTCreationException) {
-        throw AuthTokenCreationFailureException("Fail to create jwt token. ${e.message}")
+        throw AuthTokenCreationFailureException("Fail to create token. ${e.message}")
     }
 
     fun getTokenClaim(token: String): JwtClaim = try {
         val json = validateToken(token)
         json deserialize JwtClaim::class
     } catch (e: MismatchedInputException) {
-        throw AuthTokenInvalidException("Fail to parse jwt token")
+        throw AuthTokenInvalidException("Fail to parse token")
     }
 
     fun validateToken(token: String): String = try {
         jwtVerifier.verify(token).payload.decodeBase64()
     } catch (e: TokenExpiredException) {
-        throw AuthTokenExpiredException("Expired jwt token")
+        throw AuthTokenExpiredException("Expired token")
     } catch (e: JWTVerificationException) {
-        throw AuthTokenInvalidException("Invalid jwt token")
+        throw AuthTokenInvalidException("Invalid token")
     }
 }

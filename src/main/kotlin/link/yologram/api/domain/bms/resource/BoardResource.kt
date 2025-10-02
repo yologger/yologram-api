@@ -1,17 +1,28 @@
 package link.yologram.api.domain.bms.resource
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.enums.ParameterIn
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.ExampleObject
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.Max
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
 import link.yologram.api.domain.bms.service.BoardService
 import link.yologram.api.domain.bms.model.*
+import link.yologram.api.domain.bms.model.board.BoardData
 import link.yologram.api.domain.bms.model.board.BoardDataWithMetrics
 import link.yologram.api.domain.ums.model.AuthData
+import link.yologram.api.domain.ums.model.UmsErrorResponse
 import link.yologram.api.global.model.APIEnvelop
 import link.yologram.api.global.model.APIEnvelopCursorPage
 import link.yologram.api.global.model.APIEnvelopPage
+import link.yologram.api.global.rest.docs.ApiParameterAuthToken
+import link.yologram.api.global.rest.docs.ApiResponseInvalidArgument
+import link.yologram.api.global.rest.docs.ApiResponseUnauthorized
 import link.yologram.api.global.rest.wrapCreated
 import link.yologram.api.global.rest.wrapOk
 import org.slf4j.LoggerFactory
@@ -29,16 +40,44 @@ class BoardResource(
 
     private val logger = LoggerFactory.getLogger(BoardResource::class.java)
 
-    @Operation(
-        summary = "게시글 작성",
-        description = "uid, title, body로 게시글을 생성한다.",
+    @Operation(summary = "게시글 작성", description = "title, content로 게시글을 생성한다.")
+    @ApiParameterAuthToken
+    @ApiResponseInvalidArgument
+    @ApiResponseUnauthorized
+    @ApiResponse(
+        responseCode = "201",
+        description = "게시글 생성 성공",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = BoardData::class),
+            )
+        ]
     )
-    @PostMapping("/board", consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @ApiResponse(
+        responseCode = "404",
+        description = "존재하지 않는 유저",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = UmsErrorResponse::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "errorMessage": "User not exist",
+                            "errorCode": "USER_NOT_FOUND"
+                        }"""
+                    )
+                ]
+            )
+        ]
+    )
+    @PostMapping("/board", consumes = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
     fun createBoard(
         @Validated @RequestBody request: CreateBoardRequest,
-        authData: AuthData
+        @Parameter(hidden = true) authData: AuthData
     ) =
-        boardService.createBoard(uid = request.uid, title = request.title, content = request.content).wrapCreated()
+        boardService.createBoard(uid = authData.uid, title = request.title, content = request.content).wrapCreated()
 
     @Operation(
         summary = "게시글 조회",
@@ -58,10 +97,7 @@ class BoardResource(
         boardService.editBoard(uid = request.uid, bid = request.bid, newTitle = request.title, newBody = request.body)
             .wrapOk()
 
-    @Operation(
-        summary = "게시글 삭제",
-        description = "uid, bid로 게시글을 생성한다.",
-    )
+    @Operation(summary = "게시글 삭제", description = "uid, bid로 게시글을 생성한다.")
     @DeleteMapping("/board", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun deleteBoard(@Validated @RequestBody request: DeleteBoardRequest) =
         boardService.deleteBoard(uid = request.uid, bid = request.bid).wrapOk()

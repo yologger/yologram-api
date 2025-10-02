@@ -106,8 +106,8 @@ class AuthResource(
         responses = [
             ApiResponse(responseCode = "200", description = "로그인 성공 후 인증 토큰을 발급받는다"),
             ApiResponse(
-                responseCode = "404",
-                description = "유저가 존재하지 않는다",
+                responseCode = "400",
+                description = "존재하지 않는 user",
                 content = [
                     Content(
                         mediaType = "application/json",
