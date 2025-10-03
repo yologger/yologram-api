@@ -2,6 +2,9 @@ package link.yologram.api.domain.bms.exception
 
 import link.yologram.api.domain.bms.model.BmsErrorResponse
 import link.yologram.api.global.rest.wrapBadRequest
+import link.yologram.api.global.rest.wrapForbidden
+import link.yologram.api.global.rest.wrapNotFound
+import link.yologram.api.global.rest.wrapUnauthorized
 import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
@@ -18,19 +21,19 @@ class BmsExceptionHandler {
     @ExceptionHandler(value = [UserNotFoundException::class])
     fun handle(e: UserNotFoundException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
-        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.USER_NOT_FOUND).wrapBadRequest()
+        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.USER_NOT_FOUND).wrapNotFound()
     }
 
     @ExceptionHandler(value = [BoardNotFoundException::class])
     fun handle(e: BoardNotFoundException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
-        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.BOARD_NOT_FOUND).wrapBadRequest()
+        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.BOARD_NOT_FOUND).wrapNotFound()
     }
 
     @ExceptionHandler(value = [BoardWrongWriterException::class])
     fun handle(e: BoardWrongWriterException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
-        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.BOARD_WRONG_WRITER).wrapBadRequest()
+        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.BOARD_WRONG_WRITER).wrapForbidden()
     }
 
     @ExceptionHandler(value = [CommentNotFoundException::class])

@@ -12,11 +12,14 @@ fun <T> T.wrapConflict() = ResponseEntity.status(HttpStatus.CONFLICT).body(this)
 /** Wrap Response Created */
 fun <T> T.wrapCreated() = ResponseEntity.status(HttpStatus.CREATED).body(this)
 
-/** Wrap Bad Request */
+/** Wrap Bad Request (403) */
 fun <T> T.wrapBadRequest() = ResponseEntity.badRequest().body(this)
 
-/** Wrap Unauthorized */
+/** Wrap Unauthorized (401) */
 fun <T> T.wrapUnauthorized() = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(this)
+
+/** Forbidden (403) */
+fun <T> T.wrapForbidden() = ResponseEntity.status(HttpStatus.FORBIDDEN).body(this)
 
 /** Internal Server Error */
 fun <T> T.wrapInternalServerError() = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(this)

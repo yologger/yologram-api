@@ -16,7 +16,6 @@ import link.yologram.api.domain.bms.model.*
 import link.yologram.api.domain.bms.model.board.BoardData
 import link.yologram.api.domain.bms.model.board.BoardDataWithMetrics
 import link.yologram.api.domain.ums.model.AuthData
-import link.yologram.api.domain.ums.model.UmsErrorResponse
 import link.yologram.api.global.model.APIEnvelop
 import link.yologram.api.global.model.APIEnvelopCursorPage
 import link.yologram.api.global.model.APIEnvelopPage
@@ -33,6 +32,7 @@ import org.springframework.web.bind.annotation.*
 
 @Tag(name = "게시글", description = "게시글 관련 엔드포인트 (bms/BoardResource)")
 @RestController
+@ApiResponseInvalidArgument
 @RequestMapping("/api/bms/v1", produces = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
 class BoardResource(
     private val boardService: BoardService
@@ -42,7 +42,6 @@ class BoardResource(
 
     @Operation(summary = "게시글 작성", description = "title, content로 게시글을 생성한다.")
     @ApiParameterAuthToken
-    @ApiResponseInvalidArgument
     @ApiResponseUnauthorized
     @ApiResponse(
         responseCode = "201",
@@ -60,7 +59,7 @@ class BoardResource(
         content = [
             Content(
                 mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
-                schema = Schema(implementation = UmsErrorResponse::class),
+                schema = Schema(implementation = BmsErrorResponse::class),
                 examples = [
                     ExampleObject(
                         value = """{
@@ -97,10 +96,50 @@ class BoardResource(
         boardService.editBoard(uid = request.uid, bid = request.bid, newTitle = request.title, newBody = request.body)
             .wrapOk()
 
-    @Operation(summary = "게시글 삭제", description = "uid, bid로 게시글을 생성한다.")
-    @DeleteMapping("/board", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun deleteBoard(@Validated @RequestBody request: DeleteBoardRequest) =
-        boardService.deleteBoard(uid = request.uid, bid = request.bid).wrapOk()
+    @Operation(summary = "게시글 삭제", description = "bid로 게시글을 삭제한다.")
+    @ApiParameterAuthToken
+    @ApiResponseUnauthorized
+    @ApiResponse(
+        responseCode = "403",
+        description = "uid가 board의 작성자가 아닐 때",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = BmsErrorResponse::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "errorMessage": "Wrong board writer",
+                            "errorCode": "BOARD_WRONG_WRITER"
+                        }"""
+                    )
+                ]
+            )
+        ]
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "user가 존재하지 않거나, board가 존재하지 않음",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = BmsErrorResponse::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "errorMessage": "Board not exist",
+                            "errorCode": "BOARD_NOT_FOUND"
+                        }"""
+                    )
+                ]
+            )
+        ]
+    )
+    @DeleteMapping("/board/{bid}", consumes = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
+    fun deleteBoard(
+        @PathVariable(name = "bid") @Validated @Min(1) bid: Long,
+        @Parameter(hidden = true) authData: AuthData
+    ) = boardService.deleteBoard(uid = authData.uid, bid = bid).wrapOk()
 
     @Operation(
         summary = "최신 게시글 조회",

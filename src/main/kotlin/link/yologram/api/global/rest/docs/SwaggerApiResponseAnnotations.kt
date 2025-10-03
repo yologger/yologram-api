@@ -31,26 +31,26 @@ import kotlin.annotation.AnnotationTarget.FUNCTION
         )
     ]
 )
-@ApiResponse(
-    responseCode = "405",
-    description = "잘못된 HTTP Method",
-    content = [
-        Content(
-            mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
-            schema = Schema(
-                example = "{ \"errorMessage\": \"(에러 메시지)\", \"errorCode\": \"(에러 코드)\" }"
-            ),
-            examples = [
-                ExampleObject(
-                    value = """{
-                        "errorMessage": "Http Request Method Not Allowed",
-                        "errorCode": "HTTP_REQUEST_METHOD_NOT_ALLOWED"    
-                    }"""
-                )
-            ]
-        )
-    ]
-)
+//@ApiResponse(
+//    responseCode = "405",
+//    description = "잘못된 HTTP Method",
+//    content = [
+//        Content(
+//            mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+//            schema = Schema(
+//                example = "{ \"errorMessage\": \"(에러 메시지)\", \"errorCode\": \"(에러 코드)\" }"
+//            ),
+//            examples = [
+//                ExampleObject(
+//                    value = """{
+//                        "errorMessage": "Http Request Method Not Allowed",
+//                        "errorCode": "HTTP_REQUEST_METHOD_NOT_ALLOWED"
+//                    }"""
+//                )
+//            ]
+//        )
+//    ]
+//)
 annotation class ApiResponseInvalidArgument
 
 @ApiResponse(

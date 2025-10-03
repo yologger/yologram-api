@@ -51,5 +51,4 @@ class ValidationExceptionHandler {
         logger.error(e.message)
         return ValidationErrorResponse(errorMessage = "Json parse error", errorCode = ValidationErrorCode.HTTP_REQUEST_ARGUMENT_INVALID).wrapBadRequest()
     }
-
 }
