@@ -40,13 +40,13 @@ class BmsExceptionHandler {
     @ExceptionHandler(value = [CommentNotFoundException::class])
     fun handle(e: CommentNotFoundException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
-        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.COMMENT_NOT_FOUND).wrapBadRequest()
+        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.COMMENT_NOT_FOUND).wrapNotFound()
     }
 
     @ExceptionHandler(value = [BoardCommentMismatchException::class])
     fun handle(e: BoardCommentMismatchException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
-        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.BOARD_COMMENT_MISMATCH).wrapBadRequest()
+        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.BOARD_COMMENT_MISMATCH).wrapUnprocessableEntity()
     }
 
     @ExceptionHandler(value = [BoardCommentCountException::class])
