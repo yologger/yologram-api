@@ -87,7 +87,7 @@ class BoardCommentResource(
         return boardCommentService.createComment(boardId = bid, userId = authData.uid, content = request.content).wrapCreated()
     }
 
-    @Operation(summary = "댓글 삭제",  description = "bid, uid로 댓글을 작성한다.")
+    @Operation(summary = "댓글 삭제",  description = "bid, uid로 댓글을 삭제한다.")
     @ApiParameterAuthToken
     @ApiResponseUnauthorized
     @ApiResponse(
@@ -140,9 +140,70 @@ class BoardCommentResource(
         return ResponseEntity.noContent().build()
     }
 
+    @Operation(summary = "게시글의 댓글 조회",  description = "bid로 게시글의 댓글을 조회한다.")
+    @ApiResponse(
+        responseCode = "200",
+        description = "게시글의 댓글 조회",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = APIEnvelopPage::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "data": [
+                                {
+                                    "id": 3,
+                                    "bid": 2,
+                                    "uid": 1,
+                                    "content": "comment1",
+                                    "createdDate": "2025-05-03T19:55:47",
+                                    "modifiedDate": "2025-05-03T19:55:47"
+                                },
+                                {
+                                    "id": 4,
+                                    "bid": 2,
+                                    "uid": 1,
+                                    "content": "comment2",
+                                    "createdDate": "2025-05-03T19:55:51",
+                                    "modifiedDate": "2025-05-03T19:55:51"
+                                },
+                                {
+                                    "id": 5,
+                                    "bid": 2,
+                                    "uid": 1,
+                                    "content": "comment3",
+                                    "createdDate": "2025-05-03T19:55:54",
+                                    "modifiedDate": "2025-05-03T19:55:54"
+                                }
+                            ]
+                        }"""
+                    )
+                ]
+            )
+        ]
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "게시글이나 댓글이 존재하지 않음",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = BmsErrorResponse::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "errorMessage": "Board not exist",
+                            "errorCode": "BOARD_NOT_FOUND"
+                        }"""
+                    )
+                ]
+            )
+        ]
+    )
     @GetMapping("/board/{bid}/comments")
     fun getCommentsByBid(
-        @PathVariable bid: Long
+        @PathVariable @Validated @Min(1) bid: Long
     ): ResponseEntity<APIEnvelopPage<CommentData>> {
         return boardCommentService.getCommentsByBid(bid = bid).wrapOk()
     }

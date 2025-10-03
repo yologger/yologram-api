@@ -23,7 +23,7 @@ import kotlin.annotation.AnnotationTarget.FUNCTION
             examples = [
                 ExampleObject(
                     value = """{
-                        "errorMessage": "Invalid email format",
+                        "errorMessage": "(에러 메시지)",
                         "errorCode": "HTTP_REQUEST_ARGUMENT_INVALID"    
                     }"""
                 )
