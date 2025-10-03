@@ -2,7 +2,6 @@ package link.yologram.api.domain.bms.resource
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
-import io.swagger.v3.oas.annotations.enums.ParameterIn
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
@@ -78,9 +77,16 @@ class BoardResource(
     ) =
         boardService.createBoard(uid = authData.uid, title = request.title, content = request.content).wrapCreated()
 
-    @Operation(
-        summary = "게시글 조회",
-        description = "bid로 게시글을 생성한다.",
+    @Operation(summary = "게시글 조회", description = "bid로 게시글을 생성한다.",)
+    @ApiResponse(
+        responseCode = "200",
+        description = "게시글 조회 성공",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = BoardDataWithMetrics::class)
+            )
+        ]
     )
     @GetMapping("/board/{bid}")
     fun getBoard(@PathVariable(name = "bid") @Validated @Min(1) bid: Long): ResponseEntity<APIEnvelop<BoardDataWithMetrics?>> {
