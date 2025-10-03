@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
-@Tag(name = "게시글", description = "게시글 조회수 엔드포인트 (bms/BoardResource)")
+@Tag(name = "게시글/조회수", description = "게시글 조회수 엔드포인트 (bms/BoardResource)")
 @RestController
 @RequestMapping("/api/bms/v1", produces = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
 class BoardViewResource(

@@ -286,11 +286,72 @@ class BoardResource(
         return boardService.getBoardsWithMetrics(size = size, nextCursorId = nextCursor).wrapOk()
     }
 
-    @GetMapping("/user/{uid}/boards", consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @Operation(summary = "유저 게시글 조회", description = "Profile 화면의 Pagination Bar 용 (offset based pagination)")
+    @ApiResponse(
+        responseCode = "200",
+        description = "유저 게시글 조회",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = APIEnvelopPage::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "data": [
+                                {
+                                    "bid": 44,
+                                    "title": "test post200 title",
+                                    "content": "test post200 body",
+                                    "createdDate": "2025-06-13T21:54:15",
+                                    "modifiedDate": "2025-06-13T21:54:15",
+                                    "writer": {
+                                        "uid": 3,
+                                        "name": "ronaldo",
+                                        "nickname": "ronaldo",
+                                        "avatar": null
+                                    },
+                                    "metrics": {
+                                        "commentCount": 0,
+                                        "likeCount": 0,
+                                        "viewCount": 0
+                                    }
+                                },
+                                {
+                                    "bid": 43,
+                                    "title": "test post200 title",
+                                    "content": "test post200 body",
+                                    "createdDate": "2025-06-13T21:41:19",
+                                    "modifiedDate": "2025-06-13T21:41:19",
+                                    "writer": {
+                                        "uid": 3,
+                                        "name": "ronaldo",
+                                        "nickname": "ronaldo",
+                                        "avatar": null
+                                    },
+                                    "metrics": {
+                                        "commentCount": 0,
+                                        "likeCount": 0,
+                                        "viewCount": 0
+                                    }
+                                }
+                            ],
+                            "page": 2,
+                            "size": 2,
+                            "totalPages": 5,
+                            "totalCount": 9,
+                            "first": false,
+                            "last": false
+                        }"""
+                    )
+                ]
+            )
+        ]
+    )
+    @GetMapping("/user/{uid}/boards", consumes = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
     fun getBoardsByUid(
-        @PathVariable(name = "uid") uid: Long,
-        @RequestParam page: Long,
-        @RequestParam size: Long
+        @PathVariable(name = "uid") @Validated @Min(1)  uid: Long,
+        @RequestParam(defaultValue = "0") @Min(0) page: Long = 0,
+        @RequestParam(defaultValue = "10") @Min(1) @Max(value = 40) size: Long = 10,
     ): ResponseEntity<APIEnvelopPage<BoardDataWithMetrics>> {
         return boardService.getBoardsByUid(uid = uid, page = page, size = size).wrapOk()
     }
