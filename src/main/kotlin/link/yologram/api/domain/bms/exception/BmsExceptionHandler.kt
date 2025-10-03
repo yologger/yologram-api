@@ -64,7 +64,7 @@ class BmsExceptionHandler {
     @ExceptionHandler(value = [UserNotLikeBoardException::class])
     fun handle(e: UserNotLikeBoardException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
-        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.USER_NOT_LIKE_BOARD).wrapBadRequest()
+        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.USER_NOT_LIKE_BOARD).wrapUnprocessableEntity()
     }
 
     @ExceptionHandler(value = [InvalidPaginationCursorException::class])

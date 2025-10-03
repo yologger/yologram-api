@@ -94,10 +94,49 @@ class BoardLikeResource(
         return boardLikeService.likeBoard(uid = authData.uid, bid = bid).wrapOk()
     }
 
+    @Operation(summary = "게시글 좋아요 취소", description = "uid, bid로 게시글 좋아요 취소")
+    @ApiParameterAuthTokenRequired
+    @ApiResponseUnauthorized
+    @ApiResponse(
+        responseCode = "404",
+        description = "게시글이 존재하지 않음",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = BmsErrorResponse::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "errorMessage": "Board not exist",
+                            "errorCode": "BOARD_NOT_FOUND"
+                        }"""
+                    )
+                ]
+            )
+        ]
+    )
+    @ApiResponse(
+        responseCode = "422",
+        description = "이전에 좋아요를 한 적이 없음",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = BmsErrorResponse::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "errorMessage": "User (uid) not like board (bid)",
+                            "errorCode": "USER_NOT_LIKE_BOARD"
+                        }"""
+                    )
+                ]
+            )
+        ]
+    )
     @DeleteMapping("/board/like/{bid}", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun unlikeBoard(
-        @PathVariable(name = "bid") bid: Long,
-        authData: AuthData
+        @PathVariable(name = "bid") @Validated @Min(1) bid: Long,
+        @Parameter(hidden = true) authData: AuthData
     ): ResponseEntity<APIEnvelop<UnlikeBoardResponse>> {
         return boardLikeService.unlikeBoard(uid = authData.uid, bid = bid).wrapOk()
     }
