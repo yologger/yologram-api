@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size
 )
 data class CreateCommentRequest(
 
-    @Schema(description = "댓글 내용", defaultValue = "", required = true)
+    @field:Schema(description = "댓글 내용", defaultValue = "", required = true)
     @field:NotBlank(message = "'content' must not be empty.")
     @field:Size(min = 4, message = "'content' length must be longer than or equal to 4")
     val content: String

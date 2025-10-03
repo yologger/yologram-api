@@ -1,14 +1,23 @@
 package link.yologram.api.domain.bms.resource
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.ExampleObject
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.constraints.Min
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
+import link.yologram.api.domain.bms.model.BmsErrorResponse
 import link.yologram.api.domain.bms.model.comment.CommentData
 import link.yologram.api.domain.bms.model.comment.CreateCommentRequest
 import link.yologram.api.domain.bms.service.BoardCommentService
 import link.yologram.api.domain.ums.model.AuthData
 import link.yologram.api.global.model.APIEnvelop
 import link.yologram.api.global.model.APIEnvelopPage
+import link.yologram.api.global.rest.docs.ApiParameterAuthToken
+import link.yologram.api.global.rest.docs.ApiResponseUnauthorized
 import link.yologram.api.global.rest.wrapCreated
 import link.yologram.api.global.rest.wrapOk
 import org.springframework.http.ResponseEntity
@@ -22,15 +31,56 @@ class BoardCommentResource(
     private val boardCommentService: BoardCommentService
 ) {
 
-    @Operation(
-        summary = "댓글 작성",
-        description = "bid, uid, content로 댓글을 작성한다."
+    @Operation(summary = "댓글 작성",  description = "bid, uid, content로 댓글을 작성한다.")
+    @PostMapping("/board/{bid}/comment", consumes = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
+    @ApiParameterAuthToken
+    @ApiResponseUnauthorized
+    @ApiResponse(
+        responseCode = "201",
+        description = "댓글 작성 완료",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = APIEnvelop::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "data": {
+                                "id": 6,
+                                "bid": 3,
+                                "uid": 32,
+                                "content": "This is comment 1",
+                                "createdDate": "2025-10-03T15:00:19.897565",
+                                "modifiedDate": "2025-10-03T15:00:19.897565"
+                            }
+                        }"""
+                    )
+                ]
+            )
+        ]
     )
-    @PostMapping("/board/{bid}/comment")
+    @ApiResponse(
+        responseCode = "404",
+        description = "존재하지 않는 게시글",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = BmsErrorResponse::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "errorMessage": "Board not exist",
+                            "errorCode": "BOARD_NOT_FOUND"
+                        }"""
+                    )
+                ]
+            )
+        ]
+    )
     fun createComment(
-        authData: AuthData,
-        @PathVariable bid: Long,
-        @Validated @RequestBody request: CreateCommentRequest
+        @PathVariable @Validated @Min(1) bid: Long,
+        @Validated @RequestBody request: CreateCommentRequest,
+        @Parameter(hidden = true) authData: AuthData
     ): ResponseEntity<APIEnvelop<CommentData>> {
         return boardCommentService.createComment(boardId = bid, userId = authData.uid, content = request.content).wrapCreated()
     }
