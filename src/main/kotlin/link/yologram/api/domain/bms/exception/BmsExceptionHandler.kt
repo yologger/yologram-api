@@ -58,7 +58,7 @@ class BmsExceptionHandler {
     @ExceptionHandler(value = [UserAlreadyLikeBoardException::class])
     fun handle(e: UserAlreadyLikeBoardException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
-        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.USER_ALREADY_LIKE_BOARD).wrapBadRequest()
+        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.USER_ALREADY_LIKE_BOARD).wrapUnprocessableEntity()
     }
 
     @ExceptionHandler(value = [UserNotLikeBoardException::class])

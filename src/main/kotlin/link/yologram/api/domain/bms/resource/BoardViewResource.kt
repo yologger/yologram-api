@@ -44,6 +44,12 @@ class BoardViewResource(
                 examples = [
                     ExampleObject(
                         value = """{
+                            "errorMessage": "User not exist",
+                            "errorCode": "USER_NOT_FOUND"
+                        }"""
+                    ),
+                    ExampleObject(
+                        value = """{
                             "errorMessage": "Board not exist",
                             "errorCode": "BOARD_NOT_FOUND"
                         }"""
