@@ -87,18 +87,75 @@ class BoardResource(
         return boardService.getBoard(bid).wrapOk()
     }
 
-    @Operation(
-        summary = "게시글 수정",
-        description = "uid, bid로 게시글을 생성한다.",
+    @Operation(summary = "게시글 수정", description = "bid로 게시글을 수정한다.")
+    @ApiParameterAuthToken
+    @ApiResponseUnauthorized
+    @ApiResponse(
+        responseCode = "200",
+        description = "게시글 수정 성공",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = BoardData::class),
+            )
+        ]
     )
-    @PatchMapping("/board")
-    fun editBoard(@Validated @RequestBody request: EditBoardRequest) =
-        boardService.editBoard(uid = request.uid, bid = request.bid, newTitle = request.title, newBody = request.body)
-            .wrapOk()
+    @ApiResponse(
+        responseCode = "403",
+        description = "uid가 board의 작성자가 아닐 때",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = BmsErrorResponse::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "errorMessage": "Wrong board writer",
+                            "errorCode": "BOARD_WRONG_WRITER"
+                        }"""
+                    )
+                ]
+            )
+        ]
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "user가 존재하지 않거나, board가 존재하지 않음",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = BmsErrorResponse::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "errorMessage": "Board not exist",
+                            "errorCode": "BOARD_NOT_FOUND"
+                        }"""
+                    )
+                ]
+            )
+        ]
+    )
+    @PatchMapping("/board/{bid}")
+    fun editBoard(
+        @PathVariable(name = "bid") @Validated @Min(1) bid: Long,
+        @Validated @RequestBody request: EditBoardRequest,
+        @Parameter(hidden = true) authData: AuthData
+    ) = boardService.editBoard(uid = authData.uid, bid = bid, newTitle = request.title, newBody = request.body) .wrapOk()
 
     @Operation(summary = "게시글 삭제", description = "bid로 게시글을 삭제한다.")
     @ApiParameterAuthToken
     @ApiResponseUnauthorized
+    @ApiResponse(
+        responseCode = "200",
+        description = "게시글 삭제 성공",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = DeleteBoardResponse::class),
+            )
+        ]
+    )
     @ApiResponse(
         responseCode = "403",
         description = "uid가 board의 작성자가 아닐 때",
