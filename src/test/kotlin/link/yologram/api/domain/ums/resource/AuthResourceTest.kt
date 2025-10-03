@@ -197,7 +197,7 @@ class AuthResourceTest(
                 .exchange()
                 .expectStatus().isUnauthorized
                 .expectBody()
-                .jsonPath("$.errorMessage").isEqualTo("Invalid jwt token")
+                .jsonPath("$.errorMessage").isEqualTo("Invalid token")
                 .jsonPath("$.errorCode").isEqualTo("AUTH_INVALID_TOKEN")
         }
     }

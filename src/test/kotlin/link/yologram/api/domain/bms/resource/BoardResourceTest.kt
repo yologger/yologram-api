@@ -54,7 +54,7 @@ class BoardResourceTest(
             val accessToken = jwtUtil.createToken(JwtClaim(uid = uid))
             val authData = AuthData(uid = 10L, accessToken = accessToken)
 
-            val request = CreateBoardRequest1(uid = 1, title = "title", content = "content")
+            val request = CreateBoardRequest1(title = "title", content = "content")
             val response =
                 APIEnvelop(
                     BoardData(
@@ -81,14 +81,14 @@ class BoardResourceTest(
         }
 
         @Test
-        @DisplayName("User가 존재하지 않으면 400 에러가 발생한다")
-        fun `User가 존재하지 않으면 400 에러가 발생한다`() {
+        @DisplayName("User가 존재하지 않으면 404 에러가 발생한다")
+        fun `User가 존재하지 않으면 404 에러가 발생한다`() {
 
             val uid = 1L
             val accessToken = jwtUtil.createToken(JwtClaim(uid = uid))
             val authData = AuthData(uid = 10L, accessToken = accessToken)
 
-            val request = CreateBoardRequest1(uid = 1, title = "title from uid=1", content = "content from uid1=")
+            val request = CreateBoardRequest1(title = "title from uid=1", content = "content from uid1=")
 
             given(
                 boardService.createBoard(any(), any(), any())
@@ -100,7 +100,7 @@ class BoardResourceTest(
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
                 .exchange()
-                .expectStatus().isEqualTo(400)
+                .expectStatus().isEqualTo(404)
                 .expectBody()
                 .jsonPath("$.errorMessage").isEqualTo("User not exist")
                 .jsonPath("$.errorCode").isEqualTo("USER_NOT_FOUND")
@@ -172,7 +172,13 @@ class BoardResourceTest(
         @Test
         @DisplayName("게시글 수정 시 200을 응답한다")
         fun `게시글 수정 시 200을 응답한다`() {
-            val request = EditBoardRequest(uid = 1, bid = 1L, title = "new title", body = "new body")
+
+            val uid = 1L
+            val accessToken = jwtUtil.createToken(JwtClaim(uid = uid))
+            val authData = AuthData(uid = 10L, accessToken = accessToken)
+            val bid = 1L
+
+            val request = EditBoardRequest(title = "new title", body = "new body")
 
             given(
                 boardService.editBoard(any(), any(), any(), any())
@@ -190,17 +196,24 @@ class BoardResourceTest(
             )
 
             client.patch()
-                .uri("/api/bms/v1/board")
+                .uri("/api/bms/v1/board/${bid}")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthData.USER_KEY, "$accessToken")
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isOk
         }
 
         @Test
-        @DisplayName("게시글 수정 시 작성자가 아닌 경우 400을 응답한다")
+        @DisplayName("게시글 수정 시 작성자가 아닌 경우 403을 응답한다")
         fun `게시글 수정 시 작성자가 아닌 경우 403을 응답한다`() {
-            val request = EditBoardRequest(uid = 2, bid = 1L, title = "hack", body = "hackBody")
+
+            val uid = 2L
+            val accessToken = jwtUtil.createToken(JwtClaim(uid = uid))
+            val authData = AuthData(uid = 10L, accessToken = accessToken)
+            val bid = 1L
+
+            val request = EditBoardRequest(title = "hack", body = "hackBody")
             given(
                 boardService.editBoard(
                     any(),
@@ -211,11 +224,12 @@ class BoardResourceTest(
             ).willThrow(BoardWrongWriterException("Wrong board writer"))
 
             client.patch()
-                .uri("/api/bms/v1/board")
+                .uri("/api/bms/v1/board/${bid}")
+                .header(AuthData.USER_KEY, "$accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
                 .exchange()
-                .expectStatus().isBadRequest
+                .expectStatus().isForbidden
                 .expectBody()
                 .jsonPath("$.errorMessage").isEqualTo("Wrong board writer")
                 .jsonPath("$.errorCode").isEqualTo("BOARD_WRONG_WRITER")
@@ -224,7 +238,13 @@ class BoardResourceTest(
         @Test
         @DisplayName("게시글 수정 시 게시글이 존재하지 않으면 404를 응답한다")
         fun `게시글 수정 시 게시글이 존재하지 않으면 404를 응답한다`() {
-            val request = EditBoardRequest(uid = 1, bid = 999L, title = "notfound", body = "notfound")
+
+            val uid = 1L
+            val accessToken = jwtUtil.createToken(JwtClaim(uid = uid))
+            val authData = AuthData(uid = 10L, accessToken = accessToken)
+            val bid = 999L
+
+            val request = EditBoardRequest(title = "notfound", body = "notfound")
             given(
                 boardService.editBoard(
                     any(),
@@ -235,11 +255,12 @@ class BoardResourceTest(
             ).willThrow(BoardNotFoundException("Board not found"))
 
             client.patch()
-                .uri("/api/bms/v1/board")
+                .uri("/api/bms/v1/board/${bid}")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header(AuthData.USER_KEY, "$accessToken")
                 .bodyValue(request)
                 .exchange()
-                .expectStatus().isBadRequest
+                .expectStatus().isNotFound
                 .expectBody()
                 .jsonPath("$.errorMessage").isEqualTo("Board not found")
                 .jsonPath("$.errorCode").isEqualTo("BOARD_NOT_FOUND")
@@ -253,30 +274,39 @@ class BoardResourceTest(
         @DisplayName("게시글 삭제 시 200을 응답한다")
         fun `게시글 삭제 시 200을 응답한다`() {
 
-            val request = DeleteBoardRequest(uid = 1, bid = 1L)
+            val uid = 1L
+            val accessToken = jwtUtil.createToken(JwtClaim(uid = uid))
+            val authData = AuthData(uid = 10L, accessToken = accessToken)
+            val bid = 1L
+
             val response = APIEnvelop(DeleteBoardResponse(1, 1L))
             given(boardService.deleteBoard(any(), any())).willReturn(response)
 
             client.method(HttpMethod.DELETE)
-                .uri("/api/bms/v1/board")
+                .uri("/api/bms/v1/board/${bid}")
+                .header(AuthData.USER_KEY, "$accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(request)
                 .exchange()
                 .expectStatus().isOk
         }
 
         @Test
-        @DisplayName("게시글 삭제 시 게시글이 존재하지 않으면 400로 응답한다")
-        fun `게시글 삭제 시 게시글이 존재하지 않으면 400로 응답한다`() {
-            val request = DeleteBoardRequest(uid = 1, bid = 999L)
+        @DisplayName("게시글 삭제 시 게시글이 존재하지 않으면 404로 응답한다")
+        fun `게시글 삭제 시 게시글이 존재하지 않으면 404로 응답한다`() {
+
+            val uid = 1L
+            val accessToken = jwtUtil.createToken(JwtClaim(uid = uid))
+            val authData = AuthData(uid = 10L, accessToken = accessToken)
+            val bid = 1L
+
             given(boardService.deleteBoard(any(), any())).willThrow(BoardNotFoundException("Board not found"))
 
             client.method(HttpMethod.DELETE)
-                .uri("/api/bms/v1/board")
+                .uri("/api/bms/v1/board/${bid}")
+                .header(AuthData.USER_KEY, "$accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(request)
                 .exchange()
-                .expectStatus().isBadRequest
+                .expectStatus().isNotFound
                 .expectBody()
                 .jsonPath("$.errorMessage").isEqualTo("Board not found")
                 .jsonPath("$.errorCode").isEqualTo("BOARD_NOT_FOUND")
@@ -285,15 +315,20 @@ class BoardResourceTest(
         @Test
         @DisplayName("게시글 삭제 시 작성자가 아닌 경우 403을 응답한다")
         fun `게시글 삭제 시 작성자가 아닌 경우 403을 응답한다`() {
-            val request = DeleteBoardRequest(uid = 2, bid = 1L)
+
+            val uid = 2L
+            val accessToken = jwtUtil.createToken(JwtClaim(uid = uid))
+            val authData = AuthData(uid = 10L, accessToken = accessToken)
+            val bid = 1L
+
             given(boardService.deleteBoard(any(), any())).willThrow(BoardWrongWriterException("Wrong board writer"))
 
             client.method(HttpMethod.DELETE)
-                .uri("/api/bms/v1/board")
+                .uri("/api/bms/v1/board/${bid}")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(request)
+                .header(AuthData.USER_KEY, "$accessToken")
                 .exchange()
-                .expectStatus().isBadRequest
+                .expectStatus().isForbidden
                 .expectBody()
                 .jsonPath("$.errorMessage").isEqualTo("Wrong board writer")
                 .jsonPath("$.errorCode").isEqualTo("BOARD_WRONG_WRITER")
