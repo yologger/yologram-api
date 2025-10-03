@@ -9,10 +9,12 @@ import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
 
 import link.yologram.api.config.MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE
+import link.yologram.api.domain.bms.model.BmsErrorResponse
 import link.yologram.api.domain.ums.model.AuthData
 import link.yologram.api.domain.ums.service.UserService
 import link.yologram.api.domain.ums.model.JoinRequest
 import link.yologram.api.domain.ums.model.UmsErrorResponse
+import link.yologram.api.domain.ums.model.UserData
 import link.yologram.api.global.rest.docs.ApiParameterAuthTokenRequired
 import link.yologram.api.global.rest.docs.ApiResponseUnauthorized
 import link.yologram.api.global.rest.wrapCreated
@@ -50,14 +52,42 @@ class UserResource(
     @PostMapping("/user/join", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun join(@Validated @RequestBody request: JoinRequest) = userService.join(request).wrapCreated()
 
-    @Operation(
-        summary = "유저 조회",
-        description = "uid로 유저를 조회한다.",
+    @Operation(summary = "유저 조회", description = "uid로 유저를 조회한다.")
+    @ApiParameterAuthTokenRequired
+    @ApiResponseUnauthorized
+
+    @ApiResponse(
+        responseCode = "200",
+        description = "User 조회 성공",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = UserData::class),
+            )
+        ]
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "user가 존재하지 않음",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = BmsErrorResponse::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "errorMessage": "User not exist",
+                            "errorCode": "USER_NOT_FOUND"
+                        }"""
+                    )
+                ]
+            )
+        ]
     )
     @GetMapping("/user/{uid}")
     fun getUser(
-        authData: AuthData,
-        @Parameter(description = "조회할 user의 uid", required = true) @PathVariable(name = "uid") uid: Long
+        @Parameter(description = "조회할 user의 uid", required = true) @PathVariable(name = "uid") uid: Long,
+        @Parameter(hidden = true) authData: AuthData
     ) = userService.getUser(uid).wrapOk()
 
 
