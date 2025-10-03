@@ -17,6 +17,7 @@ import link.yologram.api.domain.ums.model.UmsErrorResponse
 import link.yologram.api.domain.ums.model.UserData
 import link.yologram.api.domain.ums.model.WithdrawResponse
 import link.yologram.api.global.rest.docs.ApiParameterAuthTokenRequired
+import link.yologram.api.global.rest.docs.ApiResponseInvalidArgument
 import link.yologram.api.global.rest.docs.ApiResponseUnauthorized
 import link.yologram.api.global.rest.wrapCreated
 import link.yologram.api.global.rest.wrapOk
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*
 
 @Tag(name = "유저", description = "유저 관련 엔드포인트 (ums/user/UserResource)")
 @RestController
+@ApiResponseInvalidArgument
 @RequestMapping("/api/ums/v1", produces = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
 class UserResource(
     private val userService: UserService
