@@ -13,6 +13,8 @@ import link.yologram.api.domain.ums.model.AuthData
 import link.yologram.api.domain.ums.service.UserService
 import link.yologram.api.domain.ums.model.JoinRequest
 import link.yologram.api.domain.ums.model.UmsErrorResponse
+import link.yologram.api.global.rest.docs.ApiParameterAuthTokenRequired
+import link.yologram.api.global.rest.docs.ApiResponseUnauthorized
 import link.yologram.api.global.rest.wrapCreated
 import link.yologram.api.global.rest.wrapOk
 import org.springframework.http.MediaType
@@ -25,29 +27,24 @@ import org.springframework.web.bind.annotation.*
 class UserResource(
     private val userService: UserService
 ) {
-    @Operation(
-        summary = "회원가입",
-        description = "email, name, nickname, password로 회원가입을 한다.",
-        responses = [
-            ApiResponse(
-                responseCode = "409",
-                description = "이미 회원가입한 유저",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = UmsErrorResponse::class),
-                        examples = [
-                            ExampleObject(
-                                value = """{
-                                    "errorMessage": "user 'test@gmail.com' already exists.",
-                                    "errorCode": "USER_DUPLICATE"    
-                                }"""
-                            )
-                        ]
+    @Operation(summary = "회원가입", description = "email, name, nickname, password로 회원가입을 한다.")
+    @ApiResponse(responseCode = "204", description = "회원가입 성공")
+    @ApiResponse(
+        responseCode = "409",
+        description = "이미 회원가입한 유저",
+        content = [
+            Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = UmsErrorResponse::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "errorMessage": "user 'test@gmail.com' already exists.",
+                            "errorCode": "USER_DUPLICATE"    
+                        }"""
                     )
                 ]
-            ),
-            ApiResponse(responseCode = "204", description = "회원가입 성공")
+            )
         ]
     )
     @PostMapping("/user/join", consumes = [MediaType.APPLICATION_JSON_VALUE])
