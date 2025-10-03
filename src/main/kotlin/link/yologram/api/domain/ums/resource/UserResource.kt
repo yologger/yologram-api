@@ -15,6 +15,7 @@ import link.yologram.api.domain.ums.service.UserService
 import link.yologram.api.domain.ums.model.JoinRequest
 import link.yologram.api.domain.ums.model.UmsErrorResponse
 import link.yologram.api.domain.ums.model.UserData
+import link.yologram.api.domain.ums.model.WithdrawResponse
 import link.yologram.api.global.rest.docs.ApiParameterAuthTokenRequired
 import link.yologram.api.global.rest.docs.ApiResponseUnauthorized
 import link.yologram.api.global.rest.wrapCreated
@@ -55,7 +56,6 @@ class UserResource(
     @Operation(summary = "유저 조회", description = "uid로 유저를 조회한다.")
     @ApiParameterAuthTokenRequired
     @ApiResponseUnauthorized
-
     @ApiResponse(
         responseCode = "200",
         description = "User 조회 성공",
@@ -91,12 +91,57 @@ class UserResource(
     ) = userService.getUser(uid).wrapOk()
 
 
-    @Operation(
-        summary = "회원 탈퇴",
-        description = "uid, access token으로 탈퇴를 진행한다."
+    @Operation(summary = "회원 탈퇴", description = "uid, access token으로 탈퇴를 진행한다.")
+    @ApiParameterAuthTokenRequired
+    @ApiResponseUnauthorized
+    @ApiResponse(
+        responseCode = "200",
+        description = "User 삭제 성공",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = WithdrawResponse::class),
+            )
+        ]
+    )
+    @ApiResponse(
+        responseCode = "404",
+        description = "user가 존재하지 않음",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = BmsErrorResponse::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "errorMessage": "User not exist",
+                            "errorCode": "USER_NOT_FOUND"
+                        }"""
+                    )
+                ]
+            )
+        ]
+    )
+    @ApiResponse(
+        responseCode = "422",
+        description = "user가 이미 삭제되었음",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = BmsErrorResponse::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "errorMessage": "User already deleted",
+                            "errorCode": "USER_ALREADY_DELETED"
+                        }"""
+                    )
+                ]
+            )
+        ]
     )
     @DeleteMapping("/user/withdraw")
     fun withdraw(
-        authData: AuthData
+        @Parameter(hidden = true) authData: AuthData
     ) = userService.withdraw(authData.uid).wrapOk()
 }

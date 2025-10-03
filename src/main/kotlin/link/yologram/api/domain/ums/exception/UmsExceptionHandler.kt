@@ -5,6 +5,7 @@ import link.yologram.api.global.*
 import link.yologram.api.global.rest.wrapBadRequest
 import link.yologram.api.global.rest.wrapConflict
 import link.yologram.api.global.rest.wrapUnauthorized
+import link.yologram.api.global.rest.wrapUnprocessableEntity
 import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
@@ -63,7 +64,7 @@ class UmsExceptionHandler {
     @ExceptionHandler(value = [UserAlreadyDeletedException::class])
     fun handle(e: UserAlreadyDeletedException): ResponseEntity<UmsErrorResponse> {
         logger.error(e.message)
-        return UmsErrorResponse(errorMessage = e.message, errorCode = UmsErrorCode.USER_NOT_FOUND).wrapBadRequest()
+        return UmsErrorResponse(errorMessage = e.message, errorCode = UmsErrorCode.USER_ALREADY_DELETED).wrapUnprocessableEntity()
     }
 
     @ExceptionHandler(value = [AuthHeaderEmptyException::class])
