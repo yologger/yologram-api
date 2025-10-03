@@ -3,10 +3,11 @@ package link.yologram.api.domain.bms.exception
 import link.yologram.api.global.excpetion.ErrorCode
 
 enum class BmsErrorCode: ErrorCode {
+    // Board
     USER_NOT_FOUND,
     BOARD_NOT_FOUND,
     BOARD_WRONG_WRITER,
-    INVALID_PAGINATION_CURSOR,
+    BOARD_INVALID_PAGINATION_CURSOR,
 
     // BoardComment
     COMMENT_NOT_FOUND,

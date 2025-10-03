@@ -5,6 +5,7 @@ import link.yologram.api.global.rest.wrapBadRequest
 import link.yologram.api.global.rest.wrapForbidden
 import link.yologram.api.global.rest.wrapNotFound
 import link.yologram.api.global.rest.wrapUnauthorized
+import link.yologram.api.global.rest.wrapUnprocessableEntity
 import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
@@ -69,6 +70,6 @@ class BmsExceptionHandler {
     @ExceptionHandler(value = [InvalidPaginationCursorException::class])
     fun handle(e: InvalidPaginationCursorException): ResponseEntity<BmsErrorResponse> {
         logger.error(e.message)
-        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.INVALID_PAGINATION_CURSOR).wrapBadRequest()
+        return BmsErrorResponse(errorMessage = e.message!!, errorCode = BmsErrorCode.BOARD_INVALID_PAGINATION_CURSOR).wrapUnprocessableEntity()
     }
 }

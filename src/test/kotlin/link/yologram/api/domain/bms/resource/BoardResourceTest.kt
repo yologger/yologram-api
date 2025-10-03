@@ -26,6 +26,7 @@ import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import java.time.LocalDateTime
@@ -356,8 +357,8 @@ class BoardResourceTest(
 
 
         @Test
-        @DisplayName("cursor 기반 게시글 목록 조회 실패 시 400을 응답한다")
-        fun `cursor 기반 게시글 목록 조회 실패 시 400을 응답한다`() {
+        @DisplayName("cursor 기반 게시글 목록 조회 실패 시 422을 응답한다")
+        fun `cursor 기반 게시글 목록 조회 실패 시 422을 응답한다`() {
             val size = 10
             val nextCursor = "nextCursor"
 
@@ -368,9 +369,9 @@ class BoardResourceTest(
             client.method(HttpMethod.GET)
                 .uri("/api/bms/v1/boards?nextCursor=$nextCursor&size=$size")
                 .exchange()
-                .expectStatus().isBadRequest
+                .expectStatus().isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY)
                 .expectBody()
-                .jsonPath("$.errorCode").isEqualTo("INVALID_PAGINATION_CURSOR")
+                .jsonPath("$.errorCode").isEqualTo("BOARD_INVALID_PAGINATION_CURSOR")
         }
     }
 

@@ -204,15 +204,84 @@ class BoardResource(
         @Parameter(hidden = true) authData: AuthData
     ) = boardService.deleteBoard(uid = authData.uid, bid = bid).wrapOk()
 
-    @Operation(
-        summary = "최신 게시글 조회",
-        description = "Home 화면의 Infinite Scrolling 용. cursor based pagination",
+    @Operation(summary = "최신 게시글 조회", description = "Home 화면의 Infinite Scrolling 용 (cursor based pagination)")
+    @ApiResponse(
+        responseCode = "200",
+        description = "최신 게시글 조회",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = APIEnvelopCursorPage::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "data": [
+                                {
+                                    "bid": 64,
+                                    "title": "new_title_1",
+                                    "content": "new_body_1",
+                                    "createdDate": "2025-10-03T11:47:15",
+                                    "modifiedDate": "2025-10-03T11:48:02",
+                                    "writer": {
+                                        "uid": 32,
+                                        "name": "tester10000",
+                                        "nickname": "tester10000",
+                                        "avatar": null
+                                    },
+                                    "metrics": {
+                                        "commentCount": 0,
+                                        "likeCount": 0,
+                                        "viewCount": 0
+                                    }
+                                },
+                                {
+                                    "bid": 62,
+                                    "title": "new_tqweqewe12",
+                                    "content": "new_boy12",
+                                    "createdDate": "2025-10-03T11:44:53",
+                                    "modifiedDate": "2025-10-03T11:44:53",
+                                    "writer": {
+                                        "uid": 32,
+                                        "name": "tester10000",
+                                        "nickname": "tester10000",
+                                        "avatar": null
+                                    },
+                                    "metrics": {
+                                        "commentCount": 0,
+                                        "likeCount": 0,
+                                        "viewCount": 0
+                                    }
+                                }
+                            ],
+                            "nextCursor": "Y3Vyc29yX3ByZWZpeDo1NA=="
+                        }"""
+                    )
+                ]
+            )
+        ]
+    )
+    @ApiResponse(
+        responseCode = "422",
+        description = "pagination cursor가 유효하지 않음",
+        content = [
+            Content(
+                mediaType = MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE,
+                schema = Schema(implementation = BmsErrorResponse::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "errorMessage": "Invalid cursor format",
+                            "errorCode": "BOARD_INVALID_PAGINATION_CURSOR"
+                        }"""
+                    )
+                ]
+            )
+        ]
     )
     @GetMapping("/boards")
     fun getBoards(
         @RequestParam(defaultValue = "10") @Min(1) @Max(value = 40) size: Long = 10,
         @RequestParam(required = false) nextCursor: String? = null
-
     ): ResponseEntity<APIEnvelopCursorPage<BoardDataWithMetrics>> {
         return boardService.getBoardsWithMetrics(size = size, nextCursorId = nextCursor).wrapOk()
     }
