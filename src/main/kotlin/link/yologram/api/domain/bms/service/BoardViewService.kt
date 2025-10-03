@@ -27,12 +27,12 @@ class BoardViewService(
         val exists = boardViewEventRepository.existsByBidAndUidAndIp(bid = boardId, uid = uid, ip = ip)
 
         if (!exists) {
-            // 이벤트 저장
+            // event 저장
             boardViewEventRepository.save(
                 BoardViewEvent(bid = boardId, uid = uid, ip = ip)
             )
 
-            // 집계 증가
+            // board view count 증가
             val viewCount = boardViewCountRepository.findById(boardId)
                 .orElse(BoardViewCount(bid = boardId, count = 0))
 

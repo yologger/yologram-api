@@ -18,7 +18,7 @@ import link.yologram.api.domain.ums.model.AuthData
 import link.yologram.api.global.model.APIEnvelop
 import link.yologram.api.global.model.APIEnvelopCursorPage
 import link.yologram.api.global.model.APIEnvelopPage
-import link.yologram.api.global.rest.docs.ApiParameterAuthToken
+import link.yologram.api.global.rest.docs.ApiParameterAuthTokenRequired
 import link.yologram.api.global.rest.docs.ApiResponseInvalidArgument
 import link.yologram.api.global.rest.docs.ApiResponseUnauthorized
 import link.yologram.api.global.rest.wrapCreated
@@ -39,7 +39,7 @@ class BoardResource(
     private val logger = LoggerFactory.getLogger(BoardResource::class.java)
 
     @Operation(summary = "게시글 작성", description = "title, content로 게시글을 생성한다.")
-    @ApiParameterAuthToken
+    @ApiParameterAuthTokenRequired
     @ApiResponseUnauthorized
     @ApiResponse(
         responseCode = "201",
@@ -93,7 +93,7 @@ class BoardResource(
     }
 
     @Operation(summary = "게시글 수정", description = "bid로 게시글을 수정한다.")
-    @ApiParameterAuthToken
+    @ApiParameterAuthTokenRequired
     @ApiResponseUnauthorized
     @ApiResponse(
         responseCode = "200",
@@ -149,7 +149,7 @@ class BoardResource(
     ) = boardService.editBoard(uid = authData.uid, bid = bid, newTitle = request.title, newBody = request.body) .wrapOk()
 
     @Operation(summary = "게시글 삭제", description = "bid로 게시글을 삭제한다.")
-    @ApiParameterAuthToken
+    @ApiParameterAuthTokenRequired
     @ApiResponseUnauthorized
     @ApiResponse(
         responseCode = "200",

@@ -28,14 +28,25 @@ class AuthenticatedUserResolver(
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
     ): Any? {
-        val accessToken = webRequest.headerNames.asSequence()
-            .filter { headerKey -> isAuthTokenHeader(headerKey) }
-            ?.firstOrNull()
-            ?.takeIf {it.isNotBlank()}
-            ?.let { webRequest.getHeader(it) }
-            ?: throw AuthHeaderEmptyException("Empty auth header")
+        val isParameterOptional = parameter.isOptional
 
-        val uid = jwtUtil.getTokenClaim(accessToken).uid
-        return AuthData(uid = uid, accessToken = accessToken)
+        try {
+            val accessToken = webRequest.headerNames.asSequence()
+                .filter { headerKey -> isAuthTokenHeader(headerKey) }
+                .firstOrNull()
+                ?.let { webRequest.getHeader(it) }
+                ?: throw AuthHeaderEmptyException("Empty auth header")
+
+            val uid = jwtUtil.getTokenClaim(accessToken).uid
+            return AuthData(uid = uid, accessToken = accessToken)
+
+        } catch (exception: Exception) {
+            logger.warn(exception.message)
+            if (isParameterOptional) {
+                return null
+            } else {
+                throw exception
+            }
+        }
     }
 }

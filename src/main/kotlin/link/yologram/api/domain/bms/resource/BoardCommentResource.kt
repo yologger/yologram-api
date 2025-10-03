@@ -16,7 +16,7 @@ import link.yologram.api.domain.bms.service.BoardCommentService
 import link.yologram.api.domain.ums.model.AuthData
 import link.yologram.api.global.model.APIEnvelop
 import link.yologram.api.global.model.APIEnvelopPage
-import link.yologram.api.global.rest.docs.ApiParameterAuthToken
+import link.yologram.api.global.rest.docs.ApiParameterAuthTokenRequired
 import link.yologram.api.global.rest.docs.ApiResponseInvalidArgument
 import link.yologram.api.global.rest.docs.ApiResponseUnauthorized
 import link.yologram.api.global.rest.wrapCreated
@@ -35,7 +35,7 @@ class BoardCommentResource(
 
     @Operation(summary = "댓글 작성",  description = "bid, uid, content로 댓글을 작성한다.")
     @PostMapping("/board/{bid}/comment", consumes = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
-    @ApiParameterAuthToken
+    @ApiParameterAuthTokenRequired
     @ApiResponseUnauthorized
     @ApiResponse(
         responseCode = "201",
@@ -88,7 +88,7 @@ class BoardCommentResource(
     }
 
     @Operation(summary = "댓글 삭제",  description = "bid, uid로 댓글을 삭제한다.")
-    @ApiParameterAuthToken
+    @ApiParameterAuthTokenRequired
     @ApiResponseUnauthorized
     @ApiResponse(
         responseCode = "204",

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size
 
 data class RecordBoardViewRequest(
 
-    @Schema(description = "유저 id", defaultValue = "", required = false)
+    @field:Schema(description = "유저 id", defaultValue = "", required = false)
     @field:Positive
     val uid: Long
 )

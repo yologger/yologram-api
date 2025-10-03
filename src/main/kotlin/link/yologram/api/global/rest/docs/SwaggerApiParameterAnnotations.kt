@@ -9,9 +9,21 @@ import kotlin.annotation.AnnotationTarget.FUNCTION
 @Retention(RUNTIME)
 @Parameter(
     name = "X-YOLOGRAM-USER-AUTH-TOKEN",
-    description = "사용자 인증 토큰",
+    description = "사용자 인증 토큰 (required)",
     required = true,
     `in` = ParameterIn.HEADER,
     example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 )
-annotation class ApiParameterAuthToken
+annotation class ApiParameterAuthTokenRequired
+
+
+@Target(FUNCTION)
+@Retention(RUNTIME)
+@Parameter(
+    name = "X-YOLOGRAM-USER-AUTH-TOKEN",
+    description = "사용자 인증 토큰 (optional)",
+    required = false,
+    `in` = ParameterIn.HEADER,
+    example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+)
+annotation class ApiParameterAuthTokenOptional
