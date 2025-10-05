@@ -74,7 +74,6 @@ class AuthResource(
     }
 
     @Operation(summary = "액세스 토큰 검증", description = "액세스 토큰의 유효성을 검증한다.")
-    @ApiParameterAuthTokenRequired
     @ApiResponseUnauthorized
     @ApiResponse(responseCode = "200", description = "로그인 성공 후 인증 토큰을 발급받는다")
     @ApiResponse(
@@ -97,9 +96,9 @@ class AuthResource(
     )
     @PostMapping("/auth/validate_token")
     fun validateToken(
-        @Parameter(hidden = true) authData: AuthData
+        @Validated @RequestBody request: ValidateAccessTokenRequest
     ): ResponseEntity<APIEnvelop<ValidateAccessTokenResponse>>
-    = authService.validateToken(authData.accessToken, authData.uid).wrapOk()
+    = authService.validateToken(request.accessToken).wrapOk()
 
     @Operation(summary = "로그아웃", description = "access token으로 로그아웃한다.")
     @ApiParameterAuthTokenRequired

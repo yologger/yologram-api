@@ -155,42 +155,9 @@ class AuthServiceTest(
 
             // When
             assertDoesNotThrow {
-                val result = authService.validateToken(uid = UID, accessToken = accessToken)
+                val result = authService.validateToken(accessToken = accessToken)
                 assertThat(result.data.accessToken).isEqualTo(accessToken)
             }
-        }
-
-
-        @Test
-        @DisplayName("token이 유효하나 소유주가 아닐 때")
-        fun `token이 유효하나 소유주가 아닐 때`() {
-            // Given
-            val email = "tester@example.com"
-            val password = "tester_password_1234@"
-
-            BDDMockito.given(
-                userRepository.findById(any())
-            ).willReturn(
-                Optional.of(
-                    User(
-                        id = UID,
-                        email = email,
-                        name = "yologger",
-                        nickname = "yologger",
-                        password = password,
-                        status = UserStatus.ACTIVE
-                    ).apply {
-                        joinedDate = LocalDateTime.now()
-                    }
-                )
-            )
-
-            val accessToken = jwtUtil.createToken(JwtClaim(uid = UID))
-
-            // When
-            assertThatThrownBy {
-                authService.validateToken(uid = UID + 1, accessToken = accessToken)
-            }.isExactlyInstanceOf(AuthInvalidTokenOwnerException::class.java)
         }
 
 
@@ -209,7 +176,7 @@ class AuthServiceTest(
 
             // When
             assertThatThrownBy {
-                authService.validateToken(uid = UID, accessToken = accessToken)
+                authService.validateToken(accessToken = accessToken)
             }.isExactlyInstanceOf(UserNotFoundException::class.java)
         }
     }

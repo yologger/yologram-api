@@ -8,6 +8,8 @@ import link.yologram.api.domain.ums.exception.UserNotFoundException
 import link.yologram.api.domain.ums.exception.AuthWrongPasswordException
 import link.yologram.api.domain.ums.model.ValidateAccessTokenResponse
 import link.yologram.api.domain.ums.exception.AuthInvalidTokenOwnerException
+import link.yologram.api.domain.ums.exception.AuthTokenExpiredException
+import link.yologram.api.domain.ums.exception.AuthTokenInvalidException
 import link.yologram.api.domain.ums.exception.UmsException
 import link.yologram.api.domain.ums.repository.UserRepository
 import link.yologram.api.global.model.APIEnvelop
@@ -50,10 +52,10 @@ class AuthService(
     }
 
     @Transactional(rollbackFor = [Exception::class])
-    @Throws
-        fun validateToken(accessToken: String, uid: Long): APIEnvelop<ValidateAccessTokenResponse> {
+    @Throws(link.yologram.api.domain.bms.exception.UserNotFoundException::class, AuthTokenInvalidException::class, AuthTokenExpiredException::class)
+    fun validateToken(accessToken: String): APIEnvelop<ValidateAccessTokenResponse> {
+        val uid = jwtUtil.getTokenClaim(accessToken).uid
         val user = userRepository.findById(uid).orElseThrow { UserNotFoundException("User not found") }
-        if (uid != user.id) throw AuthInvalidTokenOwnerException("Invalid token owner")
         return APIEnvelop(data = ValidateAccessTokenResponse(accessToken = accessToken, uid = uid, email = user.email, name = user.name, nickname = user.nickname))
     }
 

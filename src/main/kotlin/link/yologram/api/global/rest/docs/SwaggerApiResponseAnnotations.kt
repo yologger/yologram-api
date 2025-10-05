@@ -69,9 +69,9 @@ annotation class ApiResponseInvalidArgument
                 ExampleObject(
                     name = "invalidToken", value = "{ \"errorMessage\": \"invalid token\", \"errorCode\": \"AUTH_INVALID_TOKEN\" }", description = "토큰이 유효하지 않음"
                 ),
-                ExampleObject(
-                    name = "invalidTokenOwner", value = "{ \"errorMessage\": \"Invalid token owner\", \"errorCode\": \"AUTH_INVALID_TOKEN_OWNER\" }", description = "토큰의 owner가 아님"
-                )
+//                ExampleObject(
+//                    name = "invalidTokenOwner", value = "{ \"errorMessage\": \"Invalid token owner\", \"errorCode\": \"AUTH_INVALID_TOKEN_OWNER\" }", description = "토큰의 owner가 아님"
+//                )
             ]
         )
     ]

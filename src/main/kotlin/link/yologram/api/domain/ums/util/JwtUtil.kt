@@ -7,6 +7,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException
 import com.auth0.jwt.exceptions.TokenExpiredException
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import link.yologram.api.config.JwtConfig
+import link.yologram.api.domain.bms.exception.UserNotFoundException
 import link.yologram.api.global.extension.decodeBase64
 import link.yologram.api.global.extension.deserialize
 import link.yologram.api.domain.ums.model.JwtClaim
@@ -46,6 +47,7 @@ class JwtUtil(
     } catch (e: MismatchedInputException) {
         throw AuthTokenInvalidException("Fail to parse token")
     }
+
 
     fun validateToken(token: String): String = try {
         jwtVerifier.verify(token).payload.decodeBase64()
