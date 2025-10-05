@@ -2,6 +2,8 @@ package link.yologram.api.domain.ums.resource
 
 import any
 import link.yologram.api.common.WebMvcTestSupport
+import link.yologram.api.domain.ums.exception.AuthInvalidTokenOwnerException
+import link.yologram.api.domain.ums.exception.AuthTokenInvalidException
 import link.yologram.api.domain.ums.exception.AuthWrongPasswordException
 import link.yologram.api.domain.ums.exception.UserNotFoundException
 import link.yologram.api.domain.ums.model.*
@@ -96,7 +98,7 @@ class AuthResourceTest(
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(request)
                 .exchange()
-                .expectStatus().isBadRequest
+                .expectStatus().isNotFound
                 .expectBody()
                 .jsonPath("$.errorMessage").isEqualTo("User not found")
                 .jsonPath("$.errorCode").isEqualTo("USER_NOT_FOUND")
@@ -143,7 +145,7 @@ class AuthResourceTest(
             val accessToken = jwtUtil.createToken(JwtClaim(uid = UserResourceTest.UID))
 
             given(
-                authService.validateToken(any(), any())
+                authService.validateToken(any())
             ).willReturn(
                 APIEnvelop(
                     data = ValidateAccessTokenResponse(
@@ -156,10 +158,12 @@ class AuthResourceTest(
                 )
             )
 
+            val request = ValidateAccessTokenRequest(accessToken)
+
             // When & Then
             client.post()
                 .uri(URI_AUTH_VALIDATE_TOKEN)
-                .header(AuthData.USER_KEY, "$accessToken")
+                .bodyValue(request)
                 .exchange()
                 .expectStatus().isOk
                 .expectBody()
@@ -177,23 +181,15 @@ class AuthResourceTest(
             val accessToken = jwtUtil.createToken(JwtClaim(uid = UserResourceTest.UID))
 
             given(
-                authService.validateToken(any(), any())
-            ).willReturn(
-                APIEnvelop(
-                    data = ValidateAccessTokenResponse(
-                        uid = UID,
-                        accessToken = accessToken,
-                        email = email,
-                        nickname = nickname,
-                        name = name
-                    )
-                )
-            )
+                authService.validateToken(any())
+            ).willThrow(AuthTokenInvalidException("Invalid token"))
+
+            val request = ValidateAccessTokenRequest("invalid token")
 
             // When & Then
             client.post()
                 .uri(URI_AUTH_VALIDATE_TOKEN)
-                .header(AuthData.USER_KEY, "$accessToken" + "dummy")
+                .bodyValue(request)
                 .exchange()
                 .expectStatus().isUnauthorized
                 .expectBody()
