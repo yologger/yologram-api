@@ -4,6 +4,7 @@ import link.yologram.api.domain.ums.model.UmsErrorResponse
 import link.yologram.api.global.*
 import link.yologram.api.global.rest.wrapBadRequest
 import link.yologram.api.global.rest.wrapConflict
+import link.yologram.api.global.rest.wrapNotFound
 import link.yologram.api.global.rest.wrapUnauthorized
 import link.yologram.api.global.rest.wrapUnprocessableEntity
 import org.slf4j.LoggerFactory
@@ -28,7 +29,7 @@ class UmsExceptionHandler {
     @ExceptionHandler(value = [UserNotFoundException::class])
     fun handle(e: UserNotFoundException): ResponseEntity<UmsErrorResponse> {
         logger.error(e.message)
-        return UmsErrorResponse(errorMessage = e.message, errorCode = UmsErrorCode.USER_NOT_FOUND).wrapBadRequest()
+        return UmsErrorResponse(errorMessage = e.message, errorCode = UmsErrorCode.USER_NOT_FOUND).wrapNotFound()
     }
 
     @ExceptionHandler(value = [AuthWrongPasswordException::class])

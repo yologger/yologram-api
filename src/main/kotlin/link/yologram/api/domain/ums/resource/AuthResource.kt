@@ -13,7 +13,9 @@ import link.yologram.api.domain.ums.model.AuthData
 import link.yologram.api.domain.ums.service.AuthService
 import link.yologram.api.domain.ums.model.*
 import link.yologram.api.global.model.APIEnvelop
+import link.yologram.api.global.rest.docs.ApiParameterAuthTokenRequired
 import link.yologram.api.global.rest.docs.ApiResponseInvalidArgument
+import link.yologram.api.global.rest.docs.ApiResponseUnauthorized
 import link.yologram.api.global.rest.wrapOk
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -71,70 +73,23 @@ class AuthResource(
          return authService.login(request.email, request.password).wrapOk()
     }
 
-    @Operation(
-        summary = "액세스 토큰 검증",
-        description = "액세스 토큰의 유효성을 검증한다.",
-        parameters = [
-            Parameter(
-                name = "X-YOLOGRAM-USER-AUTH-TOKEN",
-                `in` = ParameterIn.HEADER,
-                description = "유저 토큰 정보",
-                required = true
-            )
-        ],
-        responses = [
-            ApiResponse(responseCode = "200", description = "로그인 성공 후 인증 토큰을 발급받는다"),
-            ApiResponse(
-                responseCode = "400",
-                description = "존재하지 않는 user",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = UmsErrorResponse::class),
-                        examples = [
-                            ExampleObject(
-                                value = """{
-                                    "errorMessage": "User not found",
-                                    "errorCode": "USER_NOT_FOUND"    
-                                }"""
-                            )
-                        ]
-                    )
-                ]
-            ),
-            ApiResponse(
-                responseCode = "401",
-                description = "만료된 토큰",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = UmsErrorResponse::class),
-                        examples = [
-                            ExampleObject(
-                                value = """{
-                                    "errorMessage": "Expired jwt token",
-                                    "errorCode": "AUTH_EXPIRED_TOKEN"    
-                                }"""
-                            )
-                        ]
-                    )
-                ]
-            ),
-            ApiResponse(
-                responseCode = "401",
-                description = "유효하지 않은 토큰",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = UmsErrorResponse::class),
-                        examples = [
-                            ExampleObject(
-                                value = """{
-                                    "errorMessage": "Invalid jwt token",
-                                    "errorCode": "AUTH_INVALID_TOKEN"    
-                                }"""
-                            )
-                        ]
+    @Operation(summary = "액세스 토큰 검증", description = "액세스 토큰의 유효성을 검증한다.")
+    @ApiParameterAuthTokenRequired
+    @ApiResponseUnauthorized
+    @ApiResponse(responseCode = "200", description = "로그인 성공 후 인증 토큰을 발급받는다")
+    @ApiResponse(
+        responseCode = "404",
+        description = "존재하지 않는 user",
+        content = [
+            Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = UmsErrorResponse::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "errorMessage": "User not found",
+                            "errorCode": "USER_NOT_FOUND"
+                        }"""
                     )
                 ]
             )
@@ -146,9 +101,27 @@ class AuthResource(
     ): ResponseEntity<APIEnvelop<ValidateAccessTokenResponse>>
     = authService.validateToken(authData.accessToken, authData.uid).wrapOk()
 
-    @Operation(
-        summary = "로그아웃",
-        description = "access token으로 로그아웃한다."
+    @Operation(summary = "로그아웃", description = "access token으로 로그아웃한다.")
+    @ApiParameterAuthTokenRequired
+    @ApiResponseUnauthorized
+    @ApiResponse(responseCode = "200", description = "로그아웃에 성공한다.")
+    @ApiResponse(
+        responseCode = "404",
+        description = "존재하지 않는 user",
+        content = [
+            Content(
+                mediaType = "application/json",
+                schema = Schema(implementation = UmsErrorResponse::class),
+                examples = [
+                    ExampleObject(
+                        value = """{
+                            "errorMessage": "User not found",
+                            "errorCode": "USER_NOT_FOUND"    
+                        }"""
+                    )
+                ]
+            )
+        ]
     )
     @PostMapping("/auth/logout")
     fun logout(
