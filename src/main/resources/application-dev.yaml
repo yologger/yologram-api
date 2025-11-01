@@ -48,3 +48,9 @@ core:
       hibernate:
         format_sql: true
         highlight_sql: true
+
+opensearch:
+  enabled: true
+  # uris: https://xxx.xxx.es.amazonaws.com
+  # username: username
+  # password: password

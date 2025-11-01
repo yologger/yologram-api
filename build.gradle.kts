@@ -66,6 +66,10 @@ dependencies {
     implementation("com.auth0:jwks-rsa:0.11.0")
     implementation("com.auth0:java-jwt:3.10.3")
 
+    // Opensearch
+    implementation("org.opensearch.client:opensearch-rest-high-level-client:2.15.0")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.18.0")
+
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
@@ -74,6 +78,7 @@ dependencies {
     testImplementation(platform("org.testcontainers:testcontainers-bom:${DependencyVersions.TEST_CONTAINERS_VERSION}"))
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:mysql")
+    testImplementation("org.testcontainers:elasticsearch")
 
     // API Documentation
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${DependencyVersions.SPRINGDOC_VERSION}")

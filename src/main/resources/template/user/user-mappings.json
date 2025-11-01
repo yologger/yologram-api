@@ -1,0 +1,51 @@
+{
+  "properties": {
+    "id": {
+      "type": "long"
+    },
+    "email": {
+      "type": "keyword"
+    },
+    "name": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "nickname": {
+      "type": "text",
+      "analyzer": "standard",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "password": {
+      "type": "keyword",
+      "index": false
+    },
+    "accessToken": {
+      "type": "keyword",
+      "index": false
+    },
+    "status": {
+      "type": "keyword"
+    },
+    "joinDate": {
+      "type": "date",
+      "format": "date_optional_time||yyyy-MM-dd'T'HH:mm:ss'Z'"
+    },
+    "modifiedDate": {
+      "type": "date",
+      "format": "date_optional_time||yyyy-MM-dd'T'HH:mm:ss'Z'"
+    },
+    "deletedDate": {
+      "type": "date",
+      "format": "date_optional_time||yyyy-MM-dd'T'HH:mm:ss'Z'",
+      "null_value": null
+    }
+  }
+}

@@ -198,7 +198,6 @@ class BoardServiceTest() {
     @Nested
     @DisplayName("커서 기반 게시글 목록 조회 테스트")
     inner class GetBoardsWithMetricsTest {
-
         @Test
         @DisplayName("커서 기반 게시글 목록을 정상 조회한다")
         fun `커서 기반 게시글 목록을 정상 조회한다`() {
@@ -245,7 +244,8 @@ class BoardServiceTest() {
 
             val cursor = BoardService.CursorUtil.encode(bid1)
 
-            BDDMockito.given(boardRepository.findBoardsWithMetrics(bid1, 2)).willReturn(boardList)
+            // nullable Long을 명시적으로 사용
+            BDDMockito.given(boardRepository.findBoardsWithMetrics(any<Long?>(), any())).willReturn(boardList)
 
             val result = service.getBoardsWithMetrics(2L, cursor)
 
@@ -260,13 +260,16 @@ class BoardServiceTest() {
             val boardList = emptyList<BoardDataWithMetrics>()
 
             val cursor = BoardService.CursorUtil.encode(100L)
-            BDDMockito.given(boardRepository.findBoardsWithMetrics(100L, 2)).willReturn(boardList)
+
+            // nullable Long을 명시적으로 사용
+            BDDMockito.given(boardRepository.findBoardsWithMetrics(any<Long?>(), any())).willReturn(boardList)
 
             val result = service.getBoardsWithMetrics(2, cursor)
 
             assertThat(result.data).isEmpty()
             assertThat(result.nextCursor).isNull()
         }
+
     }
 
     @Nested

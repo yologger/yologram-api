@@ -16,6 +16,7 @@ interface BoardCustomRepository {
     fun findBoardsWithMetrics(cursorId: Long?, pageSize: Long): List<BoardDataWithMetrics>
     fun findBoardsWithMetricsByUid(uid: Long, limit: Long, offset: Long): List<BoardDataWithMetrics>
     fun countBoardsByUid(uid: Long): Long
+    fun findBoardsWithMetrics(from: Long, to: Long): List<BoardDataWithMetrics>
 }
 
 class BoardCustomRepositoryImpl(
@@ -177,5 +178,47 @@ class BoardCustomRepositoryImpl(
             .from(qBoard)
             .where(qBoard.uid.eq(uid))
             .fetchOne() ?: 0
+    }
+
+    override fun findBoardsWithMetrics(
+        from: Long,
+        to: Long
+    ): List<BoardDataWithMetrics> {
+        return jpaQueryFactory
+            .select(
+                Projections.constructor(
+                    BoardDataWithMetrics::class.java,
+                    qBoard.id,
+                    qBoard.title,
+                    qBoard.content,
+                    qBoard.createdDate,
+                    qBoard.modifiedDate,
+                    Projections.constructor(
+                        BoardDataWithMetrics.Writer::class.java,
+                        qUser.id,
+                        qUser.name,
+                        qUser.nickname,
+                        qUser.avatar
+                    ),
+                    Projections.constructor(
+                        BoardDataWithMetrics.Metrics::class.java,
+                        qBoardCommentCount.count.coalesce(0L),
+                        qBoardLikeCount.count.coalesce(0L),
+                        qBoardViewCount.count.coalesce(0L),
+                    )
+                )
+            )
+            .from(qBoard)
+            .leftJoin(qBoardCommentCount)
+            .on(qBoard.id.eq(qBoardCommentCount.bid))
+            .leftJoin(qBoardLikeCount)
+            .on(qBoard.id.eq(qBoardLikeCount.bid))
+            .leftJoin(qBoardViewCount)
+            .on(qBoard.id.eq(qBoardViewCount.bid))
+            .leftJoin(qUser)
+            .on(qBoard.uid.eq(qUser.id))
+            .where(qBoard.id.between(from, to))
+            .orderBy(qBoard.id.asc())
+            .fetch()
     }
 }

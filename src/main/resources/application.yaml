@@ -43,3 +43,10 @@ yologram:
     jwt:
       secret: X-YOLOGRAM-USER-AUTH-TOKEN
       expire_in_seconds: 86400  # 1 day
+
+opensearch:
+  connection-timeout: 3s
+  connection-request-timeout: 3s
+  socket-timeout: 5s
+  max-conn-per-route: 100
+  max-conn-total: 500

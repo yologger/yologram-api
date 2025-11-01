@@ -40,3 +40,9 @@ core:
         max-lifetime: 1800000
         minimum-idle: 1
         maximum-pool-size: 10
+
+opensearch:
+  enabled: true
+  # uris: https://xxx.xxx.es.amazonaws.com
+  # username: username
+  # password: password

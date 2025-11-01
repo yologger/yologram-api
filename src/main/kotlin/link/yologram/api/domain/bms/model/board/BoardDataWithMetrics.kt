@@ -10,8 +10,6 @@ data class BoardDataWithMetrics(
     val modifiedDate: LocalDateTime,
     val writer: Writer,
     val metrics: Metrics
-    // val tags: Tag[]
-    // val categories: Category[]
 ) {
     data class Writer (
         val uid: Long,

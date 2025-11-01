@@ -1,0 +1,50 @@
+{
+  "properties": {
+    "id": {
+      "type": "long"
+    },
+    "uid": {
+      "type": "long"
+    },
+    "title": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    },
+    "content": {
+      "type": "text"
+    },
+    "status": {
+      "type": "keyword"
+    },
+    "deletedDate": {
+      "type": "date",
+      "format": "date_optional_time||yyyy-MM-dd'T'HH:mm:ss'Z'"
+    },
+    "createdDate": {
+      "type": "date",
+      "format": "date_optional_time||yyyy-MM-dd'T'HH:mm:ss'Z'"
+    },
+    "modifiedDate": {
+      "type": "date",
+      "format": "date_optional_time||yyyy-MM-dd'T'HH:mm:ss'Z'"
+    },
+    "metrics": {
+      "type": "nested",
+      "properties": {
+        "viewCount": {
+          "type": "integer"
+        },
+        "commentCount": {
+          "type": "integer"
+        },
+        "likeCount": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

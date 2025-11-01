@@ -125,4 +125,21 @@ class BoardRepositoryTest(
         boards = boardRepository.findBoardsWithMetricsByUid(uid, size, offset)
         assertThat(boards.size).isEqualTo(0)
     }
+
+    @Test
+    @DisplayName("ID 범위로 BoardWithMetrics 다건 조회")
+    fun `ID 범위로 BoardWithMetrics 다건 조회`() {
+
+        // 범위 내 조회
+        var boards = boardRepository.findBoardsWithMetrics(from = 1, to = 5)
+        assertThat(boards.size).isEqualTo(5)
+        assertThat(boards[0].bid).isEqualTo(1)
+        assertThat(boards[4].bid).isEqualTo(5)
+        assertThat(boards[0].metrics).isNotNull()
+
+        // 존재하지 않는 범위 조회
+        boards = boardRepository.findBoardsWithMetrics(from = 9999, to = 10000)
+        assertThat(boards.size).isEqualTo(0)
+    }
+
 }
