@@ -79,6 +79,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:mysql")
     testImplementation("org.testcontainers:elasticsearch")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 
     // API Documentation
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${DependencyVersions.SPRINGDOC_VERSION}")

@@ -1,7 +1,6 @@
-package link.yologram.api.global.excpetion
+package link.yologram.api.global.exception
 
 
-import jakarta.validation.ConstraintViolationException
 import link.yologram.api.global.rest.wrapInternalServerError
 import link.yologram.api.global.rest.wrapMethodNotAllowed
 import link.yologram.api.global.rest.wrapNotFound
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
 import org.springframework.web.servlet.NoHandlerFoundException
 
 @RestControllerAdvice

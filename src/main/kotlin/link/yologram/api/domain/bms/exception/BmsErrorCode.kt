@@ -1,6 +1,6 @@
 package link.yologram.api.domain.bms.exception
 
-import link.yologram.api.global.excpetion.ErrorCode
+import link.yologram.api.global.exception.ErrorCode
 
 enum class BmsErrorCode: ErrorCode {
     // Board

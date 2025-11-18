@@ -1,4 +1,4 @@
-package link.yologram.api.global.excpetion
+package link.yologram.api.global.exception
 
 import jakarta.validation.ConstraintViolationException
 import link.yologram.api.global.rest.wrapBadRequest
@@ -8,6 +8,7 @@ import org.springframework.core.annotation.Order
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.method.annotation.HandlerMethodValidationException
@@ -42,6 +43,12 @@ class ValidationExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException::class)
     fun handle(e: ConstraintViolationException): ResponseEntity<ValidationErrorResponse> {
+        logger.error(e.message)
+        return ValidationErrorResponse(errorMessage = e.message, errorCode = ValidationErrorCode.HTTP_REQUEST_ARGUMENT_INVALID).wrapBadRequest()
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException::class)
+    fun handle(e: MissingServletRequestParameterException): ResponseEntity<ValidationErrorResponse> {
         logger.error(e.message)
         return ValidationErrorResponse(errorMessage = e.message, errorCode = ValidationErrorCode.HTTP_REQUEST_ARGUMENT_INVALID).wrapBadRequest()
     }

@@ -1,4 +1,4 @@
-package link.yologram.api.global.excpetion
+package link.yologram.api.global.exception
 
 enum class GlobalErrorCode: ErrorCode {
     HTTP_REQUEST_METHOD_NOT_ALLOWED,

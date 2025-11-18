@@ -43,6 +43,13 @@ yologram:
     jwt:
       secret: X-YOLOGRAM-USER-AUTH-TOKEN
       expire_in_seconds: 86400  # 1 day
+  client:
+    data-go-kr:
+      url: https://apis.data.go.kr
+      conn-timeout: 10_000
+      read-timeout: 10_000
+      write-timeout: 10_000
+      # service-key: # by aws parameter store
 
 opensearch:
   connection-timeout: 3s

@@ -1,4 +1,4 @@
-package link.yologram.api.global.excpetion
+package link.yologram.api.global.exception
 
 
 data class ValidationErrorResponse(

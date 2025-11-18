@@ -1,11 +1,12 @@
 package link.yologram.api.global.rest
 
+import link.yologram.api.infra.api.datagokr.kisa.client.dto.KisaWhoisIpInfoResponse
 import org.opensearch.action.index.IndexResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
 /** Wrap Response Ok */
-fun <T> T.wrapOk(): ResponseEntity<T> = ResponseEntity.ok(this)
+fun <T> T.wrapOk() = ResponseEntity.ok(this)
 
 /** Wrap Response Conflict */
 fun <T> T.wrapConflict() = ResponseEntity.status(HttpStatus.CONFLICT).body(this)
