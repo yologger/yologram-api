@@ -10,6 +10,7 @@ spring:
     aws:
       credentials:
         instance-profile: true
+
   data:
     redis:
       # cluster:
@@ -46,3 +47,11 @@ opensearch:
   # uris: https://xxx.xxx.es.amazonaws.com # by aws parameter store
   # username: username # by aws parameter store
   # password: password # by aws parameter store
+
+sqs:
+  search:
+    indexing:
+      board:
+        queue-name: yologram-search-indexing-board-prod
+      user:
+        queue-name: yologram-search-indexing-user-prod

@@ -42,15 +42,17 @@ core:
         max-lifetime: 1800000
         minimum-idle: 1
         maximum-pool-size: 10
-  jpa:
-    show-sql: true # 콘솔로그로 출력
-    properties:
-      hibernate:
-        format_sql: true
-        highlight_sql: true
 
 opensearch:
   enabled: true
   # uris: https://xxx.xxx.es.amazonaws.com
   # username: username
   # password: password
+
+sqs:
+  search:
+    indexing:
+      board:
+        queue-name: yologram-search-indexing-board-prod
+      user:
+        queue-name: yologram-search-indexing-user-prod

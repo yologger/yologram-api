@@ -43,9 +43,9 @@ class OpensearchService(
         val response = osClient.index(request, RequestOptions.DEFAULT)
 
         when (response.result) {
-            DocWriteResponse.Result.CREATED -> logger.debug("document created. (id=${response.id}, index=$index)")
-            DocWriteResponse.Result.UPDATED -> logger.debug("document updated. (id=${response.id}, index=$index)")
-            else -> logger.warn("[Create] Unexpected response. (id=${response.id}, index=$index, result=${response.result}, response=$response)")
+            DocWriteResponse.Result.CREATED -> logger.info("## document created. (id=${response.id}, index=$index, version=${response.version})")
+            DocWriteResponse.Result.UPDATED -> logger.info("## document updated. (id=${response.id}, index=$index, version=${response.version})")
+            else -> logger.warn("## fail to upsert document. (id=${response.id}, index=$index, result=${response.result}, response=$response)")
         }
 
         return response

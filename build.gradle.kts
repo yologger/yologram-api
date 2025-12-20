@@ -55,9 +55,10 @@ dependencies {
     implementation("com.querydsl:querydsl-jpa:${DependencyVersions.QUERY_DSL_VERSION}:jakarta")
     kapt("com.querydsl:querydsl-apt:${DependencyVersions.QUERY_DSL_VERSION}:jakarta")
 
-    // AWS Parameters Store
+    // Spring Cloud AWS
     implementation(platform("io.awspring.cloud:spring-cloud-aws-dependencies:${DependencyVersions.SPRING_CLOUD_AWS_VERSION}"))
     implementation("io.awspring.cloud:spring-cloud-aws-starter-parameter-store")
+    implementation("io.awspring.cloud:spring-cloud-aws-starter-sqs")
 
     // JWT
     implementation("io.jsonwebtoken:jjwt-api:0.10.7")

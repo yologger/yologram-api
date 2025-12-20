@@ -13,6 +13,7 @@ import link.yologram.api.global.rest.wrapOk
 import org.opensearch.action.index.IndexResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "검색/게시글인덱싱", description = "게시글 인덱싱 엔드포인트 (search/BoardIndexingResource)")
 @RestController
 @ApiResponseInvalidArgument
-@RequestMapping("/api/search/v1/internal/migration", produces = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
+@RequestMapping("/api/search/v1/internal/indexing", produces = [MEDIA_TYPE_APPLICATION_JSON_UTF8_VALUE])
 class BoardIndexingResource(
     private val boardIndexingService: BoardIndexingService
 ) {
@@ -33,20 +34,20 @@ class BoardIndexingResource(
         description = "인덱싱 완료",
     )
     @PutMapping("/boards/{bid}")
-    fun indexing(@PathVariable bid: Long) {
+    fun indexing(@PathVariable bid: Long): ResponseEntity<Unit> {
         boardIndexingService.index(bid)
-        // response with 200
+        return ResponseEntity.ok().build()
     }
 
     @Operation(summary = "게시글 다건 범위 인덱싱", description = "DB에서 from ~ to 사이의 게시글을 조회하여, Opensearch에 인덱싱")
     @ApiResponse(
-        responseCode = "200",
-        description = "인덱싱 완료",
+        responseCode = "202",
+        description = "인덱싱 요청 완료",
     )
     @PutMapping("/boards/{from}/{to}")
-    fun indexing(@PathVariable from: Long, @PathVariable to: Long) {
+    fun indexing(@PathVariable from: Long, @PathVariable to: Long): ResponseEntity<Unit> {
         boardIndexingService.index(from, to)
-        // response with 200
+        return ResponseEntity.accepted().build()
     }
 
     @Operation(summary = "게시글 전체 인덱싱", description = "모든 게시글을 Opensearch에 인덱싱")
@@ -55,14 +56,14 @@ class BoardIndexingResource(
         description = "인덱싱 완료",
     )
     @PutMapping("/boards")
-    fun fullIndexing() {
+    fun fullIndexing(): ResponseEntity<Unit> {
         /**
          * id가 가장 큰 board를 database에서 조회하여 opensearch로 indexing.
          * 분산 데이터 그리드(Hazelcast)에 indexing 해야할 작업을 queueing.
          * TaskExecutor 같은 worker가 이를 가져와 청킹하여 bulkUpdate() 호출하여 upsert.
          */
-        boardIndexingService.fullIndexing()
-        // response with 200
+         boardIndexingService.fullIndex()
+        return ResponseEntity.accepted().build()
     }
 
     fun reindexing() {
