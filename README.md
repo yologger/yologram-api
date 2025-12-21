@@ -16,9 +16,9 @@
 - GitHub Actions ([.github/workflow/staging.yaml](.github/workflow/staging.yaml))
 
 ## Observability
-New Relic
-- Application monitoring & Log: New Relic APM Java Agent
-- Infra monitoring: New Relic Infra Agent
+- Grafana Cloud
+  - Log: Grafana Loki + loki-logback-appender,
+  - Trace & APM: OpenTelemetry exporter + Tempo
 
 ## Todo List
 - [x] 댓글 기능 구현

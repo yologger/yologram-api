@@ -92,9 +92,12 @@ dependencies {
     // Logging
     implementation("io.github.oshai:kotlin-logging-jvm:${DependencyVersions.KOTLIN_LOGGING_VERSION}")
 
-    // Grafana
+    // Grafana Logging
     implementation("com.github.loki4j:loki-logback-appender:2.0.1")
 
+    // Grafana Tracing & APM
+    implementation("io.micrometer:micrometer-tracing-bridge-otel") // Micrometer와 OpenTelemetry를 연결하는 브리지
+    implementation("io.opentelemetry:opentelemetry-exporter-otlp") // 수집한 trace를 Grafana Cloud로 전송하는 Exporter
 }
 
 tasks.getByName<Jar>("jar") {

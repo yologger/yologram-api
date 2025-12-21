@@ -63,3 +63,17 @@ grafana:
   # url:
   # username:
   # password:
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    # tracing:
+    #  endpoint:
+    #  headers:
+    #    Authorization:
+  opentelemetry:
+    resource-attributes:
+      "service": "${spring.application.name}"
+      "env": "${spring.profiles.active}"
