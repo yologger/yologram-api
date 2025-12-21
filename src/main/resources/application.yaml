@@ -58,22 +58,32 @@ opensearch:
   max-conn-per-route: 100
   max-conn-total: 500
 
+## Grafana Cloud Logging (Loki)
 grafana:
   loki:
-  # url:
-  # username:
-  # password:
-
+   url:
+   username:
+   password:
 management:
   tracing:
     sampling:
       probability: 1.0
   otlp:
-    # tracing:
-    #  endpoint:
-    #  headers:
-    #    Authorization:
+    tracing:
+      endpoint:
+      headers:
+        Authorization:
+    metrics:
+      export:
+        url:
+        step: 1m
+        headers:
+          Authorization:
   opentelemetry:
     resource-attributes:
-      "service": "${spring.application.name}"
-      "env": "${spring.profiles.active}"
+      service: ${spring.application.name}
+      env: ${spring.profiles.active}
+  metrics:
+    tags:
+      service: ${spring.application.name}
+      env: ${spring.profiles.active}

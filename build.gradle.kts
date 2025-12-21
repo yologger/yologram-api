@@ -34,12 +34,12 @@ tasks.getByName<Jar>("jar") {
 }
 
 dependencies {
-    // Kotlin
+    /** Kotlin **/
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
-    // Spring
+    /** Spring **/
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -48,30 +48,30 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.security:spring-security-crypto")
 
-    // MySQL Driver
+    /** MySQL Driver **/
     runtimeOnly("com.mysql:mysql-connector-j")
 
-    // Query DSL
+    /** Query DSL **/
     implementation("com.querydsl:querydsl-jpa:${DependencyVersions.QUERY_DSL_VERSION}:jakarta")
     kapt("com.querydsl:querydsl-apt:${DependencyVersions.QUERY_DSL_VERSION}:jakarta")
 
-    // Spring Cloud AWS
+    /** Spring Cloud AWS **/
     implementation(platform("io.awspring.cloud:spring-cloud-aws-dependencies:${DependencyVersions.SPRING_CLOUD_AWS_VERSION}"))
     implementation("io.awspring.cloud:spring-cloud-aws-starter-parameter-store")
     implementation("io.awspring.cloud:spring-cloud-aws-starter-sqs")
 
-    // JWT
+    /** JWT **/
     implementation("io.jsonwebtoken:jjwt-api:0.10.7")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.10.7")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.10.7")
     implementation("com.auth0:jwks-rsa:0.11.0")
     implementation("com.auth0:java-jwt:3.10.3")
 
-    // Opensearch
+    /** Opensearch **/
     implementation("org.opensearch.client:opensearch-rest-high-level-client:2.15.0")
     implementation("com.fasterxml.jackson.core:jackson-core:2.18.0")
 
-    // Test
+    /** Test **/
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
@@ -82,22 +82,25 @@ dependencies {
     testImplementation("org.testcontainers:elasticsearch")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 
-    // API Documentation
+    /** API Documentation **/
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${DependencyVersions.SPRINGDOC_VERSION}")
+
+    /** Logging **/
+    implementation("io.github.oshai:kotlin-logging-jvm:${DependencyVersions.KOTLIN_LOGGING_VERSION}")
+
+    /** Grafana Logging - Loki **/
+    implementation("com.github.loki4j:loki-logback-appender:2.0.1")
+
+    /** Grafana Tracing & APM - OpenTelemetry & Tempo **/
+    implementation("io.micrometer:micrometer-tracing-bridge-otel") // Micrometer와 OpenTelemetry를 연결하는 브리지
+    implementation("io.opentelemetry:opentelemetry-exporter-otlp") // 수집한 trace를 Grafana Cloud로 전송하는 Exporter
+
+    /** Grafana Metrics - Prometheus **/
+    implementation("io.micrometer:micrometer-registry-otlp")
 
     if (isAppleSilicon()) {
         runtimeOnly("io.netty:netty-resolver-dns-native-macos:4.1.94.Final:osx-aarch_64")
     }
-
-    // Logging
-    implementation("io.github.oshai:kotlin-logging-jvm:${DependencyVersions.KOTLIN_LOGGING_VERSION}")
-
-    // Grafana Logging
-    implementation("com.github.loki4j:loki-logback-appender:2.0.1")
-
-    // Grafana Tracing & APM
-    implementation("io.micrometer:micrometer-tracing-bridge-otel") // Micrometer와 OpenTelemetry를 연결하는 브리지
-    implementation("io.opentelemetry:opentelemetry-exporter-otlp") // 수집한 trace를 Grafana Cloud로 전송하는 Exporter
 }
 
 tasks.getByName<Jar>("jar") {
