@@ -57,3 +57,9 @@ opensearch:
   socket-timeout: 5s
   max-conn-per-route: 100
   max-conn-total: 500
+
+grafana:
+  loki:
+  # url:
+  # username:
+  # password:

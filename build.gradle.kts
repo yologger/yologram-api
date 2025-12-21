@@ -91,6 +91,10 @@ dependencies {
 
     // Logging
     implementation("io.github.oshai:kotlin-logging-jvm:${DependencyVersions.KOTLIN_LOGGING_VERSION}")
+
+    // Grafana
+    implementation("com.github.loki4j:loki-logback-appender:2.0.1")
+
 }
 
 tasks.getByName<Jar>("jar") {

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+    <springProperty scope="context" name="LOG_LEVEL" source="logging.level.root" defaultValue="INFO" />
+    <springProperty scope="context" name="APPLICATION_NAME" source="spring.application.name" defaultValue="yologram-api"/>
+    <springProperty scope="context" name="ACTIVE_PROFILE" source="spring.profiles.active" defaultValue="dev"/>
+    <springProperty scope="context" name="LOKI_URL" source="grafana.loki.url" />
+    <springProperty scope="context" name="LOKI_USERNAME" source="grafana.loki.username" />
+    <springProperty scope="context" name="LOKI_PASSWORD" source="grafana.loki.password" />
+
+    <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+        <http>
+            <url>${LOKI_URL}</url>
+            <auth>
+                <username>${LOKI_USERNAME}</username>
+                <password>${LOKI_PASSWORD}</password>
+            </auth>
+        </http>
+        <labels>
+            service = ${APPLICATION_NAME}
+            host = ${HOSTNAME}
+            env = ${ACTIVE_PROFILE}
+        </labels>
+        <structuredMetadata>
+            level = %level
+            logger = %logger
+            thread = %thread
+        </structuredMetadata>
+        <batch>
+            <staticLabels>true</staticLabels>
+        </batch>
+    </appender>
+
+
+    <springProfile name="default | dev">
+        <root level="${LOG_LEVEL}">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="staging | prod">
+        <root level="${LOG_LEVEL}">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="LOKI"/>
+        </root>
+    </springProfile>
+</configuration>
