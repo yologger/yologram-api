@@ -58,12 +58,13 @@ opensearch:
   max-conn-per-route: 100
   max-conn-total: 500
 
-## Grafana Cloud Logging (Loki)
+## Grafana Cloud: Logging (Loki)
 grafana:
   loki:
    url:
    username:
    password:
+## Grafana Cloud: Tracing (Tempo) + Metrics (Prometheus)
 management:
   tracing:
     sampling:
@@ -83,7 +84,9 @@ management:
     resource-attributes:
       service: ${spring.application.name}
       env: ${spring.profiles.active}
+      hostname: ${HOSTNAME:localhost}
   metrics:
     tags:
       service: ${spring.application.name}
       env: ${spring.profiles.active}
+      hostname: ${HOSTNAME:localhost}
