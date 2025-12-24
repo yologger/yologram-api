@@ -84,9 +84,9 @@ management:
     resource-attributes:
       service: ${spring.application.name}
       env: ${spring.profiles.active}
-      hostname: ${HOSTNAME:localhost}
+      hostname: ${server.hostname:unknown}
   metrics:
     tags:
       service: ${spring.application.name}
       env: ${spring.profiles.active}
-      hostname: ${HOSTNAME:localhost}
+      hostname: ${server.hostname:unknown}

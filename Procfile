@@ -1,0 +1,1 @@
+web: java -Dserver.hostname=$(hostname) -XX:InitialRAMPercentage=50.0 -XX:MaxRAMPercentage=75.0 -jar application.jar

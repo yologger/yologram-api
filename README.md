@@ -17,8 +17,9 @@
 
 ## Observability
 - Grafana Cloud
-  - Log: Grafana Loki + loki-logback-appender
-  - Trace & APM: OpenTelemetry exporter + Tempo
+  - Log: `loki-logback-appender` + Grafana Loki
+  - Trace & APM: `opentelemetry-exporter-otlp` + Grafana Tempo
+  - Metrics: `micrometer-registry-otlp` + Grafana Prometheus
 
 ## Todo List
 - [x] 댓글 기능 구현

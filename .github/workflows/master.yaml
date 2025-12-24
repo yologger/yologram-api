@@ -16,37 +16,24 @@ jobs:
           java-version: '17'
           cache: gradle
 
-      - name: Build with gradle
+      - name: Gradle Build
         run: ./gradlew clean build --exclude-task test
 
-      - name: Create deployment root directory
+      - name: Create deployment directory
         run: mkdir -p ./build/deployment
 
-      - name: Rename application.jar
+      - name: Copy application.jar
         run: mv ./build/libs/*.jar ./build/deployment/application.jar
 
-      - name: Download New Relic Java Agent
-        run: |
-          curl -L -o newrelic-java.zip https://download.newrelic.com/newrelic/java-agent/newrelic-agent/current/newrelic-java.zip
-          unzip -o newrelic-java.zip
-          mv newrelic/newrelic.jar ./build/deployment/
-          rm -rf newrelic newrelic-java.zip
-
-      - name: Copy newrelic.yml (Java Agent Config)
-        run: cp newrelic.yml ./build/deployment/
-
       - name: Copy Procfile
-        run: cp beanstalk/Procfile ./build/deployment/
+        run: cp ./Procfile ./build/deployment/
 
-      - name: Copy .ebextensions
-        run: cp -r beanstalk/.ebextensions ./build/deployment/
-
-      - name: Package deployment files
+      - name: Zip deployment directory
         run: |
           cd build/deployment
           zip -r ../deploy.zip . 
 
-      - name: Set up environment variables
+      - name: Configure environment variables
         id: set-env-vars
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
@@ -56,7 +43,7 @@ jobs:
           echo "AWS_BEANSTALK_VERSION_LABEL=${AWS_BEANSTALK_VERSION_LABEL}"
           echo "AWS_BEANSTALK_VERSION_LABEL=${AWS_BEANSTALK_VERSION_LABEL}" >> $GITHUB_ENV
 
-      - name: Deploy to Beanstalk
+      - name: Deploy to AWS Beanstalk
         uses: einaregilsson/beanstalk-deploy@v22
         with:
           aws_access_key: ${{ secrets.AWS_GITHUB_ACTIONS_DEPLOYER_ACCESS_KEY }}
